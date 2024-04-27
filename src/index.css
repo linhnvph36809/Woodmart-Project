@@ -1,0 +1,221 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+.text-font {
+  font-family: "Work Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.title-font {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.title-font-800 {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.title-font-400 {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.header-font {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.wd-text-font {
+  font-family: "Work Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.wd-text-font-bold {
+  font-family: "Work Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.content {
+  width: 1400px;
+  margin: 0 auto;
+}
+
+.w-card{
+  width: 258px;
+}
+
+.bg-primary {
+  background-color: #f59a57;
+}
+
+.color-primary {
+  color: #f59a57;
+}
+
+.bg-color-black {
+  background-color: #101010;
+}
+
+.color-black {
+  color: #101010;
+}
+
+.text-color-black {
+  color: #777777;
+}
+
+.title-color{
+  color: #242424 ; 
+}
+
+.heading-color-black {
+  color: #484848;
+}
+
+.nav-color {
+  color: #333;
+}
+
+.swiper-container {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.btn-add-cart,
+.transition-btn-cart,
+.transition-btn,
+.transition-product {
+  transition: all 0.2s ease-in-out;
+}
+
+
+.product-hover:hover .transition-btn {
+  transform: translateX(0);
+
+}
+
+.product-hover:hover .transition-product {
+  transform: translateY(-52px);
+
+}
+
+.btn-cart-hover:hover .transition-btn-cart {
+  transform: translateY(-30px);
+
+}
+
+.btn-cart-hover:hover .btn-add-cart {
+  transform: translateY(0px);
+  background-color: rgb(223, 140, 79);
+
+}
+
+.swiper-pagination {
+  background-color: #fff;
+  width: 64px !important;
+  height: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+}
+
+.swiperBanner:hover{
+  cursor: grab;
+  transition: all 2.5s ease-in-out;
+}
+
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background-color: #bbb;
+  opacity: 0.5;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.swiper-pagination-bullet:hover {
+  background-color: #000 !important;
+
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #000 !important;
+}
+
+.transition-category{
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.2s, transform 0.4s;
+}
+
+.category-hover:hover .transition-category{
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.category-hover:hover .transition-bg{
+  background-color: rgba(0, 0, 0, 0.3)
+}
+
+.category-hover:hover img{
+  transform: scale(1);
+}
+
+.category-hover:hover .now{
+  transform: translateY(0);
+}
+
+.grid-cols-258{
+  grid-template-columns: repeat(5,258px);
+}
+
+
+.grid-cols-279{
+  grid-template-columns: repeat(5,279px);
+}
+
+.grid-product-s{
+  grid-template-columns: repeat(5,258px);
+  grid-template-rows: repeat(2,398px);
+
+}
+
+/* .grid-product-l{
+  grid-template-columns: repeat(3,287px);
+  grid-template-rows: repeat(1,430px);
+
+} */
+
+.swiperProduct .swiper-slide{
+  width: 287px !important;
+  margin-right: 35px !important;
+}
+
+
+.shoping-hover:hover .transition-shoping{
+  background-color: rgba(0, 0, 0, 0.2);
+}
