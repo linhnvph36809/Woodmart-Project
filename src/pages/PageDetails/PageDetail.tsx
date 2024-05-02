@@ -1,3 +1,9 @@
+import { LuShuffle } from "react-icons/lu";
+import { LuHeart } from "react-icons/lu";
+import { LuRuler } from "react-icons/lu";
+import { LuChevronDown } from "react-icons/lu";
+import { HiStar } from "react-icons/hi";
+import { HiOutlineStar } from "react-icons/hi";
 const PageDetail = () => {
   return (
     <>
@@ -210,14 +216,461 @@ const PageDetail = () => {
                   Buy now
                 </button>
               </div>
+              <div>
+                <ul className="flex gap-5 my-10">
+                  <li>
+                    <a
+                      href="#"
+                      className="flex gap-2 items-center nav-color wd-text-font-bold text-[15px]"
+                    >
+                      <LuShuffle />
+                      Compare
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex gap-2 items-center nav-color wd-text-font-bold text-[15px]"
+                    >
+                      <LuHeart />
+                      Add to wishlist
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="flex gap-2 items-center nav-color wd-text-font-bold text-[15px]"
+                    >
+                      <LuRuler />
+                      Size Guide
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <div className="pb-5 border-b-[1px] border-solid border-[#e4e4e4]">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm title-font title-color">
+                      {" "}
+                      Shipping and returns{" "}
+                    </p>
+                    <LuChevronDown className="text-color-black" />
+                  </div>
+                  <div>
+                    <p className="text-font text-color-black text-sm pt-4">
+                      Authorities in our business will tell in no uncertain
+                      terms that Lorem Ipsum is that huge, huge no no to
+                      forswear forever. Not so fast, I’d say, there are some
+                      redeeming factors in favor of greeking text, as its use is
+                      merely the symptom of a worse problem to take into
+                      consideration.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div>
-            <div>
-                123
+      <div className="py-8">
+        <div className="content">
+          <div className="bg-white rounded-[10px] flex gap-6 px-4 pt-2 pb-8">
+            <div className="w-6/12">
+              <h1 className="text-xl title-color title-font pt-3">
+                Product details
+              </h1>
+              <p className="py-5 text-font text-sm text-color-black">
+                {" "}
+                Made possible by exploring innovative molded plywood techniques,
+                Iskos-Berlin’s Soft Edge Chair blends strong curves with extreme
+                lightness to create a three-dimensionality not usually possible
+                with 2-D plywood.
+              </p>
+              <ul>
+                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                  <h4 className="wd-text-font-bold text-sm title-color">
+                    Brand
+                  </h4>
+                  <span className="text-font text-color-black text-[13px]">
+                    Hay
+                  </span>
+                </li>
+                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                  <h4 className="wd-text-font-bold text-sm title-color">
+                    Collection
+                  </h4>
+                  <span className="text-font text-color-black text-[13px]">
+                    Emmanuel Gallina
+                  </span>
+                </li>
+                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                  <h4 className="wd-text-font-bold text-sm title-color">
+                    Color
+                  </h4>
+                  <span className="text-font text-color-black text-[13px]">
+                    Brown Sugar
+                  </span>
+                </li>
+                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                  <h4 className="wd-text-font-bold text-sm title-color">
+                    Materials
+                  </h4>
+                  <span className="text-font text-color-black text-[13px]">
+                    Fabric , Wood
+                  </span>
+                </li>
+                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                  <h4 className="wd-text-font-bold text-sm title-color">
+                    General dimensions
+                  </h4>
+                  <span className="text-font text-color-black text-[13px]">
+                    Fabric , Wood
+                  </span>
+                </li>
+              </ul>
             </div>
+            <div className="w-6/12">
+              <h1 className="text-xl title-color title-font pt-3">
+                Description
+              </h1>
+              <img
+                src="./public/images/about-brand-1.jpg.webp"
+                alt=""
+                className="rounded-[10px] my-5"
+              />
+              <p className="text-font text-sm text-color-black pt-3">
+                The company reinterprets tradition by calling upon international
+                designers to work with them and developing new technologies and
+                materials to guarantee innovative and surprising results.
+                Passion is the engine that drives the brand – together with its
+                renowned creatives and high-profile collaborators – to search
+                for original solutions using advanced materials, methods, tools,
+                and technologies.
+              </p>
+              <ul className="mt-5 pl-2">
+                <li className="flex items-center gap-2 text-font text-sm text-color-black mb-2">
+                  <img
+                    src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-dot-list.svg"
+                    alt=""
+                  />
+                  Choose items in a single color scheme and style
+                </li>
+                <li className="flex items-center gap-2 text-font text-sm text-color-black mb-2">
+                  <img
+                    src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-dot-list.svg"
+                    alt=""
+                  />
+                  Consider the area of the room
+                </li>
+                <li className="flex items-center gap-2 text-font text-sm text-color-black mb-2">
+                  <img
+                    src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-dot-list.svg"
+                    alt=""
+                  />
+                  Do not buy unnecessary pieces of furniture
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="bg-white rounded-[10px] my-16 p-4">
+            <h1 className="text-xl title-color title-font pt-3">About brand</h1>
+            <div className="flex mt-5 gap-8">
+              <div className="w-[650px]">
+                <img
+                  src="./public/images/brand-about-flos.jpg.webp"
+                  alt=""
+                  className="rounded-[10px] h-[430px] object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="text-[26px] title-color title-font">
+                    MINOTTI
+                  </h3>
+                  <div className="flex items-center gap-4 pr-16">
+                    <div className="flex items-center gap-1 text-[15px] title-font">
+                      Share:
+                      <img
+                        className="w-[30px]"
+                        src="./public/images/facebook.png"
+                        alt=""
+                      />
+                      <img
+                        className="w-[30px]"
+                        src="./public/images/x.png"
+                        alt=""
+                      />
+                      <img
+                        className="w-[30px]"
+                        src="./public/images/pinterest.png"
+                        alt=""
+                      />
+                      <img
+                        className="w-[30px]"
+                        src="./public/images/in.png"
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <a
+                        href="#"
+                        className="text-[12px] text-white wd-text-font-bold w-[110px] h-[42px] flex justify-center items-center bg-primary rounded-[35px] px-4 "
+                      >
+                        Contact us
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-color-black text-font text-sm pt-1">
+                  Horsens / Denmark
+                </div>
+                <p className="py-5 text-font text-sm text-color-black">
+                  {" "}
+                  The company reinterprets tradition by calling upon
+                  international designers to work with them and developing new
+                  technologies and materials to guarantee innovative and
+                  surprising results. Passion is the engine that drives the
+                  brand.
+                </p>
+                <div className="flex justify-between pr-16 pl-8 my-4">
+                  <div className="text-center">
+                    <div className="flex justify-center items-center w-[64px] h-[64px] rounded-full bg-[#f59a571a]">
+                      <img
+                        src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-slide-icon-chair-1.svg"
+                        alt=""
+                        className="w-[24px] h-[24px]"
+                      />
+                    </div>
+                    <h4 className="text-base title-font title-color pt-3">
+                      Chairs
+                    </h4>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex justify-center items-center w-[64px] h-[64px] rounded-full bg-[#f59a571a]">
+                      <img
+                        src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-tables-primary.svg"
+                        alt=""
+                        className="w-[24px] h-[24px]"
+                      />
+                    </div>
+                    <h4 className="text-base title-font title-color pt-3">
+                      Tables
+                    </h4>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex justify-center items-center w-[64px] h-[64px] rounded-full bg-[#f59a571a]">
+                      <img
+                        src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-armchairs-primary.svg"
+                        alt=""
+                        className="w-[24px] h-[24px]"
+                      />
+                    </div>
+                    <h4 className="text-base title-font title-color pt-3">
+                      Armchairs
+                    </h4>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex justify-center items-center w-[64px] h-[64px] rounded-full bg-[#f59a571a]">
+                      <img
+                        src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-storage-primary.svg"
+                        alt=""
+                        className="w-[24px] h-[24px]"
+                      />
+                    </div>
+                    <h4 className="text-base title-font title-color pt-3">
+                      Storages
+                    </h4>
+                  </div>
+                </div>
+                <p className="py-5 text-font text-sm text-color-black">
+                  {" "}
+                  Nordic design inspires HAY's taste for clean lines, simple
+                  geometric shapes, and quality materials like wood, metal, and
+                  textiles. Anyway, you still use Lorem Ipsum and rightly so, as
+                  it will always have a place in the web workers toolbox.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-[10px] mb-16 p-4 pb-5">
+            <h1 className="text-xl title-color title-font">Customer Reviews</h1>
+            <div className="flex justify-between gap-10">
+              <div className="w-6/12">
+                <div className="text-center mb-5">
+                  <div className="flex justify-center mb-2">
+                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
+                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
+                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
+                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
+                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
+                  </div>
+                  <span className="text-font text-base text-color-black">
+                    0 reviews
+                  </span>
+                </div>
+                <div className="flex justify-between items-center gap-3 mb-2">
+                  <div className="flex items-center">
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                  </div>
+                  <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
+                    <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
+                  </div>
+                  <div className="text-font text-base text-color-black">0</div>
+                </div>
+                <div className="flex justify-between items-center gap-3 mb-2">
+                  <div className="flex items-center">
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                  </div>
+                  <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
+                    <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
+                  </div>
+                  <div className="text-font text-base text-color-black">0</div>
+                </div>
+                <div className="flex justify-between items-center gap-3 mb-2">
+                  <div className="flex items-center">
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                  </div>
+                  <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
+                    <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
+                  </div>
+                  <div className="text-font text-base text-color-black">0</div>
+                </div>
+                <div className="flex justify-between items-center gap-3 mb-2">
+                  <div className="flex items-center">
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                  </div>
+                  <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
+                    <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
+                  </div>
+                  <div className="text-font text-base text-color-black">0</div>
+                </div>
+                <div className="flex justify-between items-center gap-3 mb-2">
+                  <div className="flex items-center">
+                    <HiStar className="text-xl text-[#EABE12]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                  </div>
+                  <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
+                    <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
+                  </div>
+                  <div className="text-font text-base text-color-black">0</div>
+                </div>
+              </div>
+              <div className="w-6/12">
+                <h5 className="text-sm title-color title-font mb-5">
+                  BE THE FIRST TO REVIEW “CAN”
+                </h5>
+                <p className="text-font text-base text-color-black pb-2">
+                  Your email address will not be published. Required fields are
+                  marked <span className="text-red-500">*</span>
+                </p>
+                <p className="text-font text-base nav-color flex items-center gap-1 my-3">
+                  Your rating <span className="text-red-500">*</span>:
+                  <div className="flex ml-2">
+                    <HiOutlineStar className="text-[#bbb] text-lg" />
+                    <HiOutlineStar className="text-[#bbb] text-lg" />
+                    <HiOutlineStar className="text-[#bbb] text-lg" />
+                    <HiOutlineStar className="text-[#bbb] text-lg" />
+                    <HiOutlineStar className="text-[#bbb] text-lg" />
+                  </div>
+                </p>
+                <form action="">
+                  <div>
+                    <label className="text-font text-base nav-color mb-2 block">
+                      Your review <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={8}
+                      className="block p-2.5 w-full text-sm bg-gray-50 text-color-black text-font
+                     rounded-[35px] border border-[#0000001a] focus:ring-blue-500 focus:outline-none"
+                      defaultValue={""}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label className="text-font text-base nav-color mb-2 block">
+                      Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <label className="text-font text-base nav-color mb-2 block">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
+                    />
+                  </div>
+                  <div className="flex gap-2 my-4">
+                    <input
+                      type="checkbox"
+                      className="text-color-black text-font rounded-[35px] border border-[#0000001a]"
+                    />
+                    <p className="text-font text-[15px] nav-color">
+                      Save my name, email, and website in this browser for the
+                      next time I comment.
+                    </p>
+                  </div>
+                  <button className="w-[86px] h-[42px] flex justify-center items-center wd-text-font-bold text-white text-[13px] rounded-[32px] bg-primary">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <h5 className="text-sm title-color title-font mb-5">
+                0 REVIEWS FOR CAN
+              </h5>
+              <form className="">
+                <select
+                  id="select-sort"
+                  className="text-left bg-gray-50
+                      text-sm text-font text-[#777777] rounded-[35px]
+                      focus:ring-blue-500 pl-[14px] block w-[139px] h-[42px]
+                      border-[1px] border-solid border-[rgba(0,0,0,.1)]
+                      bg-[url('./public/images/chevron-down.png')] bg-no-repeat
+                      bg-right
+                      "
+                >
+                  <option>Default</option>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                </select>
+              </form>
+            </div>
+            <p className="text-font text-[15px] text-color-black">
+              There are no reviews matching the given conditions.
+            </p>
+          </div>
+          <div>
+            <h3 className="title-color title-font text-[22px] mb-3">
+              Related Products
+            </h3>
+            <div>Products</div>
+          </div>
+        </div>
       </div>
     </>
   );

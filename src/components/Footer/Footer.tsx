@@ -10,7 +10,7 @@ const Footer = () => {
                         <span className="text-[22px] text-white title-font">Subscribe us:</span>
                         <div className="flex items-center gap-2">
                             <img className="w-[30px]" src="./public/images/facebook.png" alt="" />
-                            <img className="w-[30px]" src="./public/images/x.png" alt="" />
+                            <img className="w-[30px]" src="./public/images/x-footer.png" alt="" />
                             <img className="w-[30px]" src="./public/images/pinterest.png" alt="" />
                             <img className="w-[30px]" src="./public/images/in.png" alt="" />
                         </div>
