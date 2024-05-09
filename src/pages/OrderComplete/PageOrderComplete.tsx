@@ -1,5 +1,4 @@
 import { LuMoveRight } from "react-icons/lu";
-import Footer from "../../components/Footer/Footer";
 const PageOrderComplete = () => {
   return (
     <>

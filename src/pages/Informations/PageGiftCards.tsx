@@ -1,4 +1,4 @@
-import BannerGolobal from "../../components/BannerGlobal/PageAbGlobal";
+import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import { LuChevronDown, LuMoveRight } from "react-icons/lu";
 const PageGiftCards = () => {
   return (

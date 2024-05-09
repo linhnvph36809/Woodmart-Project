@@ -273,7 +273,7 @@ const Home = () => {
             <Product />
             <Product />
             <Product />
-            <Product />
+
           </div>
           <div className="mb-5 pt-20">
             <h4 className="text-[32px] title-color title-font">

@@ -1,4 +1,4 @@
-import BannerGolobal from "../../components/BannerGlobal/PageAbGlobal";
+import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import SlibarImage from "./SlibarImage";
 const PageShowroom = () => {
   return (

@@ -1,4 +1,6 @@
 import InputRange from "./InputRange";
+import Product from "../../components/Products/Product";
+import { LuChevronRight } from "react-icons/lu";
 const PageCategory = () => {
   return (
     <>
@@ -373,7 +375,7 @@ const PageCategory = () => {
                 <form className="max-w-sm mx-auto">
                   <select
                     id="select-sort"
-                    className="text-left bg-gray-50
+                    className="text-left bg-gray-50 focus:outline-none
                       text-sm text-font text-[#777777] rounded-[35px]
                       focus:ring-blue-500 pl-[14px] block w-[220px] h-[42px]
                       border-[1px] border-solid border-[rgba(0,0,0,.1)]
@@ -390,6 +392,28 @@ const PageCategory = () => {
                 </form>
               </div>
             </div>
+          </div>
+          <div className="grid-product-l my-10">
+            <Product/>
+            <Product/>
+            <Product/>
+            <Product/>
+          </div>
+          <div>
+            <ul className="flex gap-1 justify-center">
+              <li>
+               <a href="#" className="min-w-[34px] h-[34px] text-sm text-white
+               wd-text-font-bold rounded bg-primary flex justify-center items-center">1</a>
+              </li>
+              <li>
+               <a href="#" className="min-w-[34px] h-[34px] text-sm 
+               wd-text-font-bold rounded flex justify-center items-center">2</a>
+              </li>
+              <li>
+               <a href="#" className="min-w-[34px] h-[34px] text-sm 
+               wd-text-font-bold rounded flex justify-center items-center"><LuChevronRight className="text-lg title-color"/></a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

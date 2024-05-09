@@ -72,7 +72,7 @@ const Header = () => {
           <div className="flex h-[64px] items-center justify-between ">
             <Link to="">
               <div>
-                <img src="./public/images/logo.svg" alt="" />
+                <img src="https://woodmart.xtemos.com/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-logo-black.svg" alt="" />
               </div>
             </Link>
             <form action="">
