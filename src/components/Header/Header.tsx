@@ -1,9 +1,50 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [fixedHeader, setFixedHeader] = useState(false);
+
+  const ref = useRef<boolean | undefined>();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScrollTop == 0) {
+        ref.current = false;
+      } else if (currentScrollTop < lastScrollTop) {
+        setFixedHeader(true);
+        ref.current = true;
+      } else {
+        setFixedHeader(false);
+      }
+
+      setLastScrollTop(currentScrollTop);
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollTop]);
+
   return (
     <div>
-      <header>
+      <header
+        className={`bg-white ${
+          lastScrollTop > 156
+            ? `fixed ${
+                fixedHeader
+                  ? "-top-[40px] transtion-all duration-500 ease-in-out"
+                  : `-top-full ${
+                      ref.current && "transtion-all duration-1000 ease-linear"
+                    }`
+              }`
+            : "absolute top-0"
+        }
+       right-0 left-0 z-[500]`}
+      >
         <div className="bg-[#1010100d] py-2">
           <div className="flex justify-between content items-center">
             <div className="flex gap-5 items-center">
@@ -72,7 +113,10 @@ const Header = () => {
           <div className="flex h-[64px] items-center justify-between ">
             <Link to="">
               <div>
-                <img src="https://woodmart.xtemos.com/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-logo-black.svg" alt="" />
+                <img
+                  src="https://woodmart.xtemos.com/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-logo-black.svg"
+                  alt=""
+                />
               </div>
             </Link>
             <form action="">
