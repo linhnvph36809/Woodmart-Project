@@ -1,12 +1,14 @@
 
-import LayoutAccount from '../Layouts/LayoutAccount';
+import LayoutAccount from '../Layouts/LayoutAccounts/LayoutAccount';
 import DashBoard from '../pages/MyAccount/DashBoard';
 import AccountOrder from '../pages/MyAccount/AccountOrder';
 import AccountDownload from '../pages/MyAccount/AccountDownload';
 import AccountAddress from '../pages/MyAccount/AccountAddress';
 import FormEditAddress from '../pages/MyAccount/FormEditAddress';
+import Wishlist from '../pages/MyAccount/Wishlist';
+
 const routerAccounts =  {
-    path: "/my-account", 
+    path: "/my-account/", 
     element: <LayoutAccount/>,
     children: [
         {
@@ -24,6 +26,10 @@ const routerAccounts =  {
         {
             path: "edit-address",
             element: <AccountAddress/> 
+        },
+        {
+            path: "wishlist",
+            element: <Wishlist/> 
         },
         {
             path: "edit-address/billing",

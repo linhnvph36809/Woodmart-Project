@@ -23,7 +23,7 @@ const ButtonScrollTop = () => {
   return (
     <>
       <div
-        className={`fixed bottom-[20px] z-[350] w-[50px]
+        className={`fixed bottom-[20px] z-[300] w-[50px]
              h-[50px] rounded-full flex justify-center items-center bg-[#ffffffe6] right-[20px]
              shadow ${
                backToTopButton

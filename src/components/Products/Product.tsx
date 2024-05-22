@@ -1,31 +1,32 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-
-import { Navigation } from "swiper/modules";
 import { GoHeart } from "react-icons/go";
 import { HiStar } from "react-icons/hi";
 import { PiShoppingCartBold } from "react-icons/pi";
 import { LuShuffle } from "react-icons/lu";
 import { LuSearch } from "react-icons/lu";
 
+import SwiperCarousel from "../Swiper/SwiperCarousel";
+import { useGlobalContext } from "../../Layouts";
+
 export default function Product() {
+  const handleBgTransparent = useGlobalContext() ; 
+
   return (
+    <>
     <div
       className="product-hover relative overflow-hidden z-[10px]
-    bg-white rounded-[10px]"
+      bg-white rounded-[10px]"
     >
       <div className="absolute top-3 right-3 z-[5]">
         <GoHeart className="text-xl text-color-black" />
       </div>
       <div
         className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
-      text-xs uppercase text-center wd-text-font-bold py-1"
+        text-xs uppercase text-center wd-text-font-bold py-1"
       >
         New
       </div>
-      <a href="#">
-        <Swiper
+      <a href="#!">
+        {/* <Swiper
           navigation={{
             nextEl: ".next",
             prevEl: ".pre",
@@ -36,21 +37,21 @@ export default function Product() {
         >
           <SwiperSlide>
             <img
-              src="./public/images/product-1.jpg"
+              src="../public/images/product-1.jpg"
               alt=""
               className="rounded-t-[10px] w-full"
             />
           </SwiperSlide>
           <SwiperSlide>
             <img
-              src="./public/images/product-1-min-1.jpg"
+              src="../public/images/product-1-min-1.jpg"
               alt=""
               className="rounded-t-[10px] w-full"
             />
           </SwiperSlide>
           <SwiperSlide>
             <img
-              src="./public/images/product-1-min-2.jpg"
+              src="../public/images/product-1-min-2.jpg"
               alt=""
               className="rounded-t-[10px] w-full"
             />
@@ -87,7 +88,8 @@ export default function Product() {
               />
             </svg>
           </div>
-        </Swiper>
+        </Swiper> */}
+        <SwiperCarousel className="rounded-t-[10px]" sizeIcon="text-xl"/>
       </a>
       <div className="px-4 pt-2 p-4 transition-product relative z-[10] bg-white h-[100px]">
         <div className="flex justify-between items-center">
@@ -109,28 +111,28 @@ export default function Product() {
           <ul className="flex gap-2">
             <li
               className="w-[20px] h-[20px] rounded-full border-[1px]
-          border-solid border-[#00000013] flex justify-center items-center 
-          hover:border-[1px] hover:border-solid hover:border-[#000] transtion-all duration-200 ease-linear"
+              border-solid border-[#00000013] flex justify-center items-center 
+              hover:border-[1px] hover:border-solid hover:border-[#000] transtion-all duration-200 ease-linear"
             >
               <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
             </li>
             <li
               className="w-[20px] h-[20px] rounded-full border-[1px]
-          border-solid border-[#00000013] flex justify-center items-center 
-          hover:border-[1px] hover:border-solid hover:border-[#000] transtion-all duration-200 ease-linear"
+              border-solid border-[#00000013] flex justify-center items-center 
+              hover:border-[1px] hover:border-solid hover:border-[#000] transtion-all duration-200 ease-linear"
             >
               <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
             </li>
             <li
               className="w-[20px] h-[20px] rounded-full border-[1px]
-          border-solid border-[#00000013] flex justify-center items-center 
-          hover:border-[1px] hover:border-solid hover:border-[#000] transtion-all duration-200 ease-linear"
+              border-solid border-[#00000013] flex justify-center items-center 
+              hover:border-[1px] hover:border-solid hover:border-[#000] transtion-all duration-200 ease-linear"
             >
               <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
             </li>
           </ul>
         </div>
-        <div className="flex justify-between mt-3 items-center">
+        <div className="flex justify-between mt-3 items-center transtion-all duration-300 ease-in-out transtion-side-btn">
           <div className="w-8/12 block">
             <a
               href=""
@@ -139,8 +141,7 @@ export default function Product() {
             >
               <span
                 className="text-white text-xs
-              block wd-text-font-bold translate-y-0 transition-btn-cart
-       "
+              block wd-text-font-bold translate-y-0 transition-btn-cart"
               >
                 Add to cart
               </span>
@@ -153,12 +154,13 @@ export default function Product() {
             <a href="">
               <LuShuffle className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
             </a>
-            <a href="">
-              <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
+            <a href="#!">
+              <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" onClick={() => handleBgTransparent("product-popup")}/>
             </a>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 }

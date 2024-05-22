@@ -1,0 +1,16 @@
+{
+    "categorys": [
+        {
+           "id": 1,
+           "category_name": "Chair" ,
+           "image_url": "https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-category-chairs.jpg.webp",
+           "parent_category_id": 1
+        },
+        {
+            "id": 2,
+            "category_name": "Table" ,
+            "image_url": "https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-category-tables.jpg.webp",
+            "parent_category_id": 2
+         }
+    ]
+}

@@ -4,6 +4,8 @@ import { LuRuler } from "react-icons/lu";
 import { LuChevronDown } from "react-icons/lu";
 import { HiStar } from "react-icons/hi";
 import { HiOutlineStar } from "react-icons/hi";
+import ZoomImages from "./ZoomImage";
+
 const PageDetail = () => {
   return (
     <>
@@ -85,32 +87,7 @@ const PageDetail = () => {
           </div>
           <div className="flex justify-between gap-8 mt-3">
             <div className="flex-1">
-              <div className="grid grid-cols-2 gap-5">
-                <div className="relative">
-                  <img
-                    src="./public/images/product-1-min-1.jpg"
-                    alt=""
-                    className="rounded-[10px]"
-                  />
-                  <div className="absolute top-4 right-4 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px] text-xs uppercase text-center wd-text-font-bold py-1">
-                    New
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="./public/images/product-1.jpg"
-                    alt=""
-                    className="rounded-[10px]"
-                  />
-                </div>
-                <div>
-                  <img
-                    src="./public/images/product-1-min-2.jpg"
-                    alt=""
-                    className="rounded-[10px]"
-                  />
-                </div>
-              </div>
+                <ZoomImages />
             </div>
             <div className="w-[553.338px]">
               <div className="flex justify-between">

@@ -1,10 +1,17 @@
 import { LuX } from "react-icons/lu";
+import { Link } from "react-router-dom";
+import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
+import { useGlobalContext } from "../../Layouts/index.ts";
 const CartSideRight = () => {
+
+  const handleBgTransparent = useGlobalContext() ; 
+  
   return (
     <div className="p-4 flex flex-col h-full justify-between">
       <div className="pb-5 flex justify-between border-b-[1px] border-solid boder-[#0000001b]">
         <h4 className="title-font text-xl title-color">Shopping cart</h4>
-        <p className="flex items-center gap-1 title-font text-base text-[#333] hover:opacity-70 transtion-all duration-100 ease-linear hover:cursor-pointer">
+        <p className="flex items-center gap-1 title-font text-base text-[#333] hover:opacity-70
+        transtion-all duration-100 ease-linear hover:cursor-pointer" onClick={() => handleBgTransparent("")}>
           <LuX className="text-xl" /> Close
         </p>
       </div>
@@ -168,12 +175,12 @@ const CartSideRight = () => {
           </div>
         </div>
         <div>
-          <button className="w-full h-[42px] flex justify-center items-center wd-text-font-bold title-color text-[13px] rounded-[32px] bg-[#efefef]">
+          <Link to="cart" className="w-full h-[42px] flex justify-center 
+          items-center wd-text-font-bold title-color text-[13px] rounded-[32px] bg-[#efefef]"
+          onClick={() => handleBgTransparent("")}>  
             View cart
-          </button>
-          <button className="mt-2 w-full h-[42px] flex justify-center items-center wd-text-font-bold text-white text-[13px] rounded-[32px] bg-primary">
-            Checkout
-          </button>
+          </Link>
+          <ButtonPrimary name="Checkout" />
         </div>
       </div>
     </div>
