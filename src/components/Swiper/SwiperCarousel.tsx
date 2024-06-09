@@ -6,7 +6,7 @@ import { Navigation } from "swiper/modules";
 import { LiaAngleLeftSolid } from "react-icons/lia";
 import { LiaAngleRightSolid } from "react-icons/lia";
 
-const SwiperCarousel = ({className,sizeIcon="text-xl"}:{className?:string,sizeIcon?:string}) => {
+const SwiperCarousel = ({className,sizeIcon="text-xl",datas}:{className?:string,sizeIcon?:string,datas?:any}) => {
   return (
     <>
       <Swiper
@@ -14,31 +14,19 @@ const SwiperCarousel = ({className,sizeIcon="text-xl"}:{className?:string,sizeIc
           nextEl: ".next-items",
           prevEl: ".pre-items",
         }}
-        modules={[Navigation]}
+        modules={[Navigation]}  
         loop={true}
-        className={`swiper-product ${className}`}
+        className={`swiper-product h-full ${className}`}
       >
-        <SwiperSlide>
+        {datas && datas.map((data:any) => 
+        <SwiperSlide key={data.id}>
           <img
-            src="../public/images/product-1.jpg"
+            src={data.img}
             alt=""
-            className="w-full"
+            className="w-full h-full object-cover"
           />
         </SwiperSlide>
-        <SwiperSlide>
-          <img
-            src="../public/images/product-1-min-1.jpg"
-            alt=""
-            className="w-full"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img
-            src="../public/images/product-1-min-2.jpg"
-            alt=""
-            className="w-full"
-          />
-        </SwiperSlide>
+        )}
         <div className="next-items absolute top-1/2 right-0 z-10 translate-x-[60px] transition-btn">
           <LiaAngleRightSolid className={`${sizeIcon} text-black hover:text-[#777] hover:cursor-pointer`}/>
         </div>

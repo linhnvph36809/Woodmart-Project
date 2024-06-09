@@ -1,4 +1,7 @@
-const ButtonPrimary = ({className = "w-full",name="",...type}:{className?:string,name?:string,type?:any}) => {
+const ButtonPrimary = (
+  {className = "w-full bg-primary mt-5 hover:bg-[#df8c4f]",name="",...type}
+  :
+  {className?:string,name?:string,type?:any}) => {
 
   return (
     <>

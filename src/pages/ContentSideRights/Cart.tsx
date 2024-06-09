@@ -180,7 +180,7 @@ const CartSideRight = () => {
           onClick={() => handleBgTransparent("")}>  
             View cart
           </Link>
-          <ButtonPrimary name="Checkout" />
+          <ButtonPrimary name="Checkout" className="w-full bg-primary mt-3 hover:bg-[#df8c4f]"/>
         </div>
       </div>
     </div>

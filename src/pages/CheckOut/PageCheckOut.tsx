@@ -1,11 +1,17 @@
 import { LuX } from "react-icons/lu";
+
+import InputPrimary from "../../components/Inputs/InputPrimary";
+import { Link } from "react-router-dom";
+
 const PageCheckOut = () => {
   return (
     <>
       <div className="w-[1000px] mx-auto">
         <div className="flex items-center flex-col">
           <div className="py-5">
+            <Link to="/">
             <img src="./public/images/logo.svg" alt="" />
+            </Link>
           </div>
           <div className="w-[683px] pb-8">
             <div className="flex items-center gap-3 rounded-[10px] p-4 bg-[#1010100d]">
@@ -20,78 +26,30 @@ const PageCheckOut = () => {
               </h3>
             </div>
             <form action="">
-              <div className="grid grid-cols-2 gap-x-6 gap-y-5 mt-5">
+              <div className="grid grid-cols-2 gap-x-6 mt-5">
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    First name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="First name" required/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Last name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Last name" required/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Phone <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Phone" required type="number"/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Email address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Email address" required type="email"/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Country / Region <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Country / Region" required type="email"/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Town / City <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Town / City" required type="email"/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Street address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Street address" required type="email"/>
                 </div>
                 <div className="">
-                  <label className="text-font text-[15px] nav-color mb-2 block">
-                    Postcode / ZIP (optional)
-                  </label>
-                  <input
-                    type="text"
-                    className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                  />
+                  <InputPrimary label="Postcode / ZIP (optional)" type="email"/>
                 </div>
                 <div className="flex mt-5 gap-2">
                   <input
@@ -324,7 +282,7 @@ const PageCheckOut = () => {
                   Your order is expected to leave our warehouse within 1-7 days.
                 </div>
                 <div className="pb-5 border-b">
-                  <div className="flex items-center gap-3 rounded-[10px] p-4 bg-[#1010100d] my-10">
+                  <div className="flex items-center gap-3 rounded-[10px] p-4 bg-[#1010100d] mt-10">
                     <div
                       className="text-base w-[36px] h-[36px] rounded-full
                     flex justify-center items-center bg-primary text-white title-font"
@@ -336,45 +294,61 @@ const PageCheckOut = () => {
                     </h3>
                   </div>
                   <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <input type="radio" />
-                      <label className="text-font text-[15px] title-color">
-                        Direct bank transfer
-                      </label>
-                    </div>
-                    <div className="p-3 bg-[#f8f8f8] text-font text-[15px] text-color-black rounded-[10px] hidden">
-                      Make your payment directly into our bank account. Please
-                      use your Order ID as the payment reference . Your order
-                      will not be shipped until the funds have cleared in our
-                      account.
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <input type="radio" />
-                      <label className="text-font text-[15px] title-color">
-                        Check payments
-                      </label>
-                    </div>
-                    <div className="p-3 bg-[#f8f8f8] text-font text-[15px] text-color-black rounded-[10px] hidden">
-                      Please send a check to Store Name, Store Street, Store
-                      Town, Store State / County, Store Postcode.
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <input type="radio" />
-                      <label className="text-font text-[15px] title-color">
-                        Cash on delivery
-                      </label>
-                    </div>
-                    <div className="p-3 bg-[#f8f8f8] text-font text-[15px] text-color-black rounded-[10px] hidden">
-                      Pay with cash upon delivery.
-                    </div>
+                    <ul className="flex gap-3 py-4">
+                      <li>
+                        <a href="#">
+                          <button
+                            className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
+                            border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
+                            text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
+                            focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
+                            duration-300 ease-linear"
+                          >
+                            <img
+                              className="w-[20px] rounded"
+                              src="https://admin.softmaster.vn/_default_upload_bucket/154573132_152687123342645_1913382004205201124_n.png"
+                              alt=""
+                            />
+                            <span>Pay with VNPAY</span>
+                          </button>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <button
+                            className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
+                            border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
+                            text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
+                            focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
+                            duration-300 ease-linear"
+                          >
+                            <img
+                              className="w-[20px] rounded"
+                              src="https://media.licdn.com/dms/image/C560BAQF8Kkc256sg1g/company-logo_200_200/0/1630655399134/momo_mservice_logo?e=2147483647&v=beta&t=9lmTRindA_du_ZphKENZIoQzeb5XnPFGeK3dFKCy_8I"
+                              alt=""
+                            />
+                            <span>Pay with MOMO</span>
+                          </button>
+                        </a>
+                      </li>
+                      <li>
+                        <button
+                          className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
+                            border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
+                            text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
+                            focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
+                            duration-300 ease-linear"
+                        >
+                          <span>Cash on delivery</span>
+                        </button>
+                      </li>
+                    </ul>
                   </div>
                 </div>
                 <div>
-                    <button className="w-full h-[48px] bg-primary text-white wd-text-font-bold rounded-[35px] my-10">Place order</button>
+                  <button className="w-full h-[48px] bg-primary text-white wd-text-font-bold rounded-[35px] my-10">
+                    Place order
+                  </button>
                 </div>
               </div>
             </form>

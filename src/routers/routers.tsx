@@ -12,6 +12,7 @@ import PageOrderComplete from '../pages/OrderComplete/PageOrderComplete';
 import routerAccounts from './routerAccounts';
 import Login from '../pages/Authentication/Login';
 import ForgetPassword from '../pages/Authentication/ForgetPassword';
+import Blog from '../pages/Blog/Blog';
 const routers = createBrowserRouter([
     {
         path: "/",
@@ -22,7 +23,7 @@ const routers = createBrowserRouter([
                 element: <Home/> 
             },
             {
-                path: "product-category",
+                path: "product-category/:id",
                 element: <PageCategory/>
             },
             {
@@ -36,6 +37,10 @@ const routers = createBrowserRouter([
             {
                 path: "about-us",
                 element: <PageAbout/>
+            },
+            {
+                path: "blog",
+                element: <Blog/>
             },
             {
                 path: "gift-cards",

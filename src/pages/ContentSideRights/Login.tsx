@@ -2,7 +2,7 @@ import { LuX } from "react-icons/lu";
 import { LuUser2 } from "react-icons/lu";
 
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
-import InputPrimary from "../../components/Input/InputPrimary";
+import InputPrimary from "../../components/Inputs/InputPrimary";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../Layouts";
 
@@ -25,7 +25,7 @@ const Login = () => {
       <form action="" className="pb-3 border-b">
         <InputPrimary label="Username or email address" required={true} />
         <InputPrimary label="Password" required={true} />
-        <ButtonPrimary name="Log in" width="w-full" type="submit" />
+        <ButtonPrimary name="Log in" type="submit" />
         <div className="mt-5 flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <input type="checkbox" />

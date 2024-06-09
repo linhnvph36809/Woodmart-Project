@@ -7,6 +7,7 @@ import { LuShuffle } from "react-icons/lu";
 import { LiaUser } from "react-icons/lia";
 import { LuSearch } from "react-icons/lu";
 import { PiShoppingCartBold } from "react-icons/pi";
+import Category from "./Category.tsx";
 
 const Header = () => {
   const [lastScrollTop, setLastScrollTop] = useState(0);
@@ -73,6 +74,14 @@ const Header = () => {
                     className="text-[13px] text-font nav-color hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
                   >
                     Showrooms
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="blog"
+                    className="text-[13px] text-font nav-color hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
+                  >
+                    Blog
                   </Link>
                 </li>
                 <li>
@@ -191,138 +200,7 @@ const Header = () => {
             </div>
           </div>
           <div className="py-3 flex items-center justify-between">
-            <ul className="flex gap-7">
-              <li className="">
-                <Link
-                  to="product-category"
-                  className="flex items-center gap-2 header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  <img
-                    src="./public/images/Chair.svg"
-                    alt=""
-                    className="w-[18px]"
-                  />
-                  Chairs
-                </Link>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/tables.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Tables
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/sofa.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Sofas
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/armchairs.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Armchairs
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/beds.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Beds
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/storage.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Storage
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/textiles.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Textiles
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/lighting.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Lighting
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/toys.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Toys
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <img
-                  src="./public/images/decor.svg"
-                  alt=""
-                  className="w-[18px]"
-                />
-                <a
-                  href="#"
-                  className="header-font text-[14px] block hover:text-[#f59a57] hover:transition-all hover:duration-300 hover:ease-linear"
-                >
-                  Decor
-                </a>
-              </li>
-            </ul>
+            <Category />
             <div className="text-[12px] nav-color title-font bg-[#e0eaf0] rounded-[35px] min-h-[28px] flex items-center px-3 hover:bg-[#d7e5ed] hover:cursor-pointer">
               Free shipping for all orders of $1.300
             </div>

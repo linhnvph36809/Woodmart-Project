@@ -1,4 +1,4 @@
-const BannerGolobal = ({title}: {title:string}) => {
+const BannerGolobal = ({title}: {title?:string}) => {
     return (
         <>
         <div className="w-full h-[325px] bg-[url('../public/images/banner-5.jpg')] flex items-center">

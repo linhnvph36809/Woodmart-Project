@@ -1,4 +1,4 @@
-const InputPrimary = ({label,required}:{label:string,required:boolean}) => {
+const InputPrimary = ({label,required,type="text"}:{label:string,required?:boolean,type?:string}) => {
     return (
         <>
             <div className="mt-5">
@@ -7,7 +7,7 @@ const InputPrimary = ({label,required}:{label:string,required:boolean}) => {
                     {required && <span className="text-red-500"> *</span>}
                 </label>
                 <input
-                    type="text" 
+                    type={type}
                     className="text-color-black text-[15px] outline-none pl-5
                     w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
                 />
