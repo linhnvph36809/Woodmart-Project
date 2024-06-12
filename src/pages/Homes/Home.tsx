@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 
 import Banner from "./Banner";
 import Categories from "./Categorys";
-import SlibarProduct from "./SlibarProduct";
+// import SlibarProduct from "./SlibarProduct";
 import { useGlobalContext } from "../../Layouts";
 import PostsFooter from "../../components/Footers/PostsFooter";
 import ProductBestsellers from "./ProductBestsellers";
+import Posts from "./Posts";
 
 const Home = () => {
-  const handleBgTransparent = useGlobalContext() ; 
+  const handleBgTransparent = useGlobalContext();
 
   return (
     <>
@@ -287,7 +288,7 @@ const Home = () => {
               </p>
             </div>
             <div className="">
-              <SlibarProduct />
+              {/* <SlibarProduct /> */}
             </div>
           </div>
           <div className="w-4/12">
@@ -350,9 +351,12 @@ const Home = () => {
                     SØLREM furniture collection
                   </h4>
                   <div className="flex justify-center">
-                    <div className="w-[80px] h-[80px] rounded-full flex
+                    <div
+                      className="w-[80px] h-[80px] rounded-full flex
                     justify-center items-center border-[2px] border-solid
-                    border-[#c2beb9] hover:cursor-pointer" onClick={() => handleBgTransparent("video")}>
+                    border-[#c2beb9] hover:cursor-pointer"
+                      onClick={() => handleBgTransparent("video")}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -378,83 +382,16 @@ const Home = () => {
           <h4 className="text-[32px] title-color title-font">
             Latest articles
           </h4>
-          <Link to="blog" className="rounded-[35px] bg-white nav-color w-[146px] py-2 px-5 wd-text-font-bold
-          text-[13px] flex items-center justify-between gap-1 h-[42px] hover:bg-[#ececec] transtion-all duration-300 ease-in-out">
-          Visit the Blog 
-          <FaArrowRightLong />
+          <Link
+            to="blog"
+            className="rounded-[35px] bg-white nav-color w-[146px] py-2 px-5 wd-text-font-bold
+          text-[13px] flex items-center justify-between gap-1 h-[42px] hover:bg-[#ececec] transtion-all duration-300 ease-in-out"
+          >
+            Visit the Blog
+            <FaArrowRightLong />
           </Link>
         </div>
-        <div className="flex justify-between mt-8">
-          <div className="w-[327px] bg-white border-gray-200 rounded-lg">
-            <a href="#" className="relative">
-              <img
-                className="rounded-t-lg"
-                src="./public/images/articles-1.jpg"
-                alt=""
-              />
-              <div className="absolute left-0 right-0 bottom-0 flex justify-between px-5 py-3 bg-black bg-opacity-5">
-                <div className="flex items-center gap-2">
-                  <img
-                    src="./public/images/user-1.webp"
-                    alt=""
-                    className="rounded-full w-[22px] h-[22px] object-cover"
-                  />
-                  <p className="text-sm text-[#f8f6f3] text-font">Mr. Mackay</p>
-                </div>
-                <div className="flex gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5 text-[#f8f6f3]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5 text-[#f8f6f3]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </a>
-            <div className="p-6">
-              <div className="text-[13px] text-[#a5a5a5] text-font flex gap-2 mb-2">
-                <p className="#">Decoration</p>
-                <span className="">/</span>
-                <p>26 May 2023 </p>
-              </div>
-              <a href="#">
-                <h5 className="nav-color text-lg title-font tracking-tight">
-                  In the heart of Valencia
-                </h5>
-              </a>
-              <p className="text-font text-base text-color-black my-3">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-              <a href="#" className="color-primary text-[13px] title-font-800">
-                Continue reading
-              </a>
-            </div>
-          </div>
-        </div>
+        <Posts />
         <PostsFooter />
       </div>
     </>

@@ -237,9 +237,10 @@
 }
 
 .grid-product-l {
-  display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  grid-template-rows: repeat(4,398px);
+
 }
 
 .grid-product-xl {
@@ -346,4 +347,12 @@
 @keyframes hide-and-show {
   0% {opacity: 0;}
   100%{opacity: 1;}
+}
+
+.hidden-content-post{
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

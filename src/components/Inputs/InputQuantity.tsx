@@ -8,7 +8,6 @@ const InputQuantity = () => {
   return (
     <>
       <div>
-        <form action="">
           <div className="flex h-[42px] rounded-[35px] border-[1px] border-solid border-[rgba(0,0,0,.1)]">
             <div
               className="flex justify-center items-center w-[25px] border-r-[1px] btn-quantity
@@ -36,7 +35,6 @@ const InputQuantity = () => {
               <RiAddFill className="w-3 h-3 nav-color font-semibold transtion-all duration-300 ease-linear icon-quantity" />
             </div>
           </div>
-        </form>
       </div>
     </>
   );

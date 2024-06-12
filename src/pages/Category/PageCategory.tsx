@@ -1,10 +1,27 @@
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import InputRange from "./InputRange";
 import Product from "../../components/Products/Product";
 import { LuChevronRight } from "react-icons/lu";
+import { getProductByCategoryId } from "../../api/product.api";
+import Spinner from "../../components/Spinner/Spinner";
+
 const PageCategory = () => {
+  let { id } = useParams();
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    (async function () {
+      if (id) {
+        const { data } = await getProductByCategoryId(id);
+        setProducts(data || []);
+      }
+    })();
+  }, [id]);
+
   return (
     <>
-      <div className="h-[294px] bg-[url('./public/images/banner-sofas.jpg')] flex items-center">
+      <div className="h-[294px] bg-[url('https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-pt-sofas-opt.jpg')] flex items-center">
         <div className="content">
           <h1 className="flex items-center gap-2 title-font text-[78px] text-white">
             <svg
@@ -33,7 +50,7 @@ const PageCategory = () => {
             </h5>
             <InputRange />
 
-            <form action="">
+            {/* <form action="">
               <h5 className="mb-6 mt-8 title-font nav-link text-base">
                 Filter By Brand
               </h5>
@@ -134,7 +151,7 @@ const PageCategory = () => {
                   </li>
                 </ul>
               </div>
-            </form>
+            </form> */}
             <form action="">
               <h5 className="mb-6 mt-8 title-font nav-link text-base">Color</h5>
               <div className="relative w-full">
@@ -212,34 +229,19 @@ const PageCategory = () => {
               </h5>
               <div className="mt-4 pb-8 border-b-[1px] border-solid border-[#0000001b]">
                 <ul>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
+                  <li className="flex justify-between items-center gap-2 mb-3">
+                    <input
+                      id="default-checkbox"
+                      type="checkbox"
+                      defaultValue=""
+                      className="w-4 h-4 accent-[#df8c4f] text-white bg-white-100 border-gray-300 rounded"
+                    />
+                    <label
+                      htmlFor="default-checkbox"
                       className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
                     >
-                      <div
-                        className="w-[15px] h-[15px] border-2 border-solid border-[#0000001b] relative 
-                      transtion-all duration-300 find-materials-transition"
-                      >
-                        <div className="absolute top-0 right-0 left-0 bottom-0 flex justify-center items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-3 h-3 text-white"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m4.5 12.75 6 6 9-13.5"
-                            />
-                          </svg>
-                        </div>
-                      </div>
                       American Silver
-                    </a>
+                    </label>
                     <span
                       className="min-w-[30px] h-[20px] flex justify-center
                          items-center text-xs text-color-black rounded-[35px] 
@@ -253,7 +255,7 @@ const PageCategory = () => {
                 </ul>
               </div>
             </div>
-            <div>
+            {/* <div>
               <h5 className="mb-6 mt-8 title-font nav-link text-base">
                 Product Status
               </h5>
@@ -319,11 +321,11 @@ const PageCategory = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="w-9/12">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-5">
             <div className="text-font text-[15px] text-[#777777]">
               Showing 1–12 of 16 results
             </div>
@@ -393,28 +395,62 @@ const PageCategory = () => {
               </div>
             </div>
           </div>
-          <div className="grid-product-l my-10">
-            <Product/>
-            <Product/>
-            <Product/>
-            <Product/>
-          </div>
-          <div>
-            <ul className="flex gap-1 justify-center">
-              <li>
-               <a href="#" className="min-w-[34px] h-[34px] text-sm text-white
-               wd-text-font-bold rounded bg-primary flex justify-center items-center">1</a>
-              </li>
-              <li>
-               <a href="#" className="min-w-[34px] h-[34px] text-sm 
-               wd-text-font-bold rounded flex justify-center items-center">2</a>
-              </li>
-              <li>
-               <a href="#" className="min-w-[34px] h-[34px] text-sm 
-               wd-text-font-bold rounded flex justify-center items-center"><LuChevronRight className="text-lg title-color"/></a>
-              </li>
-            </ul>
-          </div>
+          {products.length > 0 ? (
+            <div className="grid grid-product-l gap-y-6 justify-between call-api-success">
+              {products.map((product: any) => (
+                <Product
+                  key={product.id}
+                  data={{
+                    id: product.id,
+                    name: product.product_name,
+                    price: product.price,
+                    reviews: product.reviews_avg_stars,
+                    variants: product.variants,
+                    category: product.category,
+                    img: product.product_theme,
+                    description: product.product_description,
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="h-[500px] flex items-center justify-center">
+              <Spinner size={35} />
+            </div>
+          )}
+          {products.length > 12 && (
+            <div>
+              <ul className="flex gap-1 justify-center">
+                <li>
+                  <a
+                    href="#"
+                    className="min-w-[34px] h-[34px] text-sm text-white
+               wd-text-font-bold rounded bg-primary flex justify-center items-center"
+                  >
+                    1
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="min-w-[34px] h-[34px] text-sm 
+               wd-text-font-bold rounded flex justify-center items-center"
+                  >
+                    2
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="min-w-[34px] h-[34px] text-sm 
+               wd-text-font-bold rounded flex justify-center items-center"
+                  >
+                    <LuChevronRight className="text-lg title-color" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -10,8 +10,10 @@ import SwiperCarousel from "../Swiper/SwiperCarousel";
 import { BackGroundTransparent } from "../../Layouts";
 import ProductColor from "./ProductColor";
 import ProductPopup from "./ProductPopup";
+import { Link } from "react-router-dom";
 
 export default memo(function Products({ data }: { data: any }) {
+  
   const image = useRef<any>("");
 
   const [selectProduct, setSelectProduct] = useState<boolean>(false);
@@ -31,14 +33,13 @@ export default memo(function Products({ data }: { data: any }) {
     image.current = variantProduct.img;
   }
 
-  const { product_name, price, reviews, variants, category } = data.product;
-  
   return (
     <>
       <div
-        className={`${selectProduct || "product-hover"
-          } relative overflow-hidden z-[10px]
-                bg-white rounded-[10px] flex flex-col justify-between`}
+        className={`${
+          selectProduct || "product-hover"
+        } relative overflow-hidden z-[10px]
+          bg-white rounded-[10px] flex flex-col justify-between h-full`}
       >
         <div className="absolute top-3 right-3 z-[5]">
           <GoHeart className="text-xl text-color-black" />
@@ -50,21 +51,23 @@ export default memo(function Products({ data }: { data: any }) {
           New
         </div>
         <div className="relative block overflow-hidden flex-1">
-          <a href="#!">
+          <Link to={`/product-detail/${data.id}`}>
             {image.current ? (
               <img
                 src={image.current}
                 alt=""
                 className="w-full h-full object-cover"
               />
-            ) : (
+            ) : data.variants.length > 0 ? (
               <SwiperCarousel
                 className="rounded-t-[10px]"
                 sizeIcon="text-xl"
-                datas={variants}
+                datas={data.variants}
               />
+            ) : (
+             <img src={data.img} alt="ảnh lỗi" className="h-full object-cover" />
             )}
-          </a>
+          </Link>
           {selectProduct && (
             <div
               className={`absolute w-full top-0 right-0 left-0 bottom-0 bg-[#ffffffe6] z-[20]`}
@@ -82,8 +85,8 @@ export default memo(function Products({ data }: { data: any }) {
                 </p>
                 <div className="flex justify-center">
                   <ProductColor
-                    datas={variants}
-                    size={27}
+                    datas={data.variants}
+                    size={25}
                     gap={3}
                     handlerSelected={setVariantProduct}
                     colorSelected={variantProduct}
@@ -112,26 +115,31 @@ export default memo(function Products({ data }: { data: any }) {
           <div className="flex justify-between items-center">
             <a href="#">
               <h5 className="text-[15px] nav-color title-font tracking-tight">
-                {product_name}
+                {data.name}
               </h5>
             </a>
             <div className="flex items-center text-[15px] wd-text-font-bold nav-color">
-              {+reviews[0].average_rating}
-              <HiStar className="text-[22px] text-[#EABE12]" />
+              {Array.isArray(data.reviews)
+                ? +data.reviews[0].average_rating 
+                : (data.reviews_avg_stars && +data.reviews_avg_stars)}
+              {
+                data.reviews_avg_stars || Array.isArray(data.reviews) && data.reviews.length > 0 &&
+                <HiStar className="text-[22px] text-[#EABE12]" />
+              }
             </div>
           </div>
           <a
             href="#"
             className="my-2 text-sm text-[#a5a5a5] wd-text-font block"
           >
-            {category?.category_name}
+            {data.category?.category_name}
           </a>
           <div className="flex justify-between items-center">
             <h3 className="wd-text-font-bold text-base color-primary">
-              ${variantProduct.price || price}
+              ${variantProduct.price || data.price}
             </h3>
             <ProductColor
-              datas={variants}
+              datas={data.variants}
               handlerSelected={setVariantProduct}
               colorSelected={variantProduct}
               changeImage
@@ -144,7 +152,7 @@ export default memo(function Products({ data }: { data: any }) {
                 className="flex justify-center bg-primary rounded-[35px] h-[36px] items-center
                 overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear"
                 onClick={() =>
-                  variants.length > 0
+                  data.variants.length > 0
                     ? setSelectProduct((state) => !state)
                     : "none"
                 }
@@ -153,7 +161,7 @@ export default memo(function Products({ data }: { data: any }) {
                   className="text-white text-xs
                   block wd-text-font-bold translate-y-0 transition-btn-cart"
                 >
-                  {variants.length > 0 ? "Select options" : "Add to cart"}
+                  {data.variants.length > 0 ? "Select options" : "Add to cart"}
                 </span>
                 <span className="absolute block w-full bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart">
                   <PiShoppingCartBold className="w-[22px] font-bold h-[22px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100" />
@@ -164,17 +172,16 @@ export default memo(function Products({ data }: { data: any }) {
               <a href="">
                 <LuShuffle className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
               </a>
-              <a
-                href="#!"
+              <p className="transtion-all duration-100 ease-linear hover:opacity-70 hover:cursor-pointer"
                 onClick={() =>
                   handlerSetProductPopup({
                     active: true,
-                    product: data.product,
+                    product: data,
                   })
                 }
               >
                 <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-              </a>
+              </p>
             </div>
           </div>
         </div>

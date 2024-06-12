@@ -13,13 +13,25 @@ const ProductBestsellers = memo(() => {
     })();
   }, []);
 
+  console.log(products);
+  
+
   return (
     <>
       {" "}
       {products.length > 0 ? (
         <div className="grid grid-product-s gap-y-6 justify-between call-api-success">
           {products.map((product: any) => (
-            <Products key={product.id} data={product} />
+            <Products key={product.id} data={{
+              id:product.product.id,
+              name: product.product.product_name,
+              price: product.product.price,
+              reviews: product.product.reviews,     
+              variants: product.product.variants,
+              category: product.product.category,
+              img: product.product.product_theme,
+              description: ""
+            }} />
           ))}
         </div>
       ) : (

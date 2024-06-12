@@ -5,8 +5,38 @@ import { LuChevronDown } from "react-icons/lu";
 import { HiStar } from "react-icons/hi";
 import { HiOutlineStar } from "react-icons/hi";
 import ZoomImages from "./ZoomImage";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  getProductByCategoryId,
+  getProductDetail,
+} from "../../api/product.api";
+import InputQuantity from "../../components/Inputs/InputQuantity";
+import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
+import SlibarProduct from "../Homes/SlibarProduct";
 
 const PageDetail = () => {
+  const { id } = useParams();
+
+  const [product, setProduct] = useState<any>({});
+  const [productByCategory, setProductByCategory] = useState<any>([]);
+
+  useEffect(() => {
+    (async function () {
+      if (id) {
+        const product = getProductDetail(id);
+        const productByCategorys = getProductByCategoryId(2);
+        Promise.all([product, productByCategorys])
+          .then((values) => {
+            setProduct(values[0].data);
+            setProductByCategory(values[1].data.slice(0,11));
+          })
+          .catch((err) => {});
+      }
+    })();
+  }, [id]);
+
+
   return (
     <>
       <div className="bg-white pb-10">
@@ -34,9 +64,7 @@ const PageDetail = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="nav-color text-[15px] title-font">
-                  Daiki Studio
-                </a>
+                <a href="#" className="nav-color text-[15px] title-font"></a>
               </li>
             </ul>
             <div className="flex gap-2">
@@ -87,11 +115,21 @@ const PageDetail = () => {
           </div>
           <div className="flex justify-between gap-8 mt-3">
             <div className="flex-1">
-                <ZoomImages />
+              {Array.isArray(product.variant) && product.variant.length > 0 ? (
+                <ZoomImages datas={product.variant} />
+              ) : (
+                <img
+                  src={product.product?.product_theme}
+                  alt=""
+                  className="w-full h-full"
+                />
+              )}
             </div>
             <div className="w-[553.338px]">
               <div className="flex justify-between">
-                <h1 className="text-[28px] title-font-800">Daiki Studio</h1>
+                <h1 className="text-[28px] title-font-800">
+                  {product.product?.product_name}
+                </h1>
                 <a href="#" className="block p-2 shadow rounded-[6.6px]">
                   <img
                     src="./public/images/brand-minotti.jpg.webp"
@@ -103,7 +141,7 @@ const PageDetail = () => {
               <div className="nav-color wd-text-font-bold text-base mt-3">
                 SKU:{" "}
                 <span className="text-[15px] text-font text-color-black">
-                  AR-210
+                  {product.product?.id}
                 </span>
               </div>
               <div className="p-5 my-5 flex gap-4 bg-[#10101008] rounded-[10px]">
@@ -125,74 +163,25 @@ const PageDetail = () => {
                 </div>
               </div>
               <p className="text-base text-color-black text-font">
-                The compact and well-proportioned silhouette of both the seats
-                and the small sofa, opens up to a new way of using the dining
-                space: as a living room within the living room, a hybrid
-                situation.
+                {product.product?.product_description}
               </p>
               <h1 className="text-[34px] title-font-800 color-primary py-4">
-                <span>$</span>1,200.00
+                <span>$</span>
+                {product.product?.price}
               </h1>
-              <div className="flex justify-between gap-2">
-                <div>
-                  <form action="">
-                    <div className="flex h-[42px] rounded-[35px] border-[1px] border-solid border-[rgba(0,0,0,.1)]">
-                      <div className="flex justify-center items-center w-[25px] border-r-[1px] border-solid border-[rgba(0,0,0,.1)] hover:cursor-pointer">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-3 h-3 nav-color font-semibold"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 12h14"
-                          />
-                        </svg>
-                      </div>
-                      <input
-                        type="text"
-                        className="w-[30px] text-center focus:outline-none text-sm text-font text-color-black"
-                        value={1}
-                      />
-
-                      <div className="flex justify-center items-center w-[25px] border-l-[1px] border-solid border-[rgba(0,0,0,.1)] hover:cursor-pointer">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-3 h-3 nav-color font-semibold"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 4.5v15m7.5-7.5h-15"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </form>
+              <form action="">
+                <div className="flex justify-between items-center gap-2">
+                  <InputQuantity />
+                  <ButtonPrimary
+                    name="Add to cart"
+                    className="w-full bg-primary m-0 hover:bg-[#df8c4f]"
+                  />
+                  <ButtonPrimary
+                    name="Buy now"
+                    className="w-full bg-[#101010e6] m-0 hover:bg-[#333333]"
+                  />
                 </div>
-                <button
-                  className="flex-1 flex justify-center items-center
-                 bg-primary rounded-[35px] text-[13px] text-white
-                  wd-text-font-bold hover:bg-[#df8c4f]"
-                >
-                  Add to cart
-                </button>
-                <button
-                  className="flex-1 flex justify-center items-center 
-                bg-[#101010e6] rounded-[35px] text-[13px] text-white 
-                wd-text-font-bold hover:opacity-90"
-                >
-                  Buy now
-                </button>
-              </div>
+              </form>
               <div>
                 <ul className="flex gap-5 my-10">
                   <li>
@@ -264,46 +253,62 @@ const PageDetail = () => {
                 with 2-D plywood.
               </p>
               <ul>
-                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                {/* <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
                   <h4 className="wd-text-font-bold text-sm title-color">
                     Brand
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
                     Hay
                   </span>
-                </li>
-                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                </li> */}
+                {/* <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
                   <h4 className="wd-text-font-bold text-sm title-color">
                     Collection
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
                     Emmanuel Gallina
                   </span>
-                </li>
+                </li> */}
                 <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
                   <h4 className="wd-text-font-bold text-sm title-color">
                     Color
                   </h4>
-                  <span className="text-font text-color-black text-[13px]">
-                    Brown Sugar
-                  </span>
+                  <div className="flex gap-2">
+                    {product?.variant && product.variant.length > 0 ? (
+                      product.variant.map((variant: any) => (
+                        <span
+                          key={variant.id}
+                          className="text-font text-color-black text-[13px]"
+                        >
+                          {variant.color.color_name}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-font text-color-black text-[13px]">
+                        Trống
+                      </span>
+                    )}
+                  </div>
                 </li>
                 <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
                   <h4 className="wd-text-font-bold text-sm title-color">
                     Materials
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
-                    Fabric , Wood
+                    {Array.isArray(product.variant) &&
+                    product.variant.length > 0
+                      ? product.variant[0].material.material_value
+                      : "Trống"}
                   </span>
                 </li>
-                <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
+                {/* <li className="flex justify-between py-4 border-b-[1px] border-solid border-[#0000001b]">
                   <h4 className="wd-text-font-bold text-sm title-color">
                     General dimensions
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
                     Fabric , Wood
                   </span>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div className="w-6/12">
@@ -316,13 +321,7 @@ const PageDetail = () => {
                 className="rounded-[10px] my-5"
               />
               <p className="text-font text-sm text-color-black pt-3">
-                The company reinterprets tradition by calling upon international
-                designers to work with them and developing new technologies and
-                materials to guarantee innovative and surprising results.
-                Passion is the engine that drives the brand – together with its
-                renowned creatives and high-profile collaborators – to search
-                for original solutions using advanced materials, methods, tools,
-                and technologies.
+                {product.product?.product_description}
               </p>
               <ul className="mt-5 pl-2">
                 <li className="flex items-center gap-2 text-font text-sm text-color-black mb-2">
@@ -349,12 +348,12 @@ const PageDetail = () => {
               </ul>
             </div>
           </div>
-          <div className="bg-white rounded-[10px] my-16 p-4">
+          {/* <div className="bg-white rounded-[10px] my-16 p-4">
             <h1 className="text-xl title-color title-font pt-3">About brand</h1>
             <div className="flex mt-5 gap-8">
               <div className="w-[650px]">
                 <img
-                  src="./public/images/brand-about-flos.jpg.webp"
+                  src="../public/images/brand-about-flos.jpg.webp"
                   alt=""
                   className="rounded-[10px] h-[430px] object-cover"
                 />
@@ -369,22 +368,22 @@ const PageDetail = () => {
                       Share:
                       <img
                         className="w-[30px]"
-                        src="./public/images/facebook.png"
+                        src="../public/images/facebook.png"
                         alt=""
                       />
                       <img
                         className="w-[30px]"
-                        src="./public/images/x.png"
+                        src="../public/images/x.png"
                         alt=""
                       />
                       <img
                         className="w-[30px]"
-                        src="./public/images/pinterest.png"
+                        src="../public/images/pinterest.png"
                         alt=""
                       />
                       <img
                         className="w-[30px]"
-                        src="./public/images/in.png"
+                        src="../public/images/in.png"
                         alt=""
                       />
                     </div>
@@ -468,7 +467,7 @@ const PageDetail = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="bg-white rounded-[10px] mb-16 p-4 pb-5">
             <h1 className="text-xl title-color title-font">Customer Reviews</h1>
             <div className="flex justify-between gap-10">
@@ -641,12 +640,16 @@ const PageDetail = () => {
               There are no reviews matching the given conditions.
             </p>
           </div>
-          <div>
-            <h3 className="title-color title-font text-[22px] mb-3">
-              Related Products
-            </h3>
-            <div>Products</div>
-          </div>
+          {productByCategory && productByCategory.length > 0 && (
+            <div>
+              <h3 className="title-color title-font text-[22px] mb-3">
+                Related Products
+              </h3>
+              <div>
+                <SlibarProduct columns={{ sm: 2, lg: 4, xl: 5 }} datas={productByCategory} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

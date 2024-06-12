@@ -15,15 +15,6 @@ const ProductPopup = ({
 }) => {
   const [variantProduct, setVariantProduct] = useState<any>({});
 
-  const {
-    product_name,
-    price,
-    product_description,
-    reviews,
-    variants,
-    category,
-  } = data;
-  console.log();
 
   return (
     <>
@@ -40,12 +31,14 @@ const ProductPopup = ({
                 alt=""
                 className="w-full h-full object-cover"
               />
-            ) : (
+            ) : data.variants.length > 0 ? (
               <SwiperCarousel
-                className="rounded-[10px] h-full"
-                sizeIcon="text-3xl"
-                datas={variants}
+                className="rounded-t-[10px]"
+                sizeIcon="text-xl"
+                datas={data.variants}
               />
+            ) : (
+             <img src={data.img} alt="ảnh lỗi" className="h-full object-cover" />
             )}
             <a
               href="#"
@@ -60,7 +53,7 @@ const ProductPopup = ({
         </div>
         <div className="w-6/12 overflow-auto scroll-cart-items pr-8 relative">
           <h1 className="text-[26px] title-font text-[#333333] mb-3">
-            <a href="#">{product_name}</a>
+            <a href="#">{data.name}</a>
           </h1>
           <a href="#">
             <img
@@ -72,7 +65,11 @@ const ProductPopup = ({
           <div className="flex gap-1 items-center my-3">
             <div className="flex items-center text-[15px] title-font">
               Đánh giá:{" "}
-              <span className="ml-2">{+reviews[0].average_rating}</span>
+              <span className="ml-2">
+              {Array.isArray(data.reviews)
+                ? +data.reviews[0].average_rating
+                : data.reviews_avg_stars}
+              </span>
               <HiStar className="text-xl text-[#EABE12]" />
             </div>
             <p className="text-color-black text-[15px] text-font">
@@ -81,16 +78,16 @@ const ProductPopup = ({
             </p>
           </div>
           <h3 className="color-primary title-font text-2xl wd-text-font-bold">
-            ${variantProduct?.price || price}
+            ${variantProduct?.price || data.price}
           </h3>
           <p className="text-color-black text-[15px] text-font my-4">
-            {product_description}
+            {data.description}
           </p>
           <div className="flex items-center gap-4 my-4 wd-text-font-bold title-color text-[15px]">
             Color:
             <ProductColor
-              datas={variants}
-              size={27}
+              datas={data.variants}
+              size={25}
               gap={3}
               handlerSelected={setVariantProduct}
               colorSelected={variantProduct}
@@ -113,20 +110,20 @@ const ProductPopup = ({
               SKU:
               <span className="text-font text-color-black pl-1">
                 {" "}
-                {category.id}
+                {data.category.id}
               </span>
             </li>
             <li className="nav-color wd-text-font-bold text-[15px] pb-3">
               Category:
               <span className="text-font text-color-black pl-1">
-                {category.category_name}
+                {data.category.category_name}
               </span>
             </li>
             <li className="nav-color wd-text-font-bold text-[15px] pb-3">
               Share:
               <span className="text-font text-color-black pl-1">
                 {" "}
-                {category.id}
+                {data.category.id}
               </span>
             </li>
           </ul>

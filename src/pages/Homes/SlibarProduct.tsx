@@ -3,16 +3,11 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Navigation } from "swiper/modules";
 
-import { GoHeart } from "react-icons/go";
-
-import { PiShoppingCartBold } from "react-icons/pi";
-import { LuShuffle } from "react-icons/lu";
-import { LuSearch } from "react-icons/lu";
 import { LiaAngleLeftSolid } from "react-icons/lia";
 import { LiaAngleRightSolid } from "react-icons/lia";
-import SwiperCarousel from "../../components/Swiper/SwiperCarousel";
+import Product from "../../components/Products/Product";
 
-const SlibarProduct = () => {
+const SlibarProduct = ({ datas, columns }: { datas: any; columns?: any }) => {
   return (
     <div className="relative furniture-collection">
       <Swiper
@@ -24,341 +19,50 @@ const SlibarProduct = () => {
         }}
         breakpoints={{
           640: {
-            slidesPerView: 2,
+            slidesPerView: columns.sm,
             spaceBetween: 20,
           },
           768: {
-            slidesPerView: 3,
+            slidesPerView: columns.lg,
             spaceBetween: 10,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: columns.xl,
             spaceBetween: 20,
           },
         }}
         modules={[Navigation]}
         className="swiperProduct"
       >
-        <SwiperSlide>
-          <div
-            className="product-hover relative overflow-hidden z-[10px]
-            bg-white rounded-[10px] flex flex-col justify-between w-[287px] h-[430px]"
-          >
-            <div className="absolute top-3 right-3 z-[5]">
-            <GoHeart  className="text-xl text-color-black"/>
-            </div>
-            {/* <div
-              className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
-              text-xs uppercase text-center wd-text-font-bold py-1"
-            >
-              New
-            </div> */}
-            <a href="#">
-            <SwiperCarousel/>
-            </a>
-            <div className="px-4 pt-2 p-4 transition-product translate-y-0 relative z-[10] bg-white">
-              <div className="flex justify-between items-center">
-                <a href="#">
-                  <h5 className="text-[15px] nav-color title-font tracking-tight">
-                    Giro
-                  </h5>
-                </a>
-              </div>
-              <a
-                href="#"
-                className="my-2 text-sm text-[#a5a5a5] wd-text-font block"
-              >
-                Chairs
-              </a>
-              <div className="flex justify-between">
-                <h3 className="wd-text-font-bold text-base color-primary">
-                  $320.00
-                </h3>
-                {/* <ul className="flex gap-2">
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                </ul> */}
-              </div>
-              <div className="flex justify-between mt-3 items-center">
-                <div className="w-8/12 block">
-                  <a
-                    href=""
-                    className="flex justify-center bg-primary rounded-[35px] h-[36px] items-center
-                     overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear" 
-                  >
-                    <span
-                      className="text-white text-xs
-                      block wd-text-font-bold translate-y-0 transition-btn-cart
-               "
-                    >
-                      Add to cart
-                    </span>
-                    <span className="absolute block w-full bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart">
-                      <PiShoppingCartBold className="w-[22px] font-bold h-[22px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100"/>
-                    </span>
-                  </a>
-                </div>
-                <div className="flex justify-between w-3/12">
-                  <a href="">
-                  <LuShuffle className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                  <a href="">
-                  <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div
-            className="product-hover relative overflow-hidden z-[10px]
-            bg-white rounded-[10px] flex flex-col justify-between w-[287px] h-[430px]"
-          >
-            <div className="absolute top-3 right-3 z-[5]">
-            <GoHeart  className="text-xl text-color-black"/>
-            </div>
-            {/* <div
-              className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
-              text-xs uppercase text-center wd-text-font-bold py-1"
-            >
-              New
-            </div> */}
-            <a href="#">
-            <SwiperCarousel/>
-            </a>
-            <div className="px-4 pt-2 p-4 transition-product translate-y-0 relative z-[10] bg-white">
-              <div className="flex justify-between items-center">
-                <a href="#">
-                  <h5 className="text-[15px] nav-color title-font tracking-tight">
-                    Giro
-                  </h5>
-                </a>
-              </div>
-              <a
-                href="#"
-                className="my-2 text-sm text-[#a5a5a5] wd-text-font block"
-              >
-                Chairs
-              </a>
-              <div className="flex justify-between">
-                <h3 className="wd-text-font-bold text-base color-primary">
-                  $320.00
-                </h3>
-                {/* <ul className="flex gap-2">
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                </ul> */}
-              </div>
-              <div className="flex justify-between mt-3 items-center">
-                <div className="w-8/12 block">
-                  <a
-                    href=""
-                    className="flex justify-center bg-primary rounded-[35px] h-[36px] items-center
-                     overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear" 
-                  >
-                    <span
-                      className="text-white text-xs
-                      block wd-text-font-bold translate-y-0 transition-btn-cart
-               "
-                    >
-                      Add to cart
-                    </span>
-                    <span className="absolute block w-full bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart">
-                      <PiShoppingCartBold className="w-[22px] font-bold h-[22px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100"/>
-                    </span>
-                  </a>
-                </div>
-                <div className="flex justify-between w-3/12">
-                  <a href="">
-                  <LuShuffle className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                  <a href="">
-                  <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div
-            className="product-hover relative overflow-hidden z-[10px]
-            bg-white rounded-[10px] flex flex-col justify-between w-[287px] h-[430px]"
-          >
-            <div className="absolute top-3 right-3 z-[5]">
-            <GoHeart  className="text-xl text-color-black"/>
-            </div>
-            {/* <div
-              className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
-              text-xs uppercase text-center wd-text-font-bold py-1"
-            >
-              New
-            </div> */}
-            <a href="#">
-            <SwiperCarousel/>
-            </a>
-            <div className="px-4 pt-2 p-4 transition-product translate-y-0 relative z-[10] bg-white">
-              <div className="flex justify-between items-center">
-                <a href="#">
-                  <h5 className="text-[15px] nav-color title-font tracking-tight">
-                    Giro
-                  </h5>
-                </a>
-              </div>
-              <a
-                href="#"
-                className="my-2 text-sm text-[#a5a5a5] wd-text-font block"
-              >
-                Chairs
-              </a>
-              <div className="flex justify-between">
-                <h3 className="wd-text-font-bold text-base color-primary">
-                  $320.00
-                </h3>
-                {/* <ul className="flex gap-2">
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                </ul> */}
-              </div>
-              <div className="flex justify-between mt-3 items-center">
-                <div className="w-8/12 block">
-                  <a
-                    href=""
-                    className="flex justify-center bg-primary rounded-[35px] h-[36px] items-center
-                     overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear" 
-                  >
-                    <span
-                      className="text-white text-xs
-                      block wd-text-font-bold translate-y-0 transition-btn-cart
-               "
-                    >
-                      Add to cart
-                    </span>
-                    <span className="absolute block w-full bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart">
-                      <PiShoppingCartBold className="w-[22px] font-bold h-[22px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100"/>
-                    </span>
-                  </a>
-                </div>
-                <div className="flex justify-between w-3/12">
-                  <a href="">
-                  <LuShuffle className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                  <a href="">
-                  <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div
-            className="product-hover relative overflow-hidden z-[10px]
-            bg-white rounded-[10px] flex flex-col justify-between w-[287px] h-[430px]"
-          >
-            <div className="absolute top-3 right-3 z-[5]">
-            <GoHeart  className="text-xl text-color-black"/>
-            </div>
-            {/* <div
-              className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
-              text-xs uppercase text-center wd-text-font-bold py-1"
-            >
-              New
-            </div> */}
-            <a href="#">
-            <SwiperCarousel/>
-            </a>
-            <div className="px-4 pt-2 p-4 transition-product translate-y-0 relative z-[10] bg-white">
-              <div className="flex justify-between items-center">
-                <a href="#">
-                  <h5 className="text-[15px] nav-color title-font tracking-tight">
-                    Giro
-                  </h5>
-                </a>
-              </div>
-              <a
-                href="#"
-                className="my-2 text-sm text-[#a5a5a5] wd-text-font block"
-              >
-                Chairs
-              </a>
-              <div className="flex justify-between">
-                <h3 className="wd-text-font-bold text-base color-primary">
-                  $320.00
-                </h3>
-                {/* <ul className="flex gap-2">
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                  <li className="w-[20px] h-[20px] rounded-full border-[1px] border-solid border-[#00000013] flex justify-center items-center ">
-                    <div className="w-[12px] h-[12px] rounded-full bg-black"></div>
-                  </li>
-                </ul> */}
-              </div>
-              <div className="flex justify-between mt-3 items-center">
-                <div className="w-8/12 block">
-                  <a
-                    href=""
-                    className="flex justify-center bg-primary rounded-[35px] h-[36px] items-center
-                     overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear" 
-                  >
-                    <span
-                      className="text-white text-xs
-                      block wd-text-font-bold translate-y-0 transition-btn-cart
-               "
-                    >
-                      Add to cart
-                    </span>
-                    <span className="absolute block w-full bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart">
-                      <PiShoppingCartBold className="w-[22px] font-bold h-[22px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100"/>
-                    </span>
-                  </a>
-                </div>
-                <div className="flex justify-between w-3/12">
-                  <a href="">
-                  <LuShuffle className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                  <a href="">
-                  <LuSearch className="text-[22px] title-color hover:opacity-70 transtion-all duration-100 ease-linear" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
+        {datas.map((data: any) => (
+          <SwiperSlide key={data.id} className="h-[398px]">
+            <Product
+              key={data.id}
+              data={{
+                id: data.id,
+                name: data.product_name,
+                price: data.price,
+                reviews: data.reviews_avg_stars,
+                variants: data.variants,
+                category: data.category,
+                img: data.product_theme,
+                description: data.product_description,
+              }}
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
-      <div className="next-items absolute top-1/2 -right-5 z-10 translate-x-[30px] opacity-0 
-      transtion-all duration-200 ease-linear">
-        <LiaAngleRightSolid className="text-3xl text-color-black hover:text-[#777] hover:cursor-pointer"/>
+      <div
+        className="next-items absolute top-1/2 -right-5 z-10 translate-x-[30px] opacity-0 
+      transtion-all duration-200 ease-linear"
+      >
+        <LiaAngleRightSolid className="text-3xl text-color-black hover:text-[#777] hover:cursor-pointer" />
       </div>
-      <div className="pre-items absolute top-1/2 -left-10 z-10 -translate-x-[30px] opacity-0 
-      transtion-all duration-200 ease-linear">
-          <LiaAngleLeftSolid className="text-3xl text-color-black hover:text-[#777] hover:cursor-pointer"/>
+      <div
+        className="pre-items absolute top-1/2 -left-10 z-10 -translate-x-[30px] opacity-0 
+      transtion-all duration-200 ease-linear"
+      >
+        <LiaAngleLeftSolid className="text-3xl text-color-black hover:text-[#777] hover:cursor-pointer" />
       </div>
     </div>
   );
