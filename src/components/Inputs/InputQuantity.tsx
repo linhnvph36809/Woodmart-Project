@@ -2,9 +2,9 @@ import { useState } from "react";
 import { RiAddFill } from "react-icons/ri";
 import { RiSubtractFill } from "react-icons/ri";
 
-const InputQuantity = () => {
-  const [quantity, setQuantity] = useState<number>(1);
-
+const InputQuantity = ({id,handlerChangeQuantity,defaultValue}: {id?:string|number,handlerChangeQuantity:any,defaultValue:number}) => {
+  const [quantity, setQuantity] = useState<number>(defaultValue);
+  
   return (
     <>
       <div>
@@ -14,7 +14,11 @@ const InputQuantity = () => {
             border-solid border-[rgba(0,0,0,.1)] rounded-l-[35px] hover:cursor-pointer transtion-all duration-300 ease-linear
             "
               onClick={() =>
-                setQuantity((state: number) => (state <= 1 ? 1 : --state))
+                setQuantity((state: number) => 
+                  {const result = state <= 1 ? 1 : --state
+                    handlerChangeQuantity(result, id)
+                    return result ; 
+                  })
               }
             >
               <RiSubtractFill className="w-3 h-3 nav-color font-semibold transtion-all duration-300 ease-linear icon-quantity" />
@@ -29,7 +33,11 @@ const InputQuantity = () => {
             border-l-[1px] btn-quantity border-solid border-[rgba(0,0,0,.1)]
             rounded-r-[35px] hover:cursor-pointer"
               onClick={() =>
-                setQuantity((state: number) => (state >= 20 ? 20 : ++state))
+                setQuantity((state: number) => {
+                  const result = state >= 20 ? 20 : ++state ;
+                  handlerChangeQuantity(result, id)
+                  return result ; 
+                })
               }
             >
               <RiAddFill className="w-3 h-3 nav-color font-semibold transtion-all duration-300 ease-linear icon-quantity" />

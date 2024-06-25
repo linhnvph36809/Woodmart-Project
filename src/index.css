@@ -1,9 +1,9 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 .text-font {
   font-family: "Work Sans", sans-serif;
@@ -54,15 +54,14 @@
   font-style: normal;
 }
 
-.hover-bg-primary{
+.hover-bg-primary {
   transition: all;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
 }
 
-
-.hover-bg-primary:hover{
-    background-color: #df8c4f;
+.hover-bg-primary:hover {
+  background-color: #df8c4f;
 }
 
 .content {
@@ -118,48 +117,41 @@
   transition: all 0.2s ease-in-out;
 }
 
-
-.btn-add-cart{
+.btn-add-cart {
   transition: all 0.2s ease-in-out;
 }
 
 .product-hover:hover .transition-btn {
   transform: translateX(0);
-
 }
 
 .product-hover:hover .transition-product {
   transform: translateY(-52px);
-
 }
 
-.product-hover:hover .btn-popup-product{
+.product-hover:hover .btn-popup-product {
   bottom: 0;
 }
 
-.transtion-side-btn{
+.transtion-side-btn {
   opacity: 0;
 }
 
-.product-hover:hover .transtion-side-btn{
+.product-hover:hover .transtion-side-btn {
   opacity: 1;
-
 }
 
-.btn-cart-hover:hover{
+.btn-cart-hover:hover {
   background-color: rgb(223, 140, 79);
 }
 
 .btn-cart-hover:hover .transition-btn-cart {
   transform: translateY(-30px);
-
 }
 
 .btn-cart-hover:hover .btn-add-cart {
   transform: translateY(0px);
-
 }
-
 
 .swiper-pagination {
   background-color: #fff;
@@ -173,12 +165,10 @@
   border-radius: 15px;
 }
 
-
 .swiperBanner:hover {
   cursor: grab;
   transition: all 2.5s ease-in-out;
 }
-
 
 .swiper-pagination-bullet {
   width: 10px;
@@ -191,7 +181,6 @@
 
 .swiper-pagination-bullet:hover {
   background-color: #000 !important;
-
 }
 
 .swiper-pagination-bullet-active {
@@ -210,7 +199,7 @@
 }
 
 .category-hover:hover .transition-bg {
-  background-color: rgba(0, 0, 0, 0.3)
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .category-hover:hover img {
@@ -225,7 +214,6 @@
   grid-template-columns: repeat(5, 258px);
 }
 
-
 .grid-cols-279 {
   grid-template-columns: repeat(5, 279px);
 }
@@ -239,8 +227,7 @@
 .grid-product-l {
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  grid-template-rows: repeat(4,398px);
-
+  grid-template-rows: repeat(4, 398px);
 }
 
 .grid-product-xl {
@@ -250,17 +237,23 @@
   gap: 30px;
 }
 
-
 .shoping-hover:hover .transition-shoping {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-
 .progress-bar {
-  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
   background-size: 15px 15px;
 }
-
 
 .dashboard-hover:hover .dashboard-icon {
   color: #f59a57;
@@ -269,90 +262,114 @@
 .scroll-cart-items::-webkit-scrollbar {
   width: 5px;
 }
- 
+
 .scroll-cart-items::-webkit-scrollbar-thumb {
-  background: #d5d5d5 ; 
+  background: #d5d5d5;
 }
 
-.furniture-collection:hover>.pre-items,
-.furniture-collection:hover>.next-items{
+.furniture-collection:hover > .pre-items,
+.furniture-collection:hover > .next-items {
   transform: translateX(0);
   opacity: 1;
-} 
+}
 
-.animation-content-top{
+.animation-content-top {
   animation-name: animation-content-top;
   animation-duration: 1.2s;
   animation-fill-mode: forwards;
 }
 
 @keyframes animation-content-top {
-  0% {transform: translateX(50px) translateY(-200px); opacity: 0;}
-  100%{transform: translateX(0) translateY(0);opacity: 1;}
+  0% {
+    transform: translateX(50px) translateY(-200px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0) translateY(0);
+    opacity: 1;
+  }
 }
 
-.animation-content-bottom{
+.animation-content-bottom {
   animation-name: animation-content-bottom;
   animation-duration: 1.2s;
   animation-fill-mode: forwards;
 }
 
 @keyframes animation-content-bottom {
-  0% {transform: translateX(100px) translateY(200px); opacity: 0;}
-  100%{transform: translateX(0) translateY(0);opacity: 1;}
+  0% {
+    transform: translateX(100px) translateY(200px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0) translateY(0);
+    opacity: 1;
+  }
 }
 
-.lg-object.lg-image{
+.lg-object.lg-image {
   border-radius: 10px;
 }
 
-.background-linear{
-  background: linear-gradient(to bottom, rgba(255, 252, 252, 0.473), #fff); 
-
+.background-linear {
+  background: linear-gradient(to bottom, rgba(255, 252, 252, 0.473), #fff);
 }
 
-.btn-quantity:hover{
+.btn-quantity:hover {
   background-color: #f59a57;
 }
 
-.btn-quantity:hover .icon-quantity{
+.btn-quantity:hover .icon-quantity {
   color: #fff;
 }
 
-.test{
+.test {
   background: linear-gradient(to bottom, transparent 0, #f2f1ed 40px);
 }
 
-.posts:hover .image-posts{
-    transform: scale(1.1);
+.posts:hover .image-posts {
+  transform: scale(1.1);
 }
 
-.call-api-success{
+.call-api-success {
   animation-name: call-api-success;
   animation-duration: 1.5s;
   animation-fill-mode: forwards;
 }
 
 @keyframes call-api-success {
-  0% {opacity: 0;}
-  100%{opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-.hide-and-show{
+.hide-and-show {
   animation-name: hide-and-show;
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
 }
 
 @keyframes hide-and-show {
-  0% {opacity: 0;}
-  100%{opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-.hidden-content-post{
+.hidden-content-post {
   display: -webkit-box;
-  -webkit-line-clamp: 3; 
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+

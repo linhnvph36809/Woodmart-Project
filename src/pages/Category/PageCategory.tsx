@@ -1,23 +1,26 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import InputRange from "./InputRange";
 import Product from "../../components/Products/Product";
 import { LuChevronRight } from "react-icons/lu";
 import { getProductByCategoryId } from "../../api/product.api";
 import Spinner from "../../components/Spinner/Spinner";
+import SideFilter from "./SideFilter";
+
 
 const PageCategory = () => {
   let { id } = useParams();
   const [products, setProducts] = useState([]);
+
   useEffect(() => {
     (async function () {
-      if (id) {
+      if (id) { 
         const { data } = await getProductByCategoryId(id);
         setProducts(data || []);
       }
     })();
   }, [id]);
+
 
   return (
     <>
@@ -43,287 +46,7 @@ const PageCategory = () => {
         </div>
       </div>
       <div className="content py-8 flex justify-between gap-5">
-        <div className="w-3/12 p-5 bg-white rounded-[10px]">
-          <div>
-            <h5 className="mb-6 title-font nav-link text-base">
-              Filter By Price
-            </h5>
-            <InputRange />
-
-            {/* <form action="">
-              <h5 className="mb-6 mt-8 title-font nav-link text-base">
-                Filter By Brand
-              </h5>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Find a Brand"
-                  className="w-full pr-[40px] pl-5 outline-none text-base
-                   text-color-black h-[42px] border-[1px] border-solid 
-                   border-[#0000001a] rounded-[35px] placeholder:text-sm
-                   text-font transtion-all duration-300 ease-linear focus:border-[#00000026]"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 absolute top-1/2 -translate-y-1/2 right-3 text-color-black"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              </div>
-              <div className="mt-4 pb-8 border-b-[1px] border-solid border-[#0000001b]">
-                <ul>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <img
-                        src="./public/images/brand-hay.jpg.webp"
-                        alt=""
-                        width={60}
-                        height={30}
-                      />
-                      Hay
-                    </a>
-                    <span
-                      className="min-w-[30px] h-[20px] flex justify-center
-                         items-center text-xs text-color-black rounded-[35px] 
-                         border-[1px] border-solid border-[#0000001b]
-                         transtion-all duration-300 ease-linear find-nav-transition
-                         "
-                    >
-                      6
-                    </span>
-                  </li>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <img
-                        src="./public/images/brand-poliform.jpg.webp"
-                        alt=""
-                        width={60}
-                        height={30}
-                      />
-                      Poliform
-                    </a>
-                    <span
-                      className="min-w-[30px] h-[20px] flex justify-center
-                         items-center text-xs text-color-black rounded-[35px] 
-                         border-[1px] border-solid border-[#0000001b]
-                         transtion-all duration-300 ease-linear find-nav-transition
-                         "
-                    >
-                      6
-                    </span>
-                  </li>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <img
-                        src="./public/images/brand-vitra.jpg.webp"
-                        alt=""
-                        width={60}
-                        height={30}
-                      />
-                      Vitra
-                    </a>
-                    <span
-                      className="min-w-[30px] h-[20px] flex justify-center
-                         items-center text-xs text-color-black rounded-[35px] 
-                         border-[1px] border-solid border-[#0000001b]
-                         transtion-all duration-300 ease-linear find-nav-transition
-                         "
-                    >
-                      4
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </form> */}
-            <form action="">
-              <h5 className="mb-6 mt-8 title-font nav-link text-base">Color</h5>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Find a Color"
-                  className="w-full pr-[40px] pl-5 outline-none text-base
-                   text-color-black h-[42px] border-[1px] border-solid 
-                   border-[#0000001a] rounded-[35px] placeholder:text-sm
-                   text-font transtion-all duration-300 ease-linear focus:border-[#00000026]"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 absolute top-1/2 -translate-y-1/2 right-3 text-color-black"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              </div>
-              <div className="mt-4 pb-8 border-b-[1px] border-solid border-[#0000001b]">
-                <ul>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <div className="w-[25px] h-[25px] rounded-full border-[1.5px] border-solid border-[#ececec] flex justify-center items-center">
-                        <div className="w-[17px] h-[17px] rounded-full bg-[#00000033]"></div>
-                      </div>
-                      American Silver
-                    </a>
-                    <span
-                      className="min-w-[30px] h-[20px] flex justify-center
-                         items-center text-xs text-color-black rounded-[35px] 
-                         border-[1px] border-solid border-[#0000001b]
-                         transtion-all duration-300 ease-linear find-nav-transition
-                         "
-                    >
-                      6
-                    </span>
-                  </li>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <div className="w-[25px] h-[25px] rounded-full border-[1.5px] border-solid border-[#ececec] flex justify-center items-center">
-                        <div className="w-[17px] h-[17px] rounded-full bg-[#1e4d3b]"></div>
-                      </div>
-                      Bone
-                    </a>
-                    <span
-                      className="min-w-[30px] h-[20px] flex justify-center
-                         items-center text-xs text-color-black rounded-[35px] 
-                         border-[1px] border-solid border-[#0000001b]
-                         transtion-all duration-300 ease-linear find-nav-transition
-                         "
-                    >
-                      6
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </form>
-            <div>
-              <h5 className="mb-6 mt-8 title-font nav-link text-base">
-                Materials
-              </h5>
-              <div className="mt-4 pb-8 border-b-[1px] border-solid border-[#0000001b]">
-                <ul>
-                  <li className="flex justify-between items-center gap-2 mb-3">
-                    <input
-                      id="default-checkbox"
-                      type="checkbox"
-                      defaultValue=""
-                      className="w-4 h-4 accent-[#df8c4f] text-white bg-white-100 border-gray-300 rounded"
-                    />
-                    <label
-                      htmlFor="default-checkbox"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      American Silver
-                    </label>
-                    <span
-                      className="min-w-[30px] h-[20px] flex justify-center
-                         items-center text-xs text-color-black rounded-[35px] 
-                         border-[1px] border-solid border-[#0000001b]
-                         transtion-all duration-300 ease-linear find-nav-transition
-                         "
-                    >
-                      6
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            {/* <div>
-              <h5 className="mb-6 mt-8 title-font nav-link text-base">
-                Product Status
-              </h5>
-              <div className="mt-4">
-                <ul>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <div
-                        className="w-[15px] h-[15px] border-2 border-solid border-[#0000001b] relative 
-                      find-materials-transition transtion-all duration-300"
-                      >
-                        <div className="absolute top-0 right-0 left-0 bottom-0 flex justify-center items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-3 h-3 text-white"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m4.5 12.75 6 6 9-13.5"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      American Silver
-                    </a>
-                  </li>
-                  <li className="flex justify-between items-center mb-3">
-                    <a
-                      href="#"
-                      className="flex flex-1 text-base items-center gap-2 text-color-black text-font find-hover"
-                    >
-                      <div
-                        className="w-[15px] h-[15px] border-2 border-solid border-[#0000001b] relative 
-                      find-materials-transition transtion-all duration-300"
-                      >
-                        <div className="absolute top-0 right-0 left-0 bottom-0 flex justify-center items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-3 h-3 text-white"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m4.5 12.75 6 6 9-13.5"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      American Silver
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div> */}
-          </div>
-        </div>
+        <SideFilter setProducts={setProducts} />
         <div className="w-9/12">
           <div className="flex justify-between items-center mb-5">
             <div className="text-font text-[15px] text-[#777777]">

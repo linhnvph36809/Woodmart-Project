@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ICategory } from "../../interfaces/ICategories/ICategories";
 import { getAllCategorys } from "../../api/categorys.api";
 
-const Category = () => {
+const Category = memo(() => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
@@ -28,6 +28,6 @@ const Category = () => {
       ))}
     </ul>
   );
-};
+});
 
 export default Category;

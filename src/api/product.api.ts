@@ -9,9 +9,17 @@ export const getProductByCategoryId = async (id:string|number) => {
 }
 
 export const getProductBestsellers = async () => {
-    return await instance.get('/products?best_seller=1').then(({data}) => data).catch(() => alert("Looi"))
+    return await instance.get('/products?best_seller=1').then(({data}) => data).catch(() => alert("Lỗi sp betsalse"))
 }
 
 export const getProductDetail = async (id:string|number) => {
     return await instance.get('/products/'+id).then(({data}) => data).catch(() => [])
+}
+
+export const filterByProducts = async (url:string) => {
+    return await instance.get('/products'+url).then(({data}) => data).catch(() => []);
+}
+
+export const getProductCollections = async () => {
+    return await instance.get('/products?popular_week=1').then(({data}) => data).catch(() => []);
 }

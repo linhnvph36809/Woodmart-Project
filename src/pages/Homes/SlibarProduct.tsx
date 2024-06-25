@@ -7,7 +7,7 @@ import { LiaAngleLeftSolid } from "react-icons/lia";
 import { LiaAngleRightSolid } from "react-icons/lia";
 import Product from "../../components/Products/Product";
 
-const SlibarProduct = ({ datas, columns }: { datas: any; columns?: any }) => {
+const SlibarProduct = ({ datas, columns = {sm: 2, lg: 3, xl:5} }: { datas: any; columns?: any }) => {
   return (
     <div className="relative furniture-collection">
       <Swiper

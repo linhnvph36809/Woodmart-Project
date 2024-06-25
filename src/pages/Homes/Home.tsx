@@ -8,6 +8,7 @@ import { useGlobalContext } from "../../Layouts";
 import PostsFooter from "../../components/Footers/PostsFooter";
 import ProductBestsellers from "./ProductBestsellers";
 import Posts from "./Posts";
+import ProductCollection from "./ProductCollection";
 
 const Home = () => {
   const handleBgTransparent = useGlobalContext();
@@ -288,7 +289,7 @@ const Home = () => {
               </p>
             </div>
             <div className="">
-              {/* <SlibarProduct /> */}
+              <ProductCollection />
             </div>
           </div>
           <div className="w-4/12">
@@ -355,7 +356,7 @@ const Home = () => {
                       className="w-[80px] h-[80px] rounded-full flex
                     justify-center items-center border-[2px] border-solid
                     border-[#c2beb9] hover:cursor-pointer"
-                      onClick={() => handleBgTransparent("video")}
+                      onClick={() => {}}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

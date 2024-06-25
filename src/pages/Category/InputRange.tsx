@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import MultiRangeSlider from "multi-range-slider-react";
 
 import "./category.css";
 
-function InputRange() {
+const  InputRange = memo(({handlerFindProducts,filterProducts}:{handlerFindProducts:(value:any) => void,filterProducts:any}) => {
+	
 	const [minValue, set_minValue] = useState(25);
 	const [maxValue, set_maxValue] = useState(75);
 
@@ -46,10 +47,10 @@ function InputRange() {
 					<span className="title-color wd-text-font-bold text-base"> — </span>
 					<h4 className="title-color wd-text-font-bold text-base">${maxValue.toLocaleString('en-US')}</h4>
 				</div>
-				<button className="min-w-[60px] rounded-[35px] hover:bg-[#efefef] h-[36px] nav-color bg-[#f7f7f7] text-[12px] wd-text-font-bold">Filter</button>
+				<button className="min-w-[60px] rounded-[35px] hover:bg-[#efefef] h-[36px] nav-color bg-[#f7f7f7] text-[12px] wd-text-font-bold" onClick={() => handlerFindProducts({...filterProducts,priceFrom: minValue,priceTo:maxValue})}>Filter</button>
 			</div>
 		</div>
 	);
-}
+})
 
 export default InputRange;

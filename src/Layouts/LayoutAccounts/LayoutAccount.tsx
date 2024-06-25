@@ -9,9 +9,10 @@ const LayoutAccount = () => {
   const location = useLocation() ; 
   
   useEffect(() => {
-    const url = location.pathname.split("/")[2] || "";
+    const url = location.pathname.split("/")[2] || "" ;
     setPage(url) ; 
   }, [location]);
+  
   
   
   return (

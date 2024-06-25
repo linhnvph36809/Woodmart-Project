@@ -13,7 +13,6 @@ const ProductBestsellers = memo(() => {
     })();
   }, []);
 
-  console.log(products);
   
 
   return (

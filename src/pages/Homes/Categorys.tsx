@@ -19,7 +19,7 @@ const Categories = memo(() => {
 
   return (
     <>
-      {categories.length > 0 ? (
+      {categories?.length > 0 ? (
         <div className="my-5 grid grid-cols-258 gap-y-6 justify-between call-api-success">
           {categories.map((category: any) => (
             <div

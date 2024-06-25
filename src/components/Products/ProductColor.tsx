@@ -7,7 +7,7 @@ const ProductColor = memo(({datas,size=12,gap=2,handlerSelected,colorSelected,ch
     <>
       <ul className={`flex gap-${gap}`}>
         {
-        datas.map( (data:any) =>
+        datas && datas.map( (data:any) =>
         <li key={data.id} onClick={() => handlerSelected({...data,changeImage})}
           className={`rounded-full border-[1px]
               border-solid border-[#00000013]
@@ -15,7 +15,7 @@ const ProductColor = memo(({datas,size=12,gap=2,handlerSelected,colorSelected,ch
               ${colorSelected?.id == data.id && "border-[#000]"}
               transtion-all duration-200 ease-linear p-1`}
         >
-          <div style={{backgroundColor: data.color.color_value}} className={`w-[${size}px] h-[${size}px] rounded-full`}></div>
+          <div style={{backgroundColor: data.color.color_value,width: size, height: size }} className={`rounded-full`}></div>
         </li>
         )}
       </ul>

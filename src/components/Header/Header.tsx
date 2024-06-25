@@ -1,22 +1,46 @@
-import { useEffect, useRef, useState, useContext } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useGlobalContext } from "../../Layouts/index.ts";
 import { GoHeart } from "react-icons/go";
 import { LuShuffle } from "react-icons/lu";
 import { LiaUser } from "react-icons/lia";
 import { LuSearch } from "react-icons/lu";
 import { PiShoppingCartBold } from "react-icons/pi";
 import Category from "./Category.tsx";
+import SideRight from "./SideRight.tsx";
+import { useGlobalContext } from "../../Layouts/index.ts";
+import { getUserById } from "../../api/authentication.api.ts";
+
 
 const Header = () => {
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [fixedHeader, setFixedHeader] = useState(false);
+  const [showSideRight,setShowSideRight] = useState("") ; 
+  const [user,setUser] = useState<any>({isLogin: false}) ; 
+
+  const {user:check,totalPrice} = useGlobalContext() ; 
+
   
-  const handleBgTransparent = useGlobalContext() ; 
   
+  const handlerShowSideRight = (value:string = "") => {
+    setShowSideRight(value)
+  }
+
+  const handlerGetUser = useCallback(async () => {
+    if(check?.user_id && check?.token){
+      const data = await getUserById(check?.user_id,check?.token) ;
+        setUser((state:any) => ({...state,data:data.data,isLogin:true}));   
+    }
+  },[check?.user_id]) 
+
   
+
   const ref = useRef<boolean | undefined>();
+
+  useEffect(() => {
+    handlerGetUser() ; 
+  },[check?.user_id])
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +63,7 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollTop]);
+
 
   return (
     <div>
@@ -169,27 +194,27 @@ const Header = () => {
               </a>
             </div>
             <div>
-              <a
-                href="#!"
-                onClick={() => handleBgTransparent('login')}
+              <Link
+                to={user?.isLogin ? "/my-account" : "/"}
+                onClick={() => user?.isLogin ? () => {} : handlerShowSideRight("login")}
                 className="flex bg-[#1010100d] gap-1 header-font
                 h-[42px] p-2 items-center hover:opacity-85 justify-center
                 rounded-[42px] text-sm w-[150px] text-[#101010b3]"
               >
                 <LiaUser className="text-2xl text-[#101010b3]" />
-                Login / Register
-              </a>
+                {user?.isLogin ? user.data.email :" Login / Register"}
+              </Link>
             </div>
             <div>
               <a
                 href="#!"
-                onClick={() => handleBgTransparent('cart')}
+                onClick={() => handlerShowSideRight("cart")}
                 className="flex relative bg-[#1010100d] gap-2 bg-color-black
                 text-white header-font h-[42px] p-3 items-center hover:opacity-85
                 justify-center rounded-[42px] text-sm min-w-[90px] text-[#101010b3]"
               >
                 <PiShoppingCartBold className="text-xl" />
-                $0.00
+                ${totalPrice ? totalPrice :  0} 
                 <p
                   className="absolute -top-1 -right-1 bg-white color-primary min-w-[18px] h-[18px]
                 rounded-full text-[11px] flex items-center justify-center p-1 border-[0.1px] border-solid border-[#0000002b]"
@@ -207,6 +232,7 @@ const Header = () => {
           </div>
         </div>
       </header>
+      <SideRight showSideRight={showSideRight} handlerShowSideRight={handlerShowSideRight}/>
     </div>
   );
 };

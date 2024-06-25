@@ -7,5 +7,5 @@ export {default as VideoGlobal} from "../components/Video/VideoGlobal.tsx";
 export {default as ButtonScrollTop} from "../components/Buttons/ButtonScrollTop";
 export {default as BackGroundTransparent} from "./components/BackGround/BackGroundTransparent.tsx";
 
-export const BackGroudContext = createContext<(pages?:string) => any>(() => {})
-export const useGlobalContext = () => useContext(BackGroudContext)
+export const User = createContext<any>(() => {})
+export const useGlobalContext = () => useContext(User) 

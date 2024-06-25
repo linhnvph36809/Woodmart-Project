@@ -7,12 +7,19 @@ import { LuShuffle, LuX } from "react-icons/lu";
 import { LuSearch } from "react-icons/lu";
 
 import SwiperCarousel from "../Swiper/SwiperCarousel";
-import { BackGroundTransparent } from "../../Layouts";
+import { BackGroundTransparent, useGlobalContext } from "../../Layouts";
 import ProductColor from "./ProductColor";
 import ProductPopup from "./ProductPopup";
+import Spinner from "../Spinner/Spinner";
 import { Link } from "react-router-dom";
+import { postCart } from "../../api/cart.api";
+import { postWishlist } from "../../api/wishlist.api";
 
 export default memo(function Products({ data }: { data: any }) {
+  
+  const cookies = useGlobalContext();
+  
+  console.log(cookies);
   
   const image = useRef<any>("");
 
@@ -22,12 +29,43 @@ export default memo(function Products({ data }: { data: any }) {
 
   const [productPopup, setProductPopup] = useState<any>({ active: false });
 
+  const [loading,setLoading] = useState<any>(null) ; 
+
+  const handlerAddCart = useCallback(
+    async (cart:any) => {
+      setLoading(false) 
+      if(cookies?.user?.token){
+        const data = await postCart(cart,cookies?.user.token) ;
+        if(data?.status < 200 && data?.status > 300){
+          alert("Khong co squyen truy cap") 
+        }
+        setSelectProduct(false) ; 
+        setLoading(true) ;
+
+      }else{
+        alert("Vui lòng đăng nhập để mua hàng") ;
+        setLoading(null)
+      }
+    },
+    [cookies?.user]
+  );
+
   const handlerSetProductPopup = useCallback(
     (product: any = { active: false }) => {
       setProductPopup(product);
     },
     []
   );
+
+  const handlerWishlist = useCallback(async (productId:string|number) => {
+      if(cookies?.user?.token){
+        const data = await postWishlist({user_id: cookies.user.user_id, product_id: productId},cookies.user.token)
+        alert("Thêm thành công")
+      }else{
+        alert("Vui lòng đăng nhập để mua hàng") ;
+
+      }
+  },[]) 
 
   if (variantProduct.changeImage) {
     image.current = variantProduct.img;
@@ -42,7 +80,7 @@ export default memo(function Products({ data }: { data: any }) {
           bg-white rounded-[10px] flex flex-col justify-between h-full`}
       >
         <div className="absolute top-3 right-3 z-[5]">
-          <GoHeart className="text-xl text-color-black" />
+          <GoHeart className="text-xl text-color-black hover:cursor-pointer hover:opacity-70" onClick={() => handlerWishlist(data.id)} />
         </div>
         <div
           className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
@@ -69,6 +107,7 @@ export default memo(function Products({ data }: { data: any }) {
             )}
           </Link>
           {selectProduct && (
+            <>
             <div
               className={`absolute w-full top-0 right-0 left-0 bottom-0 bg-[#ffffffe6] z-[20]`}
             >
@@ -103,12 +142,20 @@ export default memo(function Products({ data }: { data: any }) {
                 )}
               </div>
               <div className="absolute bottom-0 left-0 text-center right-0 bg-primary text-white">
-                <button className="text-xs wd-text-font-bold hover-bg-primary w-full py-3">
+                <button className="text-xs wd-text-font-bold hover-bg-primary w-full py-3" 
+                  onClick={() => variantProduct?.id ? 
+                  handlerAddCart({user_id: cookies?.user?.user_id,quantity: 1,product_variant_id: variantProduct.id || data.id})
+                  : alert("Please select some product options before adding this product to your cart.")}>
                   Add to cart
                 </button>
               </div>
             </div>
+            {loading == false && <div className="absolute flex justify-center items-center w-full top-0 right-0 left-0 bottom-0 bg-[#ffffffe6] z-[40]">
+              <Spinner />
+            </div> }
+            </>
           )}
+
         </div>
 
         <div className="px-4 pt-2 p-4 transition-product relative z-[10] bg-white h-[100px]">
@@ -154,7 +201,7 @@ export default memo(function Products({ data }: { data: any }) {
                 onClick={() =>
                   data.variants.length > 0
                     ? setSelectProduct((state) => !state)
-                    : "none"
+                    : handlerAddCart({user_id: cookies?.user?.user_id,quantity: 1,product_variant_id: variantProduct.id || data.id})
                 }
               >
                 <span
@@ -186,13 +233,10 @@ export default memo(function Products({ data }: { data: any }) {
           </div>
         </div>
       </div>
-      {createPortal(
         <BackGroundTransparent
           bgTransparent={productPopup.active}
           onhandleBg={handlerSetProductPopup}
-        />,
-        document.body
-      )}
+        />
       {productPopup.active &&
         createPortal(
           <ProductPopup
