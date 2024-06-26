@@ -1,4 +1,4 @@
-const InputPrimary = ({label,required,type="text",register}:{label:string,required?:boolean,type?:string,register:any}) => {
+const InputPrimary = ({label,required,type="text",register}:{label:string,required?:boolean,type?:string,register?:any}) => {
     return (
         <>
             <div className="mt-5">

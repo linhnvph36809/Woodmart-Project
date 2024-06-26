@@ -1,18 +1,134 @@
 import { LuX } from "react-icons/lu";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useGlobalContext } from "../../Layouts";
+import { useCallback, useEffect, useState } from "react";
 
 import InputPrimary from "../../components/Inputs/InputPrimary";
-import { Link } from "react-router-dom";
+
+import {
+  getAddressByUserId,
+  getPayments,
+  getShiping,
+  getUser,
+  postUrlPayMomo,
+  postUrlPayVnpay,
+} from "../../api/user.api";
+
+import { deleteCart, getCartByUserId, putCart } from "../../api/cart.api";
+import InputQuantity from "../../components/Inputs/InputQuantity";
+import { useNavigate } from "react-router-dom";
 
 const PageCheckOut = () => {
+  const cookies = useGlobalContext();
+
+  const [inforUser, setInforUser] = useState<any>();
+  const [shippings, setShipping] = useState<any>();
+  const [payments, setPayments] = useState<any>();
+  const [carts, setCarts] = useState<any>();
+  const [loading, setLoading] = useState<any>(false);
+  const [quantity, setQuantity] = useState<any>();
+  const navigate = useNavigate();
+
+  type Inputs = {
+    fullName: string;
+    phone: string | number;
+    email: string;
+    country: string;
+    city: string;
+    street_address: string;
+    post_code: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
+  const handlerGetInfoPay = useCallback(async () => {
+    const address = getAddressByUserId(
+      cookies.user.user_id,
+      cookies.user.token
+    );
+    const user = getUser(cookies.user.user_id, cookies.user.token);
+    const shipping = getShiping(cookies.user.token);
+    const payments = getPayments(cookies.user.token);
+    setLoading(true);
+    Promise.all([address, user, shipping, payments]).then((values: any) => {
+      const [address, { data: user }, shipping, payments] = values;
+      reset({
+        fullName: user?.full_name || null,
+        phone: user?.phone || null,
+        email: user?.email,
+        country: address?.country,
+        city: address?.city,
+        street_address: address?.street_address,
+        post_code: address?.post_code,
+      });
+      setInforUser({ ...address, ...user });
+      setShipping(shipping);
+      setPayments(payments);
+      setLoading(false);
+    });
+  }, []);
+
+  const hanlerGetCart = async () => {
+    setLoading(true);
+    const datas = await getCartByUserId(
+      cookies.user.user_id,
+      cookies.user.token
+    );
+    setCarts(datas);
+    cookies.hanlerTotalPrice();
+    setLoading(false);
+  };
+
+  const handlerQuantity = useCallback(
+    async (quantity: string | number, id: string | number) => {
+      setLoading(true);
+      setQuantity({ id, quantity });
+      const data = await putCart({ id, quantity }, cookies?.user.token);
+      hanlerGetCart();
+      setLoading(false);
+    },
+    [quantity]
+  );
+
+  const handlerDeleteCart = useCallback(
+    async (id: string | number, token: string) => {
+      setLoading(true);
+      if (cookies?.user?.token) {
+        const data = await deleteCart(id, token);
+        hanlerGetCart();
+      }
+      setLoading(false);
+    },
+    [carts]
+  );
+
+  const handlerPayOnline = useCallback(async (id: string | number) => {
+    const payload = { total: "1231", url: "http://localhost:5173/checkout/order-received" };
+    if (id == 1) {
+      const data = await postUrlPayVnpay(payload, cookies.user.token);
+      window.location.href = data.data;
+    } else if (id == 2) {
+      const data = await postUrlPayMomo(payload, cookies.user.token);
+      window.location.href = data.payUrl;
+    }
+  }, []);
+
+  useEffect(() => {
+    hanlerGetCart();
+    handlerGetInfoPay();
+  }, [reset]);
+
   return (
     <>
-      <div className="w-[1000px] mx-auto">
+      <div className="w-[1000px] mx-auto py-16">
         <div className="flex items-center flex-col">
-          <div className="py-5">
-            <Link to="/">
-            <img src="./public/images/logo.svg" alt="" />
-            </Link>
-          </div>
           <div className="w-[683px] pb-8">
             <div className="flex items-center gap-3 rounded-[10px] p-4 bg-[#1010100d]">
               <div
@@ -25,33 +141,100 @@ const PageCheckOut = () => {
                 Billing Details
               </h3>
             </div>
-            <form action="">
+            <form action="" onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-x-6 mt-5">
                 <div className="">
-                  <InputPrimary label="First name" required/>
+                  <InputPrimary
+                    label="Full Name"
+                    required
+                    register={{ ...register("fullName", { required: true }) }}
+                  />
+                  {errors.fullName && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
                 <div className="">
-                  <InputPrimary label="Last name" required/>
+                  <InputPrimary
+                    label="Phone"
+                    required
+                    type="number"
+                    register={{ ...register("phone", { required: true }) }}
+                  />
+                  {errors.phone && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
                 <div className="">
-                  <InputPrimary label="Phone" required type="number"/>
+                  <InputPrimary
+                    label="Email address"
+                    required
+                    type="email"
+                    register={{ ...register("email", { required: true }) }}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
                 <div className="">
-                  <InputPrimary label="Email address" required type="email"/>
+                  <InputPrimary
+                    label="Country / Region"
+                    required
+                    type="text"
+                    register={{ ...register("country", { required: true }) }}
+                  />
+                  {errors.country && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
                 <div className="">
-                  <InputPrimary label="Country / Region" required type="email"/>
+                  <InputPrimary
+                    label="Town / City"
+                    required
+                    type="text"
+                    register={{ ...register("city", { required: true }) }}
+                  />
+                  {errors.city && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
                 <div className="">
-                  <InputPrimary label="Town / City" required type="email"/>
+                  <InputPrimary
+                    label="Street address"
+                    required
+                    type="text"
+                    register={{
+                      ...register("street_address", { required: true }),
+                    }}
+                  />
+                  {errors.street_address && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
                 <div className="">
-                  <InputPrimary label="Street address" required type="email"/>
+                  <InputPrimary
+                    label="Postcode / ZIP (optional)"
+                    type="text"
+                    register={{ ...register("post_code", { required: true }) }}
+                  />
+                  {errors.post_code && (
+                    <p className="text-sm text-font text-red-500 pt-1">
+                      This field is required
+                    </p>
+                  )}
                 </div>
-                <div className="">
-                  <InputPrimary label="Postcode / ZIP (optional)" type="email"/>
-                </div>
-                <div className="flex mt-5 gap-2">
+                <div className="flex mt-5 gap-2 items-center">
                   <input
                     type="checkbox"
                     className="text-color-black text-font rounded-[35px] border border-[#0000001a]"
@@ -62,7 +245,7 @@ const PageCheckOut = () => {
                 </div>
               </div>
               <div>
-                <div className="mt-5 mb-10">
+                {/* <div className="mt-5 mb-10">
                   <label className="text-font text-base nav-color mb-2 block">
                     Your review <span className="text-red-500">*</span>
                   </label>
@@ -73,7 +256,7 @@ const PageCheckOut = () => {
                      rounded-[35px] border border-[#0000001a] focus:ring-blue-500 focus:outline-none"
                     defaultValue={""}
                   />
-                </div>
+                </div> */}
                 <div className="flex items-center gap-3 rounded-[10px] p-4 bg-[#1010100d] my-10">
                   <div
                     className="text-base w-[36px] h-[36px] rounded-full
@@ -104,130 +287,45 @@ const PageCheckOut = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 text-font flex items-center gap-3"
-                        >
-                          <LuX className="text-base" />
-                          <img
-                            src="./public/images/product-1.jpg"
-                            className="w-[65px]"
-                            alt="Apple Watch"
-                          />
-                          <div className="flex flex-col gap-3">
-                            <h5>Belt - French Bistre</h5>
-                            <form action="">
-                              <div className="flex h-[32px] rounded-[35px] w-[80px] border-[1px] border-solid border-[rgba(0,0,0,.1)]">
-                                <div className="flex justify-center items-center w-[25px] border-r-[1px] border-solid border-[rgba(0,0,0,.1)] hover:cursor-pointer">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-3 h-3 nav-color font-semibold"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M5 12h14"
-                                    />
-                                  </svg>
-                                </div>
-                                <input
-                                  type="text"
-                                  className="w-[30px] text-center focus:outline-none text-sm text-font text-color-black"
-                                  value={1}
-                                />
-
-                                <div className="flex justify-center items-center w-[25px] border-l-[1px] border-solid border-[rgba(0,0,0,.1)] hover:cursor-pointer">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-3 h-3 nav-color font-semibold"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M12 4.5v15m7.5-7.5h-15"
-                                    />
-                                  </svg>
+                      {carts?.length &&
+                        carts.map((cart: any) => (
+                          <tr className="bg-white border-b">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 text-font flex items-center gap-3"
+                            >
+                              <LuX
+                                className="text-base hover:cursor-pointer hover:opacity-70"
+                                onClick={() =>
+                                  handlerDeleteCart(cart.id, cookies.user.token)
+                                }
+                              />
+                              <img
+                                src={cart?.variant?.img}
+                                className="w-[65px] h-[74px] object-cover"
+                                alt="Apple Watch"
+                              />
+                              <div className="flex flex-col gap-3">
+                                <h5>{cart?.variant?.product.product_name}</h5>
+                                <div className="w-[81px]">
+                                  <InputQuantity
+                                    defaultValue={cart.quantity}
+                                    id={cart.id}
+                                    handlerChangeQuantity={handlerQuantity}
+                                  />
                                 </div>
                               </div>
-                            </form>
-                          </div>
-                        </th>
+                            </th>
 
-                        <td className="px-2 py-4 text-font text-base text-color-black text-end">
-                          $680.00
-                        </td>
-                      </tr>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 text-font flex items-center gap-3"
-                        >
-                          <LuX className="text-base" />
-                          <img
-                            src="./public/images/product-1.jpg"
-                            className="w-[65px]"
-                            alt="Apple Watch"
-                          />
-                          <div className="flex flex-col gap-3">
-                            <h5>Belt - French Bistre</h5>
-                            <form action="">
-                              <div className="flex h-[32px] rounded-[35px] w-[80px] border-[1px] border-solid border-[rgba(0,0,0,.1)]">
-                                <div className="flex justify-center items-center w-[25px] border-r-[1px] border-solid border-[rgba(0,0,0,.1)] hover:cursor-pointer">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-3 h-3 nav-color font-semibold"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M5 12h14"
-                                    />
-                                  </svg>
-                                </div>
-                                <input
-                                  type="text"
-                                  className="w-[30px] text-center focus:outline-none text-sm text-font text-color-black"
-                                  value={1}
-                                />
-
-                                <div className="flex justify-center items-center w-[25px] border-l-[1px] border-solid border-[rgba(0,0,0,.1)] hover:cursor-pointer">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-3 h-3 nav-color font-semibold"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M12 4.5v15m7.5-7.5h-15"
-                                    />
-                                  </svg>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                        </th>
-
-                        <td className="px-2 py-4 text-font text-base text-color-black text-end">
-                          $680.00
-                        </td>
-                      </tr>
+                            <td className="px-2 py-4 text-font text-base text-color-black text-end">
+                              $
+                              {+cart?.variant?.price *
+                                (quantity?.id == cart.variant.id
+                                  ? quantity.quantity
+                                  : cart.quantity)}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -236,7 +334,7 @@ const PageCheckOut = () => {
                     Subtotal
                   </h4>
                   <p className="wd-text-font-bold text-[15px] color-primary">
-                    $8,400.00
+                    ${cookies.totalPrice}
                   </p>
                 </div>
                 <div className="flex justify-between items-center py-4 border-b border-solid">
@@ -244,30 +342,29 @@ const PageCheckOut = () => {
                     Shiping
                   </h4>
                   <div className="text-end">
-                    <div className="flex items-center gap-2 justify-end mb-3">
-                      <label className="text-font text-[15px] title-color">
-                        Flat rate
-                      </label>
-                      <input type="radio" />
-                    </div>
-                    <div className="flex items-center justify-end gap-2 mb-3">
-                      <label className="text-font text-[15px] title-color">
-                        Free shipping
-                      </label>
-                      <input type="radio" />
-                    </div>
-                    <div className="flex items-center justify-end gap-2 mb-3">
-                      <label className="text-font text-[15px] title-color">
-                        Local pickup
-                      </label>
-                      <input type="radio" />
-                    </div>
+                    {shippings?.length &&
+                      shippings.map((shipping: any) => (
+                        <div className="flex items-center gap-2 justify-end mb-3">
+                          <label
+                            htmlFor={"shipping" + shipping.id}
+                            className="text-font text-[15px] title-color hover:cursor-pointer"
+                          >
+                            {shipping.shipping_name}
+                          </label>
+                          <input
+                            id={"shipping" + shipping.id}
+                            type="radio"
+                            name="shipping"
+                            className="hover:cursor-pointer"
+                          />
+                        </div>
+                      ))}
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-4">
                   <h4 className="title-color title-font text-lg">Total</h4>
                   <h3 className="wd-text-font-bold text-[22px] color-primary">
-                    $8,400.00
+                    ${cookies.totalPrice}
                   </h3>
                 </div>
                 <div className="rounded-[10px] bg-white">
@@ -295,58 +392,29 @@ const PageCheckOut = () => {
                   </div>
                   <div>
                     <ul className="flex gap-3 py-4">
-                      <li>
-                        <a href="#">
-                          <button
-                            className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
+                      {payments?.length &&
+                        payments.map((payment: any) => (
+                          <li onClick={() => handlerPayOnline(payment.id)}>
+                            <button
+                              type="button"
+                              className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
                             border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
                             text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
                             focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
                             duration-300 ease-linear"
-                          >
-                            <img
-                              className="w-[20px] rounded"
-                              src="https://admin.softmaster.vn/_default_upload_bucket/154573132_152687123342645_1913382004205201124_n.png"
-                              alt=""
-                            />
-                            <span>Pay with VNPAY</span>
-                          </button>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <button
-                            className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
-                            border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
-                            text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
-                            focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
-                            duration-300 ease-linear"
-                          >
-                            <img
-                              className="w-[20px] rounded"
-                              src="https://media.licdn.com/dms/image/C560BAQF8Kkc256sg1g/company-logo_200_200/0/1630655399134/momo_mservice_logo?e=2147483647&v=beta&t=9lmTRindA_du_ZphKENZIoQzeb5XnPFGeK3dFKCy_8I"
-                              alt=""
-                            />
-                            <span>Pay with MOMO</span>
-                          </button>
-                        </a>
-                      </li>
-                      <li>
-                        <button
-                          className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
-                            border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
-                            text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
-                            focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
-                            duration-300 ease-linear"
-                        >
-                          <span>Cash on delivery</span>
-                        </button>
-                      </li>
+                            >
+                              <span>{payment.payment_name}</span>
+                            </button>
+                          </li>
+                        ))}
                     </ul>
                   </div>
                 </div>
                 <div>
-                  <button className="w-full h-[48px] bg-primary text-white wd-text-font-bold rounded-[35px] my-10">
+                  <button
+                    type="submit"
+                    className="w-full h-[48px] bg-primary text-white wd-text-font-bold rounded-[35px] my-10"
+                  >
                     Place order
                   </button>
                 </div>
@@ -354,6 +422,11 @@ const PageCheckOut = () => {
             </form>
           </div>
         </div>
+        {loading && (
+          <div className="fixed z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center">
+            laodding.....
+          </div>
+        )}
       </div>
     </>
   );

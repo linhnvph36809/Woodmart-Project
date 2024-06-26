@@ -24,7 +24,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const datas = await login(data) ; 
-    if(datas.status_code == 200){
+    if(datas.status_code > 100 && datas.status_code < 300){
       setCookie('user', {token: datas.access_token, user_id: datas.data.id}, { path: '/',
       maxAge: 3600})
       alert("Login successful")

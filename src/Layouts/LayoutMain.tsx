@@ -8,6 +8,7 @@ import { getCartByUserId } from "../api/cart.api.ts";
 const LayOutMain = () => {
 
   const [cookies] = useCookies(['user']);
+  
   const [totalPrice, setTotalPrice] = useState<any>([]);
 
   const hanlerTotalPrice = async () => {

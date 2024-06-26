@@ -2,17 +2,21 @@ import { useState } from "react";
 import { RiAddFill } from "react-icons/ri";
 import { RiSubtractFill } from "react-icons/ri";
 
-const InputQuantity = ({id,handlerChangeQuantity,defaultValue}: {id?:string|number,handlerChangeQuantity:any,defaultValue:number}) => {
+const InputQuantity = ({id,handlerChangeQuantity = null ,defaultValue = 1,totalQuantity}: {id?:string|number,handlerChangeQuantity?:any,defaultValue?:number,totalQuantity:number}) => {
   const [quantity, setQuantity] = useState<number>(defaultValue);
+  console.log(totalQuantity <= quantity);
   
   return (
     <>
       <div>
           <div className="flex h-[42px] rounded-[35px] border-[1px] border-solid border-[rgba(0,0,0,.1)]">
             <div
-              className="flex justify-center items-center w-[25px] border-r-[1px] btn-quantity
-            border-solid border-[rgba(0,0,0,.1)] rounded-l-[35px] hover:cursor-pointer transtion-all duration-300 ease-linear
-            "
+              className={`flex justify-center items-center w-[25px]
+              border-r-[1px] btn-quantity
+              border-solid border-[rgba(0,0,0,.1)] rounded-l-[35px]
+              hover:cursor-pointer transtion-all duration-300 ease-linear
+              ${quantity == 1 && "opacity-20 pointer-events-none"}
+              `}
               onClick={() =>
                 setQuantity((state: number) => 
                   {const result = state <= 1 ? 1 : --state
@@ -29,9 +33,10 @@ const InputQuantity = ({id,handlerChangeQuantity,defaultValue}: {id?:string|numb
               value={quantity}
             />
             <div
-              className="flex justify-center items-center w-[25px]
+              className={`flex justify-center items-center w-[25px]
             border-l-[1px] btn-quantity border-solid border-[rgba(0,0,0,.1)]
-            rounded-r-[35px] hover:cursor-pointer"
+            rounded-r-[35px] hover:cursor-pointer ${quantity >= totalQuantity  && "opacity-20 pointer-events-none"}
+            ${quantity >= 20  && "opacity-20 pointer-events-none"}`}
               onClick={() =>
                 setQuantity((state: number) => {
                   const result = state >= 20 ? 20 : ++state ;

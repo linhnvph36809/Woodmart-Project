@@ -13,8 +13,17 @@ const ProductPopup = ({
   data: any;
   onHandlerClose: () => void;
 }) => {
-  const [variantProduct, setVariantProduct] = useState<any>({});
 
+
+  const [variantProduct, setVariantProduct] = useState<any>({});
+  const [quantity,setQuantity] = useState<number>(1)
+
+  const handlerCheckQuantity = (quantity: number) => {
+    setQuantity(quantity) 
+  }
+  
+  
+  
 
   return (
     <>
@@ -94,15 +103,15 @@ const ProductPopup = ({
             />
           </div>
           <div className="flex items-center gap-2 pb-4 border-b">
-            <InputQuantity />
-            <ButtonPrimary
+            <InputQuantity totalQuantity={variantProduct?.qty_in_stock} handlerChangeQuantity={handlerCheckQuantity}/>
+            <ButtonPrimary  
               name="Add to cart"
-              className="w-[112px] bg-primary hover:bg-[#df8c4f]"
+              className={`w-[112px] bg-primary hover:bg-[#df8c4f] ${variantProduct?.qty_in_stock && +variantProduct?.qty_in_stock < quantity && "opacity-50 pointer-events-none"}`}
               type="submit"
             />
             <ButtonPrimary
               name="Buy now"
-              className="bg-[#333333] w-[112px] hover:opacity-90"
+              className={`bg-[#333333] w-[112px] hover:opacity-90 ${variantProduct?.qty_in_stock && +variantProduct?.qty_in_stock < quantity && "opacity-50 pointer-events-none"}`}
             />
           </div>
           <ul className="mt-5">

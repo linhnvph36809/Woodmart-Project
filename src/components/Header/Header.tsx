@@ -29,7 +29,7 @@ const Header = () => {
   const handlerGetUser = useCallback(async () => {
     if(check?.user_id && check?.token){
       const data = await getUserById(check?.user_id,check?.token) ;
-        setUser((state:any) => ({...state,data:data.data,isLogin:true}));   
+        setUser((state:any) => ({...state,data:data?.data,isLogin:true}));   
     }
   },[check?.user_id]) 
 
@@ -202,7 +202,7 @@ const Header = () => {
                 rounded-[42px] text-sm w-[150px] text-[#101010b3]"
               >
                 <LiaUser className="text-2xl text-[#101010b3]" />
-                {user?.isLogin ? user.data.email :" Login / Register"}
+                {user?.isLogin ? user?.data?.email :" Login / Register"}
               </Link>
             </div>
             <div>

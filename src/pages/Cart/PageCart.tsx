@@ -39,18 +39,23 @@ const PageCart = () => {
     [carts]
   );
 
-  const handlerQuantity = useCallback(async (quantity:string|number,id:string|number) => {
+  const handlerQuantity = useCallback((quantity:string|number,id:string|number) => {
     setLoading(true);
     setQuantity({id, quantity});
-    const data = await putCart({id,quantity},cookies?.user.token) ;
-    hanlerGetCart() 
-    setLoading(false);
+    setTimeout(async () => {
+      const data = await putCart({id,quantity},cookies?.user.token) ;
+      hanlerGetCart() 
+      setLoading(false);
+    },1000)
     
   },[quantity])
 
   useEffect(() => {
     hanlerGetCart();
   }, []);
+
+  console.log(carts);
+  
 
   return (
     <>
@@ -118,9 +123,10 @@ const PageCart = () => {
                           </td>
                           <td className="w-[50px] px-6 py-4 font-semibold text-gray-900 dark:text-white">
                             <InputQuantity 
+                            totalQuantity={+cart.variant.qty_in_stock}
                             id={cart.id} 
                             handlerChangeQuantity={handlerQuantity}
-                            defaultValue={cart.quantity}
+                            defaultValue={cart.quantity < +cart.variant.qty_in_stock && cart.quantity >= 20 ? 20 : (+cart.quantity < +cart.variant.qty_in_stock ? +cart.quantity : +cart.variant.qty_in_stock) }
                             />
                           </td>
                           <td className="px-6 py-4 text-end text-base wd-text-font-bold color-primary">

@@ -60,19 +60,20 @@ const routers = createBrowserRouter([
                 path: "lost-password",
                 element: <ForgetPassword/>
             },
+            {
+                path: "/checkout",
+                element: <PageCheckOut/>
+            },
+            {
+                path: "/checkout/order-received", 
+                element: <PageOrderComplete/>
+            },
             routerAccounts
 
 
         ]
     },
-    {
-        path: "/checkout",
-        element: <PageCheckOut/>
-    },
-    {
-        path: "/checkout/order-received", 
-        element: <PageOrderComplete/>
-    },
+
 
 ])
 
