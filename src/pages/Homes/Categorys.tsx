@@ -27,7 +27,7 @@ const Categories = memo(() => {
                     bg-center relative category-hover overflow-hidden"
               key={category.category.id}
             >
-              <Link to={`product-category/${category.category.id}`} className="block text-center">
+              <Link to={`product-category/${category?.category?.id}`} className="block text-center">
                 <img
                   className="rounded-full scale-[1.1] transition-all duration-300 ease-linear"
                   src=""

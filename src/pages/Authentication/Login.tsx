@@ -17,7 +17,8 @@ const Login = () => {
   type Input = {
     email: string;
     password: string;
-    full_name?: string
+    full_name?: string,
+    phone_number: string|number
   };
 
   const {
@@ -43,7 +44,6 @@ const Login = () => {
 
   const onSubmit2: SubmitHandler<Input> = async (data) => {
     const datas = await postRegister(data) ;
-    console.log(datas);
     
     if (datas.status < 300 && datas.status > 100) {
       setCookie(
@@ -57,7 +57,6 @@ const Login = () => {
       alert(datas.message);
     }
   }
-
 
   
 
@@ -252,11 +251,25 @@ const Login = () => {
                     </div>
                     <div className="mt-5">
                       <InputPrimary 
+                      label="Phone" 
+                      required type="number" 
+                      register={{ ...register("phone_number",
+                      { required: {value: true,message: "This field is required"},
+                      min: {value: 0,message: "This field must be positive"},
+                      minLength: {value: 9,message: "This field must be greater than 9 characters"} }) }}
+                      />
+                      {errors.phone_number && <p className="text-sm text-font text-red-500 pt-1">{errors.phone_number.message}</p>}
+
+                    </div>
+                    <div className="mt-5">
+                      <InputPrimary 
                       label="Password" 
                       required type="password" 
-                      register={{ ...register("password", { required: true }) }}
+                      register={{ ...register("password",
+                      { required: {value: true,message: "This field is required"},
+                        minLength: {value: 6, message: "This field must be greater than 6 characters"} }) }}
                       />
-                      {errors.password && <p className="text-sm text-font text-red-500 pt-1">This field is required</p>}
+                      {errors.password && <p className="text-sm text-font text-red-500 pt-1">{errors.password.message}</p>}
                     </div>
                     <div className="mt-8">
                       <ButtonPrimary name="Register" />

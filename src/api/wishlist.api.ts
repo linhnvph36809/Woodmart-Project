@@ -1,8 +1,8 @@
 import instance from "../axios/instance";
 
 
-export const getWishlistByUserId = async (id:string|number) => {
-    return await instance.get('/wishlist?user_id='+id).then(({data}) => data).catch(() => []); 
+export const getWishlistByUserId = async (id:string|number,token:string) => {
+    return await instance.get('/wishlist?user_id='+id,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch(() => []); 
 }
 
 

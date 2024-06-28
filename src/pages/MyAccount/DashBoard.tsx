@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 
 import navLinksAccount from "../../constants/NavLinkAccounts";
-
+import { IoLogOutOutline } from "react-icons/io5";
 const DashBoard = () => {
-  
   return (
     <>
       <div>
@@ -31,17 +30,26 @@ const DashBoard = () => {
         </p>
         <div className="grid grid-cols-3 gap-5 mt-8">
           {navLinksAccount.map((navLink, i) =>
-          navLink.path !== "" &&
+            navLink.path !== "" &&
             <div key={i}>
               <Link to={navLink.path} className="block p-5 text-center
               shadow rounded-[10px] dashboard-hover transtion-all duration-100 ease-linear hover:bg-[#00000008]">
                 {navLink.icon}
                 <h3 className="wd-text-font-bold text-[#555] text-[15px] pt-3">
-                {navLink.name}
+                  {navLink.name}
                 </h3>
               </Link>
             </div>
           )}
+          <div>
+            <div className="block p-5 text-center hover:cursor-pointer
+              shadow rounded-[10px] dashboard-hover transtion-all duration-100 ease-linear hover:bg-[#00000008]">
+              <IoLogOutOutline className="text-[50px] text-[#bbb] flex mx-auto dashboard-icon" />
+              <h3 className="wd-text-font-bold text-[#555] text-[15px] pt-3">
+                Logout
+              </h3>
+            </div>
+          </div>
         </div>
       </div>
     </>

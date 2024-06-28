@@ -2,29 +2,36 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 
 import {Header,Footer,User,ButtonScrollTop,} from "./index.ts";
 import { useCookies } from "react-cookie";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCartByUserId } from "../api/cart.api.ts";
 
 const LayOutMain = () => {
 
   const [cookies] = useCookies(['user']);
-  
-  const [totalPrice, setTotalPrice] = useState<any>([]);
+  const [totalPrice, setTotalPrice] = useState<any>(0);
+  const [orderId, setOrderId] = useState<any>();
 
   const hanlerTotalPrice = async () => {
-    const data = await getCartByUserId(cookies.user.user_id,cookies.user.token)    
-      const result =  data.reduce((acc:number,cur:any) => acc +(+cur.quantity * +cur.variant.price),0)
-      setTotalPrice(result)
+    if(cookies?.user){
+      const data = await getCartByUserId(cookies?.user?.user_id,cookies?.user?.token)    
+        const result = data.reduce((acc:number,cur:any) => acc +(+cur.quantity * +cur.variant.price),0)
+        setTotalPrice(result)
+    }
   }
 
   useEffect(() => {
     hanlerTotalPrice() 
   },[cookies])
 
+  console.log(cookies);
   
-
-
-  const datas = {...cookies,totalPrice,hanlerTotalPrice};
+  
+  const datas = {...cookies,
+    totalPrice,
+    hanlerTotalPrice,
+    orderId,
+    setOrderId
+  };
   
   return (
     <>

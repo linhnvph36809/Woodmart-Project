@@ -3,8 +3,8 @@ import { RiAddFill } from "react-icons/ri";
 import { RiSubtractFill } from "react-icons/ri";
 
 const InputQuantity = ({id,handlerChangeQuantity = null ,defaultValue = 1,totalQuantity}: {id?:string|number,handlerChangeQuantity?:any,defaultValue?:number,totalQuantity:number}) => {
+  
   const [quantity, setQuantity] = useState<number>(defaultValue);
-  console.log(totalQuantity <= quantity);
   
   return (
     <>

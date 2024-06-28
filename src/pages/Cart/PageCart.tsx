@@ -146,21 +146,7 @@ const PageCart = () => {
                   </div>
                 )}
               </div>
-              <form action="">
-                <div className="flex gap-2 mt-8">
-                  <input
-                    type="text"
-                    className="text-color-black w-[230px] h-[42px] text-font 
-                    rounded-[35px] border border-[#0000001a] text-sm
-                    pl-4 nav-color text-color-black
-                    "
-                    placeholder="Coupon code"
-                  />
-                  <button className="w-[126px] h-[42px] flex justify-center items-center wd-text-font-bold text-white text-[13px] rounded-[32px] bg-primary">
-                    Apply coupon
-                  </button>
-                </div>
-              </form>
+
             </div>
             <div className="flex justify-between">
               <div className="flex w-[287px] items-start gap-5 pl-4 py-5 bg-white rounded-[10px]">

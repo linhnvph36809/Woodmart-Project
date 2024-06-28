@@ -1,43 +1,39 @@
-import { LuX } from "react-icons/lu";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useGlobalContext } from "../../Layouts";
 import { useCallback, useEffect, useState } from "react";
 
-import InputPrimary from "../../components/Inputs/InputPrimary";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useGlobalContext } from "../../Layouts";
 
+import InputPrimary from "../../components/Inputs/InputPrimary";
+import Spinner from "../../components/Spinner/Spinner";
 import {
   getAddressByUserId,
   getPayments,
-  getShiping,
+  getShippings,
   getUser,
-  postUrlPayMomo,
-  postUrlPayVnpay,
+  postUrlPay
 } from "../../api/user.api";
 
-import { deleteCart, getCartByUserId, putCart } from "../../api/cart.api";
-import InputQuantity from "../../components/Inputs/InputQuantity";
+
+import Voucher from "./Voucher";
 import { useNavigate } from "react-router-dom";
+import ProductTables from "./ProductTables";
+import { postOrder } from "../../api/orders.api";
+import { IInForPay } from "../../interfaces/IInForPay";
 
 const PageCheckOut = () => {
-  const cookies = useGlobalContext();
 
-  const [inforUser, setInforUser] = useState<any>();
-  const [shippings, setShipping] = useState<any>();
-  const [payments, setPayments] = useState<any>();
-  const [carts, setCarts] = useState<any>();
-  const [loading, setLoading] = useState<any>(false);
-  const [quantity, setQuantity] = useState<any>();
+  const cookies = useGlobalContext();
   const navigate = useNavigate();
 
-  type Inputs = {
-    fullName: string;
-    phone: string | number;
-    email: string;
-    country: string;
-    city: string;
-    street_address: string;
-    post_code: string;
-  };
+  if (!cookies?.user || !cookies?.totalPrice) {
+    navigate("/")
+  }
+
+  const [shippings, setShipping] = useState<any>();
+  const [payments, setPayments] = useState<any>();
+  const [loading, setLoading] = useState<any>(false);
+  const [calculate, setCalculate] = useState<any>({ priceShipping: 0, priceVoucher: { price: 0, id: null },products: [] });
+
 
   const {
     register,
@@ -45,83 +41,79 @@ const PageCheckOut = () => {
     watch,
     reset,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  } = useForm<IInForPay>();
+  const onSubmit: SubmitHandler<IInForPay> = async (data) => {
+    setLoading(true) ; 
+    const obj = {
+      telephone: data.telephone,
+      payment_id: data.payment_id,
+      shipping_id: data.shipping_id,
+      address: `${data.street_address} ${data.city} ${data.country}`,
+      user_id: cookies.user.user_id,
+      voucher: calculate.priceVoucher.id,
+      total: cookies.totalPrice + calculate.priceShipping - calculate.priceVoucher.price,
+      status: 2,
+      products: calculate.products
+    }
+    
+    const {payment_name} = payments.find((payment: any) => payment.id == data.payment_id)
+
+    if (payment_name == "Cash on delivery") {
+      const datas = await postOrder(obj, cookies?.user?.token) ; 
+      if(datas?.status >= 200 && datas?.status < 300 ){
+        cookies.setOrderId(datas.data.id)
+        alert("Order sucessces")
+        navigate("/checkout/order-received")
+      }
+    } else {
+      const datas = await postUrlPay(payment_name.split(' ').join('').toLowerCase()
+        , { total: obj.total, url: "http://localhost:5173/checkout/order-received" }, cookies?.user?.token);
+      if (datas?.payUrl) {
+        window.location.href = datas.payUrl
+        sessionStorage.setItem('infor', JSON.stringify(obj));
+
+      } else if (datas?.data) {
+        window.location.href = datas.data
+        sessionStorage.setItem('infor', JSON.stringify(obj));
+
+      }
+    }
+    setLoading(false) ; 
+
+  };
 
   const handlerGetInfoPay = useCallback(async () => {
     const address = getAddressByUserId(
-      cookies.user.user_id,
-      cookies.user.token
+      cookies?.user?.user_id,
+      cookies?.user?.token
     );
     const user = getUser(cookies.user.user_id, cookies.user.token);
-    const shipping = getShiping(cookies.user.token);
-    const payments = getPayments(cookies.user.token);
+    const shipping = getShippings(cookies?.user?.token);
+    const payments = getPayments(cookies?.user?.token);
     setLoading(true);
+
     Promise.all([address, user, shipping, payments]).then((values: any) => {
       const [address, { data: user }, shipping, payments] = values;
       reset({
         fullName: user?.full_name || null,
-        phone: user?.phone || null,
+        telephone: user?.phone_number || null,
         email: user?.email,
         country: address?.country,
         city: address?.city,
         street_address: address?.street_address,
         post_code: address?.post_code,
       });
-      setInforUser({ ...address, ...user });
+
       setShipping(shipping);
       setPayments(payments);
       setLoading(false);
     });
   }, []);
 
-  const hanlerGetCart = async () => {
-    setLoading(true);
-    const datas = await getCartByUserId(
-      cookies.user.user_id,
-      cookies.user.token
-    );
-    setCarts(datas);
-    cookies.hanlerTotalPrice();
-    setLoading(false);
-  };
 
-  const handlerQuantity = useCallback(
-    async (quantity: string | number, id: string | number) => {
-      setLoading(true);
-      setQuantity({ id, quantity });
-      const data = await putCart({ id, quantity }, cookies?.user.token);
-      hanlerGetCart();
-      setLoading(false);
-    },
-    [quantity]
-  );
 
-  const handlerDeleteCart = useCallback(
-    async (id: string | number, token: string) => {
-      setLoading(true);
-      if (cookies?.user?.token) {
-        const data = await deleteCart(id, token);
-        hanlerGetCart();
-      }
-      setLoading(false);
-    },
-    [carts]
-  );
-
-  const handlerPayOnline = useCallback(async (id: string | number) => {
-    const payload = { total: "1231", url: "http://localhost:5173/checkout/order-received" };
-    if (id == 1) {
-      const data = await postUrlPayVnpay(payload, cookies.user.token);
-      window.location.href = data.data;
-    } else if (id == 2) {
-      const data = await postUrlPayMomo(payload, cookies.user.token);
-      window.location.href = data.payUrl;
-    }
-  }, []);
 
   useEffect(() => {
-    hanlerGetCart();
     handlerGetInfoPay();
   }, [reset]);
 
@@ -160,9 +152,9 @@ const PageCheckOut = () => {
                     label="Phone"
                     required
                     type="number"
-                    register={{ ...register("phone", { required: true }) }}
+                    register={{ ...register("telephone", { required: true }) }}
                   />
-                  {errors.phone && (
+                  {errors.telephone && (
                     <p className="text-sm text-font text-red-500 pt-1">
                       This field is required
                     </p>
@@ -268,67 +260,7 @@ const PageCheckOut = () => {
                     Your Order
                   </h3>
                 </div>
-                <div className="relative overflow-x-auto sm:rounded-lg">
-                  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="uppercase border-b-2 border-solid border-[rgba(0,0,0,0.075)]">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 title-font text-base title-color"
-                        >
-                          PRODUCT
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-2 py-3 text-end title-font text-base title-color"
-                        >
-                          SUBTOTAL
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {carts?.length &&
-                        carts.map((cart: any) => (
-                          <tr className="bg-white border-b">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 text-font flex items-center gap-3"
-                            >
-                              <LuX
-                                className="text-base hover:cursor-pointer hover:opacity-70"
-                                onClick={() =>
-                                  handlerDeleteCart(cart.id, cookies.user.token)
-                                }
-                              />
-                              <img
-                                src={cart?.variant?.img}
-                                className="w-[65px] h-[74px] object-cover"
-                                alt="Apple Watch"
-                              />
-                              <div className="flex flex-col gap-3">
-                                <h5>{cart?.variant?.product.product_name}</h5>
-                                <div className="w-[81px]">
-                                  <InputQuantity
-                                    defaultValue={cart.quantity}
-                                    id={cart.id}
-                                    handlerChangeQuantity={handlerQuantity}
-                                  />
-                                </div>
-                              </div>
-                            </th>
-
-                            <td className="px-2 py-4 text-font text-base text-color-black text-end">
-                              $
-                              {+cart?.variant?.price *
-                                (quantity?.id == cart.variant.id
-                                  ? quantity.quantity
-                                  : cart.quantity)}
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
+                <ProductTables setLoading={setLoading} setCalculate={setCalculate} />
                 <div className="flex justify-between items-center py-4 border-b border-solid">
                   <h4 className="title-color title-font text-[15px]">
                     Subtotal
@@ -344,7 +276,10 @@ const PageCheckOut = () => {
                   <div className="text-end">
                     {shippings?.length &&
                       shippings.map((shipping: any) => (
-                        <div className="flex items-center gap-2 justify-end mb-3">
+                        <div
+                          key={shipping.id}
+                          className="flex items-center gap-2 justify-end mb-3"
+                        >
                           <label
                             htmlFor={"shipping" + shipping.id}
                             className="text-font text-[15px] title-color hover:cursor-pointer"
@@ -354,19 +289,41 @@ const PageCheckOut = () => {
                           <input
                             id={"shipping" + shipping.id}
                             type="radio"
-                            name="shipping"
                             className="hover:cursor-pointer"
+                            value={shipping.id}
+                            {...register("shipping_id", { required: true })}
+                            onChange={() => setCalculate((state: any) => ({ ...state, priceShipping: +shipping.fee }))}
                           />
                         </div>
                       ))}
+                    {errors.shipping_id && (
+                      <p className="text-sm text-font text-red-500 pt-1">
+                        This field is required
+                      </p>
+                    )}
                   </div>
+                </div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">
+                    Voucher
+                  </h4>
+                  <Voucher setCalculate={setCalculate} />
                 </div>
                 <div className="flex justify-between items-center py-4">
                   <h4 className="title-color title-font text-lg">Total</h4>
-                  <h3 className="wd-text-font-bold text-[22px] color-primary">
-                    ${cookies.totalPrice}
-                  </h3>
+                  <div>
+                    {calculate?.priceShipping ?
+                      <p className="text-font text-[#777777] text-[10px] text-end call-api-success">Shipping :
+                        <span className="ml-1 font-medium">${calculate.priceShipping}</span></p> : ""}
+                    {calculate?.priceVoucher?.price ?
+                      <p className="text-font text-[#777777] text-[10px] text-end">Voucher :
+                        <span className="ml-1 font-medium">-${calculate.priceVoucher.price}</span></p> : ""}
+                    <h3 className="wd-text-font-bold text-[22px] color-primary text-end">
+                      ${cookies.totalPrice + calculate.priceShipping - calculate.priceVoucher.price}
+                    </h3>
+                  </div>
                 </div>
+
                 <div className="rounded-[10px] bg-white">
                   <p className="text-font text-[15px] text-color-black pb-3">
                     Your order qualifies for free shipping!
@@ -391,23 +348,31 @@ const PageCheckOut = () => {
                     </h3>
                   </div>
                   <div>
-                    <ul className="flex gap-3 py-4">
+                    <ul className="text-end pt-5">
                       {payments?.length &&
                         payments.map((payment: any) => (
-                          <li onClick={() => handlerPayOnline(payment.id)}>
-                            <button
-                              type="button"
-                              className="flex justify-center items-center gap-2 mt-3 bg-white dark:bg-gray-900 border
-                            border-[#0000001a] rounded-lg w-[160px] h-[45px] px-3 py-2 text-sm font-medium 
-                            text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
-                            focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
-                            duration-300 ease-linear"
+                          <div className="flex gap-2 items-center">
+                            <input
+                              {...register("payment_id", { required: true })}
+                              type="radio"
+                              value={payment.id}
+                              id={payment.id}
+                              className="hover:cursor-pointer w-3 h-3"
+                            />
+                            <label
+                              htmlFor={payment.id}
+                              className="text-font text-[17px] title-color hover:cursor-pointer"
                             >
-                              <span>{payment.payment_name}</span>
-                            </button>
-                          </li>
+                              {payment.payment_name}
+                            </label>
+                          </div>
                         ))}
                     </ul>
+                    {errors.payment_id && (
+                      <p className="text-sm text-font text-red-500 pt-1">
+                        This field is required
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -424,7 +389,7 @@ const PageCheckOut = () => {
         </div>
         {loading && (
           <div className="fixed z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center">
-            laodding.....
+              <Spinner />
           </div>
         )}
       </div>

@@ -16,6 +16,7 @@ import { postCart } from "../../api/cart.api";
 import { postWishlist } from "../../api/wishlist.api";
 
 export default memo(function Products({ data }: { data: any }) {
+
   const cookies = useGlobalContext();
 
   const image = useRef<any>("");
@@ -54,14 +55,11 @@ export default memo(function Products({ data }: { data: any }) {
     },
     []
   );
-
-
-  console.log("Selected",data);
   
 
   const handlerWishlist = useCallback(async (productId: string | number) => {
     if (cookies?.user?.token) {
-      const data = await postWishlist(
+      await postWishlist(
         { user_id: cookies.user.user_id, product_id: productId },
         cookies.user.token
       );

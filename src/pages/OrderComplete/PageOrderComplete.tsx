@@ -1,5 +1,41 @@
 import { LuMoveRight } from "react-icons/lu";
+import { useGlobalContext } from "../../Layouts";
+import { getOrderDetail, postOrder } from "../../api/orders.api";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const PageOrderComplete = () => {
+  const cookies = useGlobalContext() ; 
+  const navigate = useNavigate() ; 
+  const [orders,setOrders] = useState<any>([]) ; 
+  
+  const products = JSON.parse(sessionStorage.getItem('infor') || "false");
+
+  const hanlerPostOrder = useCallback (async () => {
+    if(products){
+      const datas = await postOrder(products, cookies?.user?.token) ; 
+      hanlerGetOrderDetail(datas.data.id)
+    }
+  },[])
+  
+  const hanlerGetOrderDetail = useCallback(async (id:string|number) => {
+    if(id || products){
+      const datas = await getOrderDetail(id,cookies.user.token) ;
+      setOrders(datas) 
+      sessionStorage.removeItem('infor')
+    }else{
+      navigate("/")
+    }
+  },[])
+
+  useEffect(() => {
+    hanlerGetOrderDetail(cookies.orderId) ;
+    hanlerPostOrder() ;
+  },[])
+  
+  console.log(orders);
+  
+  
   return (
     <>
       <div className="w-[800px] mx-auto text-center">
@@ -53,39 +89,41 @@ const PageOrderComplete = () => {
           <ul className="flex justify-between">
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Order number:
-              <h5 className="wd-text-font-bold title-color mt-3">2020</h5>
+              <h5 className="wd-text-font-bold title-color mt-3">{orders?.order?.id}</h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Date:
               <h5 className="wd-text-font-bold title-color mt-3">
-                May 1, 2024
+                {orders?.order?.created_at}
               </h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Email:
               <h5 className="wd-text-font-bold title-color mt-3">
-                linhnvph36809@fpt.edu.vn
+                {orders?.order?.user?.email}
+
               </h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Total:
-              <h5 className="wd-text-font-bold title-color mt-3">$898.00</h5>
+              <h5 className="wd-text-font-bold title-color mt-3">${orders?.order?.total}</h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black">
               Payment method:
               <h5 className="wd-text-font-bold title-color mt-3">
-                Cash on delivery
+                $ {orders?.order?.shipping?.shipping_name}
               </h5>
             </li>
           </ul>
         </div>
         <p className="text-font text-color-black text-[15px] py-8">
-          Pay with cash upon delivery.
+          Pay with {orders?.order?.shipping?.shipping_name}
         </p>
         <div>
           <h3 className="title-font text-[22px] title-color uppercase mb-5">
             ORDER DETAILS
           </h3>
+          {orders && orders['order-detail'] && orders['order-detail'].map( (orderDetail : any) =>
           <div>
           <div className="flex justify-between items-center py-4 border-b border-solid">
               <h4 className="title-color title-font text-base">PRODUCT</h4>
@@ -94,51 +132,49 @@ const PageOrderComplete = () => {
               </p>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-[15px]">Giro LR <span className="text-color-black">× 2</span></h4>
+              <h4 className="title-color title-font text-[15px]"> ${orderDetail.product.product_name}  <span className="text-color-black">× {orderDetail.quantity}</span></h4>
               <p className="wd-text-font-bold text-[15px] color-primary">
-              $898.00
+              ${orderDetail.price}
               </p>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-solid">
               <h4 className="title-color title-font text-[15px]">Subtotal:</h4>
               <p className="wd-text-font-bold text-[15px] color-primary">
-              $898.00
+              ${+orderDetail.price * +orderDetail.quantity}
               </p>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-solid">
               <h4 className="title-color title-font text-[15px]">Shipping:</h4>
               <p className="text-font text-[15px] text-color-black">
-              Local pickup
+              {orders.order.shipping.shipping_name}
               </p>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-solid">
               <h4 className="title-color title-font text-[15px]">Payment method:</h4>
               <p className="text-font text-[15px] text-color-black">
-              Cash on delivery
+              {orders.order.payment.payment_name}
               </p>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-solid">
               <h4 className="title-color title-font text-[15px]">TOTAL:</h4>  
-              <h4 className="text-[22px] wd-text-font-bold color-primary">$898.00</h4>
+              <h4 className="text-[22px] wd-text-font-bold color-primary">${+orderDetail.price * +orderDetail.quantity}</h4>
             </div>
           </div>
+          )}
         </div>
         <div>
-        <h3 className="title-font text-[22px] title-color uppercase mt-10 mb-5">
+        <h3 className="title-font text-[22px] title-color uppercase mt-10 mb-3">
         BILLING ADDRESS
         </h3>
         <address className="text-color-black text-font text-base leading-[1.8] mb-5 font-normal italic">
-        <em>Nguyễn Văn Linh
+        <em>{orders?.order?.user?.full_name}
         <br />
-        Đường Mỹ Đình
+        {orders?.order?.address}
         <br />
-        Nam Từ Liêm 100000
+        {orders?.order?.telephone}
         <br />
-        Vietnam
-        <br />
-        0377893303
-        <br />
-        linhnvph36809@fpt.edu.vn</em>
+        {orders?.order?.user?.email}
+        </em>
         </address>
         </div>
       </div>

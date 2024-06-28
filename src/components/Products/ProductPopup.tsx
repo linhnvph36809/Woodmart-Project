@@ -4,7 +4,11 @@ import SwiperCarousel from "../Swiper/SwiperCarousel";
 import ButtonPrimary from "../Buttons/ButtonPrimary";
 import InputQuantity from "../Inputs/InputQuantity";
 import ProductColor from "./ProductColor";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useGlobalContext } from "../../Layouts";
+import { postCart } from "../../api/cart.api";
+import { Link } from "react-router-dom";
+import { LuX } from "react-icons/lu";
 
 const ProductPopup = ({
   data = {},
@@ -13,17 +17,31 @@ const ProductPopup = ({
   data: any;
   onHandlerClose: () => void;
 }) => {
-
+  const cookies = useGlobalContext();
 
   const [variantProduct, setVariantProduct] = useState<any>({});
-  const [quantity,setQuantity] = useState<number>(1)
+  const [quantity, setQuantity] = useState<number>(1);
 
   const handlerCheckQuantity = (quantity: number) => {
-    setQuantity(quantity) 
-  }
-  
-  
-  
+    setQuantity(quantity);
+  };
+
+  const handlerAddCart = useCallback(
+    async (cart: any) => {
+      if (cookies?.user?.token) {
+        const data = await postCart(cart, cookies?.user.token);
+        if (data?.status < 200 && data?.status > 300) {
+          alert("Khong co squyen truy cap");
+        } else {
+          cookies.hanlerTotalPrice();
+          onHandlerClose();
+        }
+      } else {
+        alert("Vui lòng đăng nhập để mua hàng");
+      }
+    },
+    [cookies?.user]
+  );
 
   return (
     <>
@@ -47,17 +65,20 @@ const ProductPopup = ({
                 datas={data.variants}
               />
             ) : (
-             <img src={data.img} alt="ảnh lỗi" className="h-full object-cover" />
+              <img
+                src={data.img}
+                alt="ảnh lỗi"
+                className="h-full object-cover"
+              />
             )}
-            <a
-              href="#"
+            <Link
+              to={`/product-detail/${data.id}`}
               className="flex justify-center items-center text-white
-                        absolute -bottom-[50px] w-full bg-primary z-[2] rounded-b-[10px] h-[42px] wd-text-font-bold
-                        text-[13px] transtion-all duration-100 ease-linear btn-popup-product
-                        "
+              absolute -bottom-[50px] w-full bg-primary z-[2] rounded-b-[10px] h-[42px] wd-text-font-bold
+              text-[13px] transtion-all duration-100 ease-linear btn-popup-product"
             >
               View detailts
-            </a>
+            </Link>
           </div>
         </div>
         <div className="w-6/12 overflow-auto scroll-cart-items pr-8 relative">
@@ -75,9 +96,9 @@ const ProductPopup = ({
             <div className="flex items-center text-[15px] title-font">
               Đánh giá:{" "}
               <span className="ml-2">
-              {Array.isArray(data.reviews)
-                ? +data.reviews[0].average_rating
-                : data.reviews_avg_stars}
+                {Array.isArray(data.reviews)
+                  ? +data.reviews[0].average_rating
+                  : data.reviews_avg_stars}
               </span>
               <HiStar className="text-xl text-[#EABE12]" />
             </div>
@@ -92,26 +113,63 @@ const ProductPopup = ({
           <p className="text-color-black text-[15px] text-font my-4">
             {data.description}
           </p>
-          <div className="flex items-center gap-4 my-4 wd-text-font-bold title-color text-[15px]">
-            Color:
-            <ProductColor
-              datas={data.variants}
-              size={25}
-              gap={3}
-              handlerSelected={setVariantProduct}
-              colorSelected={variantProduct}
-            />
-          </div>
+          {
+            data.variants.length ?
+              <div className="flex items-center gap-3 my-4 wd-text-font-bold title-color text-[15px]">
+                Color:
+                <ProductColor
+                  datas={data.variants}
+                  size={25}
+                  gap={3}
+                  handlerSelected={setVariantProduct}
+                  colorSelected={variantProduct}
+                />
+                {
+                  variantProduct?.id &&
+                  <span className="flex items-center justify-center gap-1 
+                    text-xs text-[#777] text-font hover:cursor-pointer call-api-success"
+                    onClick={() => setVariantProduct({})}>
+                    <LuX className="text-sm text-[#b1b1b1]" />
+                    Clear</span>
+                }
+              </div> : ""
+          }
           <div className="flex items-center gap-2 pb-4 border-b">
-            <InputQuantity totalQuantity={variantProduct?.qty_in_stock} handlerChangeQuantity={handlerCheckQuantity}/>
-            <ButtonPrimary  
-              name="Add to cart"
-              className={`w-[112px] bg-primary hover:bg-[#df8c4f] ${variantProduct?.qty_in_stock && +variantProduct?.qty_in_stock < quantity && "opacity-50 pointer-events-none"}`}
-              type="submit"
+            <InputQuantity
+              totalQuantity={variantProduct?.qty_in_stock}
+              handlerChangeQuantity={handlerCheckQuantity}
             />
+            <div
+              onClick={() =>
+                handlerAddCart({
+                  user_id: cookies?.user?.user_id,
+                  quantity: quantity,
+                  product_variant_id: variantProduct.id,
+                })
+              }
+            >
+              <ButtonPrimary
+                name="Add to cart"
+                className={`w-[112px] bg-primary hover:bg-[#df8c4f] ${+variantProduct?.qty_in_stock < quantity &&
+                  "opacity-50 pointer-events-none"
+                  }
+                    ${data?.variants?.length
+                    ? variantProduct?.id || "opacity-50 pointer-events-none"
+                    : ""
+                  }`}
+                type="submit"
+              />
+            </div>
             <ButtonPrimary
               name="Buy now"
-              className={`bg-[#333333] w-[112px] hover:opacity-90 ${variantProduct?.qty_in_stock && +variantProduct?.qty_in_stock < quantity && "opacity-50 pointer-events-none"}`}
+              className={`bg-[#333333] w-[112px] hover:opacity-90 ${+variantProduct?.qty_in_stock < quantity &&
+                "opacity-50 pointer-events-none"
+                }
+                  ${data?.variants?.length
+                  ? variantProduct?.id ||
+                  "opacity-50 pointer-events-none"
+                  : ""
+                }`}
             />
           </div>
           <ul className="mt-5">

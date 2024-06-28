@@ -1,20 +1,29 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import navLinksAccount from "../../constants/NavLinkAccounts";
+import { useGlobalContext } from "..";
 
 const LayoutAccount = () => {
-  const [page,setPage] = useState<string>("");
-  const location = useLocation() ; 
-  
+  const cookies = useGlobalContext();
+
+  const navigate = useNavigate();
+  const [page, setPage] = useState<string>("");
+  const location = useLocation();
+
+
+
   useEffect(() => {
-    const url = location.pathname.split("/")[2] || "" ;
-    setPage(url) ; 
+    if (!cookies?.user) {
+      navigate('/')
+    }
+    const url = location.pathname.split("/")[2] || "";
+    setPage(url);
   }, [location]);
-  
-  
-  
+
+
+
   return (
     <>
       <BannerGolobal title="My account" />
@@ -33,16 +42,25 @@ const LayoutAccount = () => {
                       to={navLink.path}
                       className={`px-3 py-[10px] block ${page == navLink.path && "bg-[#0000000f]"}
                       hover:bg-[#00000008] rounded-[10px] wd-text-font-bold text-sm title-color`}
-                    > 
-                    {navLink.name}
+                    >
+                      {navLink.name}
                     </Link>
                   </li>
                 )
               }
+              <li>
+                <div
+                  className={`px-3 py-[10px] block hover:bg-[#00000008]
+                  rounded-[10px] wd-text-font-bold text-sm title-color 
+                  hover:cursor-pointer`}
+                >
+                  Logout
+                </div>
+              </li>
             </ul>
           </div>
           <div className="w-9/12 py-3 px-7">
-            <Outlet context={setPage}/>
+            <Outlet context={setPage} />
           </div>
         </div>
       </div>

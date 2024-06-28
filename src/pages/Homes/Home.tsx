@@ -278,7 +278,7 @@ const Home = () => {
         </div>
       </div>
       <div className="content">
-        <div className="flex items-end gap-10 mt-20">
+        {/* <div className="flex items-end gap-10 mt-20">
           <div className="w-8/12">
             <div className="mb-5 pt-10">
               <h4 className="text-[32px] title-color title-font">
@@ -299,7 +299,7 @@ const Home = () => {
               className="rounded-xl"
             />
           </div>
-        </div>
+        </div> */}
         <div className="mt-20">
           <h4 className="text-[32px] title-color title-font">
             Rules for choosing furniture

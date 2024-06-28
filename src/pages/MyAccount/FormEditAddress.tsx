@@ -1,113 +1,129 @@
-const FormEditAddress = ({title}:{title:string}) => {
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import InputPrimary from "../../components/Inputs/InputPrimary";
+import { IInForPay } from "../../interfaces/IInForPay";
+import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
+import { useGlobalContext } from "../../Layouts";
+import {
+  getAddressByUserId,
+  patchAddressUser,
+} from "../../api/user.api";
+
+
+const FormEditAddress = ({ title }: { title: string }) => {
+  const cookies = useGlobalContext();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [idAddress, setIdAddress] = useState();
+
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<IInForPay>();
+  const onSubmit: SubmitHandler<IInForPay> = async (data) => {
+    if (cookies.user) {
+      setLoading(true);
+      const datas = await patchAddressUser(
+        { ...data, user_id: cookies.user.user_id },
+        cookies.user.token
+      );
+      setLoading(false);
+      navigate("/my-account/address");
+    }
+  };
+
+  const handlerGetAddress = async () => {
+    if (cookies.user) {
+      setLoading(true);
+      const datas = await getAddressByUserId(
+        cookies.user.user_id,
+        cookies.user.token
+      );
+      setLoading(false);
+
+      reset({
+        country: datas.country,
+        city: datas.city,
+        street_address: datas.street_address,
+        post_code: datas.post_code,
+      });
+    }
+  };
+
+  useEffect(() => {
+    handlerGetAddress();
+  }, []);
+
   return (
     <>
       <div>
-        <h3 className="text-[22px] title-font title-color mb-5">
-          {title}
-        </h3>
-        <form action="">
-          <div className="flex gap-10">
-            <div className="w-6/12">
-              <label className="text-font text-[15px] nav-color mb-2 block">
-                First name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-              />
-            </div>
-            <div className="w-6/12">
-              <label className="text-font text-[15px] nav-color mb-2 block">
-                Last name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-              />
-            </div>
-          </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Company name (optional) <span className="text-red-500">*</span>
-            </label>
-            <input
+        <h3 className="text-[22px] title-font title-color mb-5">{title}</h3>
+        <form action="" onSubmit={handleSubmit(onSubmit)}>
+          <div className="">
+            <InputPrimary
+              label="Country / Region"
+              required
               type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
+              register={{ ...register("country", { required: true }) }}
             />
+            {errors.country && (
+              <p className="text-sm text-font text-red-500 pt-1">
+                This field is required
+              </p>
+            )}
           </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Country / Region <span className="text-red-500">*</span>
-            </label>
-            <select
-              name=""
-              id=""
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-            >
-              <option value="">2</option>
-            </select>
-          </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Street address <span className="text-red-500">*</span>
-            </label>
-            <input
+          <div className="">
+            <InputPrimary
+              label="Town / City"
+              required
               type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
+              register={{ ...register("city", { required: true }) }}
             />
+            {errors.city && (
+              <p className="text-sm text-font text-red-500 pt-1">
+                This field is required
+              </p>
+            )}
           </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Street address <span className="text-red-500">*</span>
-            </label>
-            <input
+          <div className="">
+            <InputPrimary
+              label="Street address"
+              required
               type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
+              register={{
+                ...register("street_address", { required: true }),
+              }}
             />
-            <input
-              type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a] mt-4"
-            />
+            {errors.street_address && (
+              <p className="text-sm text-font text-red-500 pt-1">
+                This field is required
+              </p>
+            )}
           </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Postcode / ZIP (optional)
-            </label>
-            <input
+          <div className="">
+            <InputPrimary
+              label="Postcode / ZIP (optional)"
               type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
+              register={{ ...register("post_code", { required: true }) }}
             />
+            {errors.post_code && (
+              <p className="text-sm text-font text-red-500 pt-1">
+                This field is required
+              </p>
+            )}
           </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Town / City <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-            />
+          <div>
+            <ButtonPrimary
+              type={`${loading ? "button" : "submit"}`}
+              name={`${loading ? "Loading..." : "Save"}`}
+            ></ButtonPrimary>
           </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Phone <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-            />
-          </div>
-          <div className="mt-5">
-            <label className="text-font text-[15px] nav-color mb-2 block">
-              Email address <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="text-color-black text-[15px] outline-none pl-5 w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-            />
-          </div>
-          <button className="mt-5 w-[126px] h-[42px] flex justify-center items-center wd-text-font-bold text-white text-[13px] rounded-[32px] bg-primary">
-            Save Address
-          </button>
         </form>
       </div>
     </>

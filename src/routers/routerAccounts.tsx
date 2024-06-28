@@ -6,6 +6,9 @@ import AccountDownload from '../pages/MyAccount/AccountDownload';
 import AccountAddress from '../pages/MyAccount/AccountAddress';
 import FormEditAddress from '../pages/MyAccount/FormEditAddress';
 import Wishlist from '../pages/MyAccount/Wishlist';
+import AccountOrderDetail from '../pages/MyAccount/AccountOrderDetail';
+import FormAddAddress from '../pages/MyAccount/FormAddAddress';
+import AccountDetail from '../pages/MyAccount/AccountDetail';
 
 const routerAccounts =  {
     path: "/my-account/", 
@@ -20,11 +23,15 @@ const routerAccounts =  {
             element: <AccountOrder/> 
         },
         {
+            path: "orders/detail/:id",
+            element: <AccountOrderDetail/> 
+        },
+        {
             path: "download",
             element: <AccountDownload/> 
         },
         {
-            path: "edit-address",
+            path: "address",
             element: <AccountAddress/> 
         },
         {
@@ -32,12 +39,18 @@ const routerAccounts =  {
             element: <Wishlist/> 
         },
         {
-            path: "edit-address/billing",
-            element: <FormEditAddress title='Billing address'/>  
+            path: "account-detail",
+            element: <AccountDetail title='Account Detail' /> 
         },
         {
-            path: "edit-address/shipping",
-            element: <FormEditAddress title='Shipping address'/>  
+            path: "add-address/billing",
+            element: <FormAddAddress title='Add Billing address'/>  
+
+        },
+        {
+            path: "edit-address/billing",
+            element: <FormEditAddress title='Edit Billing address'/>  
+
         }
     ]
 }

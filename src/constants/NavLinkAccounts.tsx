@@ -25,7 +25,7 @@ const navLinksAccount = [
 
     },
     {
-        path: "edit-address",
+        path: "address",
         name: "Addresses",
         icon: <IoLocationOutline className={classes}/>
         
@@ -40,12 +40,7 @@ const navLinksAccount = [
         path: "wishlist",
         name: "Wishlist",
         icon: <IoHeartOutline className={classes}/>
-    },
-    {
-        path: "logout",
-        name: "Logout",
-        icon: <IoLogOutOutline className={classes}/>
-    },
+    }
 ]
 
 export default navLinksAccount

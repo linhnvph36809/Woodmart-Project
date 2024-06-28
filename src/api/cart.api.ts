@@ -11,7 +11,7 @@ export const putCart = async (product:any,token:string) => {
 }
 
 export const getCartByUserId = async (user_id:string|number,token:string) => {
-    return await instance.get('/cart?user_id='+user_id,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => alert(error) ); 
+    return await instance.get('/cart?user_id='+user_id,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => console.log(error) ); 
 }
 
 export const deleteCart = async (id:string|number,token:string) => {

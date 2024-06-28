@@ -1,5 +1,21 @@
-import Product from "../../components/Products/Product"
+import { useEffect, useState } from "react";
+import Products from "../../components/Products/Product"
+import { getWishlistByUserId } from "../../api/wishlist.api";
+import { useGlobalContext } from "../../Layouts";
+
 const Wishlist = () => {
+
+    const cookies = useGlobalContext();
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+      (async function () {
+        const data = await getWishlistByUserId(cookies.user.user_id,cookies.user.token);
+        data && setProducts(data);
+      })();
+    }, []);
+
     return (
         <>
         <div>
@@ -11,9 +27,18 @@ const Wishlist = () => {
                 </p>
             </div>
             <div className="grid-product-xl mt-5">
-                <Product/>
-                <Product/>
-                <Product/>
+            {products.map((product: any) => (
+            <Products key={product.id} data={{
+              id:product.product.id,
+              name: product.product.product_name,
+              price: product.product.price,
+              reviews: product.product.reviews,     
+              variants: product.product.variants,
+              category: product.product.category,
+              img: product.product.product_theme,
+              description: ""
+            }} />
+          ))}
             </div>
         </div>
         </>

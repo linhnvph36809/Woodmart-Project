@@ -1,4 +1,4 @@
-import { LuShuffle } from "react-icons/lu";
+import { LuShuffle, LuX } from "react-icons/lu";
 import { LuHeart } from "react-icons/lu";
 import { LuRuler } from "react-icons/lu";
 import { LuChevronDown } from "react-icons/lu";
@@ -14,12 +14,19 @@ import {
 import InputQuantity from "../../components/Inputs/InputQuantity";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import SlibarProduct from "../Homes/SlibarProduct";
+import ProductColor from "../../components/Products/ProductColor";
 
 const PageDetail = () => {
   const { id } = useParams();
 
   const [product, setProduct] = useState<any>({});
   const [productByCategory, setProductByCategory] = useState<any>([]);
+  const [variantProduct, setVariantProduct] = useState<any>({});
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const handlerCheckQuantity = (quantity: number) => {
+    setQuantity(quantity);
+  };
 
   useEffect(() => {
     (async function () {
@@ -29,13 +36,12 @@ const PageDetail = () => {
         Promise.all([product, productByCategorys])
           .then((values) => {
             setProduct(values[0].data);
-            setProductByCategory(values[1].data.slice(0,11));
+            setProductByCategory(values[1].data.slice(0, 11));
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
     })();
   }, [id]);
-
 
   return (
     <>
@@ -167,18 +173,59 @@ const PageDetail = () => {
               </p>
               <h1 className="text-[34px] title-font-800 color-primary py-4">
                 <span>$</span>
-                {product.product?.price}
+                {variantProduct.price || product.product?.price}
               </h1>
+              {
+                product?.variant?.length ?
+                  <div className="flex items-center gap-3 mb-5 title-font">
+                    Color:{" "}
+                    <ProductColor
+                      datas={product.variant}
+                      size={25}
+                      gap={3}
+                      handlerSelected={setVariantProduct}
+                      colorSelected={variantProduct}
+                    />
+                    {
+                      variantProduct?.id &&
+                      <span className="flex items-center justify-center gap-1 
+                    text-xs text-[#777] text-font hover:cursor-pointer call-api-success"
+                        onClick={() => setVariantProduct({})}>
+                        <LuX className="text-sm text-[#b1b1b1]" />
+                        Clear</span>
+                    }
+                  </div> : ""
+              }
               <form action="">
                 <div className="flex justify-between items-center gap-2">
-                  <InputQuantity />
+                  <InputQuantity
+                    totalQuantity={variantProduct?.qty_in_stock}
+                    handlerChangeQuantity={handlerCheckQuantity}
+                  />
                   <ButtonPrimary
                     name="Add to cart"
-                    className="w-full bg-primary m-0 hover:bg-[#df8c4f]"
+                    className={`w-full bg-primary m-0 hover:bg-[#df8c4f]
+                      ${+variantProduct?.qty_in_stock < quantity &&
+                      "opacity-50 pointer-events-none"
+                      }
+                        ${product?.variant?.length
+                        ? variantProduct?.id ||
+                        "opacity-50 pointer-events-none"
+                        : ""
+                      }
+                      `}
                   />
                   <ButtonPrimary
                     name="Buy now"
-                    className="w-full bg-[#101010e6] m-0 hover:bg-[#333333]"
+                    className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]
+                        ${+variantProduct?.qty_in_stock <
+                      quantity && "opacity-50 pointer-events-none"
+                      }
+                        ${product?.variant?.length
+                        ? variantProduct?.id ||
+                        "opacity-50 pointer-events-none"
+                        : ""
+                      }`}
                   />
                 </div>
               </form>
@@ -296,7 +343,7 @@ const PageDetail = () => {
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
                     {Array.isArray(product.variant) &&
-                    product.variant.length > 0
+                      product.variant.length > 0
                       ? product.variant[0].material.material_value
                       : "Trống"}
                   </span>
@@ -646,7 +693,10 @@ const PageDetail = () => {
                 Related Products
               </h3>
               <div>
-                <SlibarProduct columns={{ sm: 2, lg: 4, xl: 5 }} datas={productByCategory} />
+                <SlibarProduct
+                  columns={{ sm: 2, lg: 4, xl: 5 }}
+                  datas={productByCategory}
+                />
               </div>
             </div>
           )}

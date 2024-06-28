@@ -1,30 +1,32 @@
 import { LuX } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useGlobalContext } from "../../Layouts";
 import { deleteCart, getCartByUserId } from "../../api/cart.api";
 import Spinner from "../../components/Spinner/Spinner";
 
-const CartSideRight = ({onClose} : {onClose : () => void }) => {
+const CartSideRight = memo(({onClose} : {onClose : () => void }) => {
 
-  const {user,totalPrice} = useGlobalContext();
+  const {user,totalPrice,hanlerTotalPrice} = useGlobalContext();
 
   const [carts,setCarts] = useState([])
 
   const [loading,setLoading] = useState<any>(null) ; 
 
-
   const hanlerGetCart =  useCallback(async () => {
     setLoading(true)
-    const data = await getCartByUserId(user?.user_id,user?.token) ; 
+    if(user){
+      const data = await getCartByUserId(user?.user_id,user?.token) ; 
+      setCarts(data)
+      hanlerTotalPrice()
+    }
     setLoading(false)
-    setCarts(data)
   },[carts])
 
 
   const handlerDeleteCart = useCallback (async(id:string|number,token:string) => {
-    const data = await deleteCart(id,token)  ;
+    await deleteCart(id,token)  ;
     hanlerGetCart() ; 
   },[carts])
 
@@ -114,6 +116,6 @@ const CartSideRight = ({onClose} : {onClose : () => void }) => {
       </div>
     </div>
   );
-};
+});
 
 export default CartSideRight;
