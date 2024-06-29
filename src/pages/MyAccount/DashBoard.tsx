@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 
 import navLinksAccount from "../../constants/NavLinkAccounts";
 import { IoLogOutOutline } from "react-icons/io5";
+import { useGlobalContext } from "../../Layouts";
 const DashBoard = () => {
+
+  const {handlerLogout} = useGlobalContext()
   return (
     <>
       <div>
@@ -43,7 +46,8 @@ const DashBoard = () => {
           )}
           <div>
             <div className="block p-5 text-center hover:cursor-pointer
-              shadow rounded-[10px] dashboard-hover transtion-all duration-100 ease-linear hover:bg-[#00000008]">
+              shadow rounded-[10px] dashboard-hover transtion-all
+              duration-100 ease-linear hover:bg-[#00000008]" onClick={handlerLogout}>
               <IoLogOutOutline className="text-[50px] text-[#bbb] flex mx-auto dashboard-icon" />
               <h3 className="wd-text-font-bold text-[#555] text-[15px] pt-3">
                 Logout

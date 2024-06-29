@@ -1,41 +1,44 @@
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LuMoveRight } from "react-icons/lu";
 import { useGlobalContext } from "../../Layouts";
 import { getOrderDetail, postOrder } from "../../api/orders.api";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Loadding from "../../components/Loadding/Loadding";
 
 const PageOrderComplete = () => {
-  const cookies = useGlobalContext() ; 
-  const navigate = useNavigate() ; 
-  const [orders,setOrders] = useState<any>([]) ; 
-  
-  const products = JSON.parse(sessionStorage.getItem('infor') || "false");
+  const cookies = useGlobalContext();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const hanlerPostOrder = useCallback (async () => {
-    if(products){
-      const datas = await postOrder(products, cookies?.user?.token) ; 
-      hanlerGetOrderDetail(datas.data.id)
+  const products = JSON.parse(sessionStorage.getItem("infor") || "false");
+
+  const hanlerPostOrder = useCallback(async () => {
+    if (cookies?.user && products) {
+      const datas = await postOrder(products, cookies?.user?.token);
+      hanlerGetOrderDetail(datas.data.id);
     }
-  },[])
-  
-  const hanlerGetOrderDetail = useCallback(async (id:string|number) => {
-    if(id || products){
-      const datas = await getOrderDetail(id,cookies.user.token) ;
-      setOrders(datas) 
-      sessionStorage.removeItem('infor')
-    }else{
-      navigate("/")
+  }, []);
+
+  const hanlerGetOrderDetail = useCallback(async (id: string | number) => {
+    if (id || products) {
+      setLoading(true);
+      const datas = await getOrderDetail(id, cookies.user.token);
+      setOrders(datas);
+      setLoading(false);
+      sessionStorage.removeItem("infor");
+    } else {
+      navigate("/");
     }
-  },[])
+  }, []);
 
   useEffect(() => {
-    hanlerGetOrderDetail(cookies.orderId) ;
-    hanlerPostOrder() ;
-  },[])
-  
+    hanlerGetOrderDetail(cookies.orderId);
+    hanlerPostOrder();
+  }, []);
+
   console.log(orders);
-  
-  
+
   return (
     <>
       <div className="w-[800px] mx-auto text-center">
@@ -89,7 +92,9 @@ const PageOrderComplete = () => {
           <ul className="flex justify-between">
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Order number:
-              <h5 className="wd-text-font-bold title-color mt-3">{orders?.order?.id}</h5>
+              <h5 className="wd-text-font-bold title-color mt-3">
+                {orders?.order?.id}
+              </h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Date:
@@ -101,12 +106,13 @@ const PageOrderComplete = () => {
               Email:
               <h5 className="wd-text-font-bold title-color mt-3">
                 {orders?.order?.user?.email}
-
               </h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black border-r-[1px] border-solid">
               Total:
-              <h5 className="wd-text-font-bold title-color mt-3">${orders?.order?.total}</h5>
+              <h5 className="wd-text-font-bold title-color mt-3">
+                ${orders?.order?.total}
+              </h5>
             </li>
             <li className="p-5 text-center text-font text-[15px] text-color-black">
               Payment method:
@@ -123,61 +129,77 @@ const PageOrderComplete = () => {
           <h3 className="title-font text-[22px] title-color uppercase mb-5">
             ORDER DETAILS
           </h3>
-          {orders && orders['order-detail'] && orders['order-detail'].map( (orderDetail : any) =>
-          <div>
-          <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-base">PRODUCT</h4>
-              <p className="title-color title-font text-base">
-              TOTAL
-              </p>
-            </div>
-            <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-[15px]"> ${orderDetail.product.product_name}  <span className="text-color-black">× {orderDetail.quantity}</span></h4>
-              <p className="wd-text-font-bold text-[15px] color-primary">
-              ${orderDetail.price}
-              </p>
-            </div>
-            <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-[15px]">Subtotal:</h4>
-              <p className="wd-text-font-bold text-[15px] color-primary">
-              ${+orderDetail.price * +orderDetail.quantity}
-              </p>
-            </div>
-            <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-[15px]">Shipping:</h4>
-              <p className="text-font text-[15px] text-color-black">
-              {orders.order.shipping.shipping_name}
-              </p>
-            </div>
-            <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-[15px]">Payment method:</h4>
-              <p className="text-font text-[15px] text-color-black">
-              {orders.order.payment.payment_name}
-              </p>
-            </div>
-            <div className="flex justify-between items-center py-4 border-b border-solid">
-              <h4 className="title-color title-font text-[15px]">TOTAL:</h4>  
-              <h4 className="text-[22px] wd-text-font-bold color-primary">${+orderDetail.price * +orderDetail.quantity}</h4>
-            </div>
-          </div>
-          )}
+          {orders &&
+            orders["order-detail"] &&
+            orders["order-detail"].map((orderDetail: any) => (
+              <div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-base">PRODUCT</h4>
+                  <p className="title-color title-font text-base">TOTAL</p>
+                </div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">
+                    {" "}
+                    ${orderDetail.product.product_name}{" "}
+                    <span className="text-color-black">
+                      × {orderDetail.quantity}
+                    </span>
+                  </h4>
+                  <p className="wd-text-font-bold text-[15px] color-primary">
+                    ${orderDetail.price}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">
+                    Subtotal:
+                  </h4>
+                  <p className="wd-text-font-bold text-[15px] color-primary">
+                    ${+orderDetail.price * +orderDetail.quantity}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">
+                    Shipping:
+                  </h4>
+                  <p className="text-font text-[15px] text-color-black">
+                    {orders.order.shipping.shipping_name}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">
+                    Payment method:
+                  </h4>
+                  <p className="text-font text-[15px] text-color-black">
+                    {orders.order.payment.payment_name}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">TOTAL:</h4>
+                  <h4 className="text-[22px] wd-text-font-bold color-primary">
+                    ${+orderDetail.price * +orderDetail.quantity}
+                  </h4>
+                </div>
+              </div>
+            ))}
         </div>
         <div>
-        <h3 className="title-font text-[22px] title-color uppercase mt-10 mb-3">
-        BILLING ADDRESS
-        </h3>
-        <address className="text-color-black text-font text-base leading-[1.8] mb-5 font-normal italic">
-        <em>{orders?.order?.user?.full_name}
-        <br />
-        {orders?.order?.address}
-        <br />
-        {orders?.order?.telephone}
-        <br />
-        {orders?.order?.user?.email}
-        </em>
-        </address>
+          <h3 className="title-font text-[22px] title-color uppercase mt-10 mb-3">
+            BILLING ADDRESS
+          </h3>
+          <address className="text-color-black text-font text-base leading-[1.8] mb-5 font-normal italic">
+            <em>
+              {orders?.order?.user?.full_name}
+              <br />
+              {orders?.order?.address}
+              <br />
+              {orders?.order?.telephone}
+              <br />
+              {orders?.order?.user?.email}
+            </em>
+          </address>
         </div>
       </div>
+      <Loadding isActive={loading}/>
     </>
   );
 };

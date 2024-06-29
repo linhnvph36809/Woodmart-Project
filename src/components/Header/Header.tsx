@@ -13,12 +13,13 @@ import { getUserById } from "../../api/authentication.api.ts";
 
 
 const Header = () => {
+  
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [fixedHeader, setFixedHeader] = useState(false);
   const [showSideRight,setShowSideRight] = useState("") ; 
   const [user,setUser] = useState<any>({isLogin: false}) ; 
 
-  const {user:check,totalPrice} = useGlobalContext() ; 
+  const {user:check,totalPrice,quantityProduct} = useGlobalContext() ; 
 
   
   
@@ -26,12 +27,15 @@ const Header = () => {
     setShowSideRight(value)
   }
 
-  const handlerGetUser = useCallback(async () => {
+  const handlerGetUser = async () => {
+    console.log("Header work");
     if(check?.user_id && check?.token){
       const data = await getUserById(check?.user_id,check?.token) ;
         setUser((state:any) => ({...state,data:data?.data,isLogin:true}));   
+    }else{
+      setUser({})
     }
-  },[check?.user_id]) 
+  }
 
   
 
@@ -39,7 +43,7 @@ const Header = () => {
 
   useEffect(() => {
     handlerGetUser() ; 
-  },[check?.user_id])
+  },[check?.token])
 
 
   useEffect(() => {
@@ -219,7 +223,7 @@ const Header = () => {
                   className="absolute -top-1 -right-1 bg-white color-primary min-w-[18px] h-[18px]
                 rounded-full text-[11px] flex items-center justify-center p-1 border-[0.1px] border-solid border-[#0000002b]"
                 >
-                  16
+                  {quantityProduct}
                 </p>
               </a>
             </div>

@@ -1,3 +1,6 @@
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { LuShuffle, LuX } from "react-icons/lu";
 import { LuHeart } from "react-icons/lu";
 import { LuRuler } from "react-icons/lu";
@@ -5,24 +8,30 @@ import { LuChevronDown } from "react-icons/lu";
 import { HiStar } from "react-icons/hi";
 import { HiOutlineStar } from "react-icons/hi";
 import ZoomImages from "./ZoomImage";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import Spinner from "../../components/Spinner/Spinner";
+
 import {
   getProductByCategoryId,
   getProductDetail,
 } from "../../api/product.api";
+
 import InputQuantity from "../../components/Inputs/InputQuantity";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import SlibarProduct from "../Homes/SlibarProduct";
 import ProductColor from "../../components/Products/ProductColor";
+import { postCart } from "../../api/cart.api";
+import { useGlobalContext } from "../../Layouts";
 
 const PageDetail = () => {
   const { id } = useParams();
+  const cookies = useGlobalContext();
 
   const [product, setProduct] = useState<any>({});
   const [productByCategory, setProductByCategory] = useState<any>([]);
   const [variantProduct, setVariantProduct] = useState<any>({});
   const [quantity, setQuantity] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handlerCheckQuantity = (quantity: number) => {
     setQuantity(quantity);
@@ -33,15 +42,37 @@ const PageDetail = () => {
       if (id) {
         const product = getProductDetail(id);
         const productByCategorys = getProductByCategoryId(2);
+        setLoading(true);
+
         Promise.all([product, productByCategorys])
           .then((values) => {
             setProduct(values[0].data);
             setProductByCategory(values[1].data.slice(0, 11));
+            setLoading(false);
           })
           .catch((err) => { });
       }
     })();
   }, [id]);
+
+  const handlerAddCart = useCallback(
+    async (type: boolean, cart: any) => {
+      if (cookies?.user?.token) {
+        setLoading(true);
+        const data = await postCart(cart, cookies?.user.token);
+        if (data?.status < 200 && data?.status > 300) {
+          alert("Khong co squyen truy cap");
+        } else {
+          await cookies.hanlerTotalPrice();
+          setLoading(false);
+          type && navigate("/checkout");
+        }
+      } else {
+        alert("Vui lòng đăng nhập để mua hàng");
+      }
+    },
+    [cookies?.user]
+  );
 
   return (
     <>
@@ -119,7 +150,7 @@ const PageDetail = () => {
               </svg>
             </div>
           </div>
-          <div className="flex justify-between gap-8 mt-3">
+          <div className="flex justify-between items-start gap-8 mt-3">
             <div className="flex-1">
               {Array.isArray(product.variant) && product.variant.length > 0 ? (
                 <ZoomImages datas={product.variant} />
@@ -175,58 +206,85 @@ const PageDetail = () => {
                 <span>$</span>
                 {variantProduct.price || product.product?.price}
               </h1>
-              {
-                product?.variant?.length ?
-                  <div className="flex items-center gap-3 mb-5 title-font">
-                    Color:{" "}
-                    <ProductColor
-                      datas={product.variant}
-                      size={25}
-                      gap={3}
-                      handlerSelected={setVariantProduct}
-                      colorSelected={variantProduct}
-                    />
-                    {
-                      variantProduct?.id &&
-                      <span className="flex items-center justify-center gap-1 
+              {product?.variant?.length ? (
+                <div className="flex items-center gap-3 mb-5 title-font">
+                  Color:{" "}
+                  <ProductColor
+                    datas={product.variant}
+                    size={25}
+                    gap={3}
+                    handlerSelected={setVariantProduct}
+                    colorSelected={variantProduct}
+                  />
+                  {variantProduct?.id && (
+                    <span
+                      className="flex items-center justify-center gap-1 
                     text-xs text-[#777] text-font hover:cursor-pointer call-api-success"
-                        onClick={() => setVariantProduct({})}>
-                        <LuX className="text-sm text-[#b1b1b1]" />
-                        Clear</span>
-                    }
-                  </div> : ""
-              }
+                      onClick={() => setVariantProduct({})}
+                    >
+                      <LuX className="text-sm text-[#b1b1b1]" />
+                      Clear
+                    </span>
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
               <form action="">
                 <div className="flex justify-between items-center gap-2">
                   <InputQuantity
                     totalQuantity={variantProduct?.qty_in_stock}
                     handlerChangeQuantity={handlerCheckQuantity}
                   />
-                  <ButtonPrimary
-                    name="Add to cart"
-                    className={`w-full bg-primary m-0 hover:bg-[#df8c4f]
+                  <div
+                    onClick={() =>
+                      handlerAddCart(false, {
+                        user_id: cookies?.user?.user_id,
+                        quantity: quantity,
+                        product_variant_id: variantProduct.id,
+                      })
+                    }
+                    className="w-full"
+                  >
+                    <ButtonPrimary
+                      name="Add to cart"
+                      type="button"
+                      className={`w-full bg-primary m-0 hover:bg-[#df8c4f]
                       ${+variantProduct?.qty_in_stock < quantity &&
-                      "opacity-50 pointer-events-none"
-                      }
-                        ${product?.variant?.length
-                        ? variantProduct?.id ||
                         "opacity-50 pointer-events-none"
-                        : ""
-                      }
+                        }
+                        ${product?.variant?.length
+                          ? variantProduct?.id ||
+                          "opacity-50 pointer-events-none"
+                          : ""
+                        }
                       `}
-                  />
-                  <ButtonPrimary
-                    name="Buy now"
-                    className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]
-                        ${+variantProduct?.qty_in_stock <
-                      quantity && "opacity-50 pointer-events-none"
-                      }
-                        ${product?.variant?.length
-                        ? variantProduct?.id ||
+                    />
+                  </div>
+                  <div
+                    onClick={() =>
+                      handlerAddCart(true, {
+                        user_id: cookies?.user?.user_id,
+                        quantity: quantity,
+                        product_variant_id: variantProduct.id,
+                      })
+                    }
+                    className="w-full"
+                  >
+                    <ButtonPrimary
+                      name="Buy now"
+                      type="button"
+                      className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]
+                        ${+variantProduct?.qty_in_stock < quantity &&
                         "opacity-50 pointer-events-none"
-                        : ""
-                      }`}
-                  />
+                        }
+                        ${product?.variant?.length
+                          ? variantProduct?.id ||
+                          "opacity-50 pointer-events-none"
+                          : ""
+                        }`}
+                    />
+                  </div>
                 </div>
               </form>
               <div>
@@ -515,7 +573,7 @@ const PageDetail = () => {
               </div>
             </div>
           </div> */}
-          <div className="bg-white rounded-[10px] mb-16 p-4 pb-5">
+          <div className="bg-white rounded-[10px] my-16 p-4 pb-5">
             <h1 className="text-xl title-color title-font">Customer Reviews</h1>
             <div className="flex justify-between gap-10">
               <div className="w-6/12">
@@ -598,90 +656,22 @@ const PageDetail = () => {
                 </div>
               </div>
               <div className="w-6/12">
-                <h5 className="text-sm title-color title-font mb-5">
-                  BE THE FIRST TO REVIEW “CAN”
-                </h5>
-                <p className="text-font text-base text-color-black pb-2">
-                  Your email address will not be published. Required fields are
-                  marked <span className="text-red-500">*</span>
-                </p>
-                <p className="text-font text-base nav-color flex items-center gap-1 my-3">
-                  Your rating <span className="text-red-500">*</span>:
-                  <div className="flex ml-2">
-                    <HiOutlineStar className="text-[#bbb] text-lg" />
-                    <HiOutlineStar className="text-[#bbb] text-lg" />
-                    <HiOutlineStar className="text-[#bbb] text-lg" />
-                    <HiOutlineStar className="text-[#bbb] text-lg" />
-                    <HiOutlineStar className="text-[#bbb] text-lg" />
+                <div>
+                  <div className="pb-3 mb-5 border-b">
+                    <div className="flex items-center gap-1">
+                    <h3 className="header-font text-[15px] mb-2 px-3 rounded-[30px] bg-[#b3b0b0]
+                    text-white">@binhle-qu1kq </h3>
+                    <span className="text-font text-xs nav-color">11 tháng trước</span>
+                    </div>
+                    <p className="text-font nav-color text-base">Mong ngày nào cũng ra seri người cuối cùng ,hay quá </p>
                   </div>
-                </p>
-                <form action="">
-                  <div>
-                    <label className="text-font text-base nav-color mb-2 block">
-                      Your review <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={8}
-                      className="block p-2.5 w-full text-sm bg-gray-50 text-color-black text-font
-                     rounded-[35px] border border-[#0000001a] focus:ring-blue-500 focus:outline-none"
-                      defaultValue={""}
-                    />
-                  </div>
-                  <div className="mt-3">
-                    <label className="text-font text-base nav-color mb-2 block">
-                      Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                    />
-                  </div>
-                  <div className="mt-3">
-                    <label className="text-font text-base nav-color mb-2 block">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="text-color-black w-full h-[42px] text-font rounded-[35px] border border-[#0000001a]"
-                    />
-                  </div>
-                  <div className="flex gap-2 my-4">
-                    <input
-                      type="checkbox"
-                      className="text-color-black text-font rounded-[35px] border border-[#0000001a]"
-                    />
-                    <p className="text-font text-[15px] nav-color">
-                      Save my name, email, and website in this browser for the
-                      next time I comment.
-                    </p>
-                  </div>
-                  <button className="w-[86px] h-[42px] flex justify-center items-center wd-text-font-bold text-white text-[13px] rounded-[32px] bg-primary">
-                    Submit
-                  </button>
-                </form>
+                </div>
               </div>
             </div>
             <div className="flex justify-between items-center">
               <h5 className="text-sm title-color title-font mb-5">
                 0 REVIEWS FOR CAN
               </h5>
-              <form className="">
-                <select
-                  id="select-sort"
-                  className="text-left bg-gray-50
-                      text-sm text-font text-[#777777] rounded-[35px]
-                      focus:ring-blue-500 pl-[14px] block w-[139px] h-[42px]
-                      border-[1px] border-solid border-[rgba(0,0,0,.1)]
-                      bg-[url('./public/images/chevron-down.png')] bg-no-repeat
-                      bg-right
-                      "
-                >
-                  <option>Default</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                </select>
-              </form>
             </div>
             <p className="text-font text-[15px] text-color-black">
               There are no reviews matching the given conditions.
@@ -702,6 +692,7 @@ const PageDetail = () => {
           )}
         </div>
       </div>
+      {loading && <div className="fixed inset-0 flex justify-center items-center"><Spinner size={30} /></div>}
     </>
   );
 };

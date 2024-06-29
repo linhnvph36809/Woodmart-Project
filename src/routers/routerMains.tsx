@@ -13,6 +13,8 @@ import routerAccounts from './routerAccounts';
 import Login from '../pages/Authentication/Login';
 import ForgetPassword from '../pages/Authentication/ForgetPassword';
 import Blog from '../pages/Blog/Blog';
+import CheckCode from '../pages/Authentication/CheckCode';
+import BlogDetail from '../pages/Blog/BlogDetail';
 
 
 const routers = createBrowserRouter([
@@ -45,6 +47,10 @@ const routers = createBrowserRouter([
                 element: <Blog/>
             },
             {
+                path: "blog-detail/:slug",
+                element: <BlogDetail/>
+            },
+            {
                 path: "gift-cards",
                 element: <PageGiftCards/>
             },
@@ -63,6 +69,10 @@ const routers = createBrowserRouter([
             {
                 path: "/checkout",
                 element: <PageCheckOut/>
+            },
+            {
+                path: "check-code",
+                element: <CheckCode/>
             },
             {
                 path: "/checkout/order-received", 

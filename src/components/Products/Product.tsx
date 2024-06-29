@@ -188,9 +188,9 @@ export default memo(function Products({ data }: { data: any }) {
             </a>
             <div className="flex items-center text-[15px] wd-text-font-bold nav-color">
               {Array.isArray(data.reviews)
-                ? +data.reviews[0].average_rating
-                : data.reviews_avg_stars && +data.reviews_avg_stars}
-              {data.reviews_avg_stars ||
+                ? +data?.reviews[0]?.average_rating
+                : data?.reviews_avg_stars && +data.reviews_avg_stars}
+              {data?.reviews_avg_stars ||
                 (Array.isArray(data.reviews) && data.reviews.length > 0 && (
                   <HiStar className="text-[22px] text-[#EABE12]" />
                 ))}

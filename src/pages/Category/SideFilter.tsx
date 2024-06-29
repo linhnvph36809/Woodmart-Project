@@ -24,11 +24,13 @@ const SideFilter = ({setProducts} : {setProducts: any}) => {
     setFilterpProducts(value);
   },[filterProducts])
 
+  console.log(filterProducts);
+  
 
 
   return (
     <>
-      <div className="w-3/12 p-5 bg-white rounded-[10px]">
+      <div className="w-3/12 p-5 bg-white rounded-[10px] max-h-[1000px]">
         <div>
           <h5 className="mb-6 title-font nav-link text-base">
             Filter By Price

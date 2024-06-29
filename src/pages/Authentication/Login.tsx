@@ -1,12 +1,12 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import InputPrimary from "../../components/Inputs/InputPrimary";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
-import { login, postRegister } from "../../api/authentication.api";
+import { login, loginGoogle, postRegister } from "../../api/authentication.api";
 
 const Login = () => {
 
@@ -21,13 +21,7 @@ const Login = () => {
     phone_number: string|number
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Input>();
-  const onSubmit: SubmitHandler<Input> = async (data) => {
-    const datas = await login(data);
+  const handlerLogin = (datas:any) => {
     if (datas.status_code == 200) {
       setCookie(
         "user",
@@ -40,6 +34,21 @@ const Login = () => {
     } else {
       alert(datas.message);
     }
+  }
+
+  const handlerLoginGg = async () => {
+    const data = await loginGoogle()
+    window.location.href = data.redirect_url
+  }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Input>();
+  const onSubmit: SubmitHandler<Input> = async (data) => {
+    const datas = await login(data);
+    handlerLogin(datas);
   };
 
   const onSubmit2: SubmitHandler<Input> = async (data) => {
@@ -111,12 +120,12 @@ const Login = () => {
                           Remember me
                         </p>
                       </div>
-                      <a
-                        href=""
+                      <Link
+                        to="/lost-password"
                         className="text-font color-primary text-[15px] hover:underline hover:opacity-60"
                       >
                         Lost your password?
-                      </a>
+                      </Link>
                     </div>
                     <div className="flex justify-between items-center gap-2 pt-4">
                       <span className="flex-1 h-[1px] bg-[#0000001a]"></span>
@@ -129,7 +138,7 @@ const Login = () => {
                       border-[#0000001a] rounded-lg w-[230px] px-3 py-[10px] text-[15px] font-medium 
                       text-gray-800 title-font hover:bg-gray-200 focus:outline-none 
                       focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transtion-all
-                      duration-300 ease-linear"
+                      duration-300 ease-linear" onClick={handlerLoginGg}
                       >
                         <svg
                           className="h-6 w-6 mr-2"

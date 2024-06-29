@@ -7,7 +7,7 @@ const Posts = () => {
 
     useEffect(() => {
         (async function(){
-            const data = await getAllPost();
+            const {data} = await getAllPost();
             const newData = data.reverse().slice(0,4)
             setPost(newData) 
         })()

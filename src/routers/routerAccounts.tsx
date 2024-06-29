@@ -9,6 +9,7 @@ import Wishlist from '../pages/MyAccount/Wishlist';
 import AccountOrderDetail from '../pages/MyAccount/AccountOrderDetail';
 import FormAddAddress from '../pages/MyAccount/FormAddAddress';
 import AccountDetail from '../pages/MyAccount/AccountDetail';
+import ReviewProducts from '../pages/MyAccount/ReviewProducts';
 
 const routerAccounts =  {
     path: "/my-account/", 
@@ -37,6 +38,10 @@ const routerAccounts =  {
         {
             path: "wishlist",
             element: <Wishlist/> 
+        },
+        {
+            path: 'review-product',
+            element: <ReviewProducts/>
         },
         {
             path: "account-detail",

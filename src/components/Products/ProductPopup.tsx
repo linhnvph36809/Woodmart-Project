@@ -7,7 +7,7 @@ import ProductColor from "./ProductColor";
 import { useCallback, useState } from "react";
 import { useGlobalContext } from "../../Layouts";
 import { postCart } from "../../api/cart.api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LuX } from "react-icons/lu";
 
 const ProductPopup = ({
@@ -21,20 +21,24 @@ const ProductPopup = ({
 
   const [variantProduct, setVariantProduct] = useState<any>({});
   const [quantity, setQuantity] = useState<number>(1);
+  const navigate = useNavigate();
 
   const handlerCheckQuantity = (quantity: number) => {
     setQuantity(quantity);
   };
 
   const handlerAddCart = useCallback(
-    async (cart: any) => {
+    async (type: boolean, cart: any) => {
       if (cookies?.user?.token) {
+        // setLoading(true);
         const data = await postCart(cart, cookies?.user.token);
         if (data?.status < 200 && data?.status > 300) {
           alert("Khong co squyen truy cap");
         } else {
-          cookies.hanlerTotalPrice();
+          await cookies.hanlerTotalPrice();
+          // setLoading(false);
           onHandlerClose();
+          type && navigate("/checkout");
         }
       } else {
         alert("Vui lòng đăng nhập để mua hàng");
@@ -113,27 +117,30 @@ const ProductPopup = ({
           <p className="text-color-black text-[15px] text-font my-4">
             {data.description}
           </p>
-          {
-            data.variants.length ?
-              <div className="flex items-center gap-3 my-4 wd-text-font-bold title-color text-[15px]">
-                Color:
-                <ProductColor
-                  datas={data.variants}
-                  size={25}
-                  gap={3}
-                  handlerSelected={setVariantProduct}
-                  colorSelected={variantProduct}
-                />
-                {
-                  variantProduct?.id &&
-                  <span className="flex items-center justify-center gap-1 
+          {data.variants.length ? (
+            <div className="flex items-center gap-3 my-4 wd-text-font-bold title-color text-[15px]">
+              Color:
+              <ProductColor
+                datas={data.variants}
+                size={25}
+                gap={3}
+                handlerSelected={setVariantProduct}
+                colorSelected={variantProduct}
+              />
+              {variantProduct?.id && (
+                <span
+                  className="flex items-center justify-center gap-1 
                     text-xs text-[#777] text-font hover:cursor-pointer call-api-success"
-                    onClick={() => setVariantProduct({})}>
-                    <LuX className="text-sm text-[#b1b1b1]" />
-                    Clear</span>
-                }
-              </div> : ""
-          }
+                  onClick={() => setVariantProduct({})}
+                >
+                  <LuX className="text-sm text-[#b1b1b1]" />
+                  Clear
+                </span>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
           <div className="flex items-center gap-2 pb-4 border-b">
             <InputQuantity
               totalQuantity={variantProduct?.qty_in_stock}
@@ -141,7 +148,7 @@ const ProductPopup = ({
             />
             <div
               onClick={() =>
-                handlerAddCart({
+                handlerAddCart(false, {
                   user_id: cookies?.user?.user_id,
                   quantity: quantity,
                   product_variant_id: variantProduct.id,
@@ -150,27 +157,40 @@ const ProductPopup = ({
             >
               <ButtonPrimary
                 name="Add to cart"
-                className={`w-[112px] bg-primary hover:bg-[#df8c4f] ${+variantProduct?.qty_in_stock < quantity &&
+                className={`w-[112px] bg-primary hover:bg-[#df8c4f] ${
+                  +variantProduct?.qty_in_stock < quantity &&
                   "opacity-50 pointer-events-none"
-                  }
-                    ${data?.variants?.length
-                    ? variantProduct?.id || "opacity-50 pointer-events-none"
-                    : ""
-                  }`}
-                type="submit"
+                }
+                    ${
+                      data?.variants?.length
+                        ? variantProduct?.id || "opacity-50 pointer-events-none"
+                        : ""
+                    }`}
+                type="button"
               />
             </div>
-            <ButtonPrimary
-              name="Buy now"
-              className={`bg-[#333333] w-[112px] hover:opacity-90 ${+variantProduct?.qty_in_stock < quantity &&
-                "opacity-50 pointer-events-none"
-                }
-                  ${data?.variants?.length
-                  ? variantProduct?.id ||
+            <div
+              onClick={() =>
+                handlerAddCart(true, {
+                  user_id: cookies?.user?.user_id,
+                  quantity: quantity,
+                  product_variant_id: variantProduct.id,
+                })
+              }
+            >
+              <ButtonPrimary
+                name="Buy now"
+                className={`bg-[#333333] w-[112px] hover:opacity-90 ${
+                  +variantProduct?.qty_in_stock < quantity &&
                   "opacity-50 pointer-events-none"
-                  : ""
-                }`}
-            />
+                }
+                  ${
+                    data?.variants?.length
+                      ? variantProduct?.id || "opacity-50 pointer-events-none"
+                      : ""
+                  }`}
+              />
+            </div>
           </div>
           <ul className="mt-5">
             <li className="nav-color wd-text-font-bold text-[15px] pb-3">

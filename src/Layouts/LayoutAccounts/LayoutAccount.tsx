@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import navLinksAccount from "../../constants/NavLinkAccounts";
 import { useGlobalContext } from "..";
+import PageError from "../../components/PageError/PageError";
 
 const LayoutAccount = () => {
   const cookies = useGlobalContext();
@@ -13,11 +14,11 @@ const LayoutAccount = () => {
   const location = useLocation();
 
 
+  if (!cookies?.user) {
+    return (<PageError />)
+  }
 
   useEffect(() => {
-    if (!cookies?.user) {
-      navigate('/')
-    }
     const url = location.pathname.split("/")[2] || "";
     setPage(url);
   }, [location]);
@@ -52,8 +53,7 @@ const LayoutAccount = () => {
                 <div
                   className={`px-3 py-[10px] block hover:bg-[#00000008]
                   rounded-[10px] wd-text-font-bold text-sm title-color 
-                  hover:cursor-pointer`}
-                >
+                  hover:cursor-pointer`} onClick={cookies.handlerLogout} >
                   Logout
                 </div>
               </li>

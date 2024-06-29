@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
 
 const PostItem = ({data}:{data:any}) => {
   return (
     <>
       <div className="bg-white border-gray-200 rounded-lg posts">
-        <a href="#" className="relative">
+        <Link to={`/blog-detail/${data.slug}`} className="relative">
           <div className="overflow-hidden rounded-t-lg">
             <img
               className="w-full object-cover h-[202px] transtion-all duration-500 ease-in-out image-posts"
@@ -52,7 +53,7 @@ const PostItem = ({data}:{data:any}) => {
               </svg>
             </div>
           </div>
-        </a>
+        </Link>
         <div className="p-6">
           <div className="text-[13px] text-[#a5a5a5] text-font flex gap-2 mb-2">
             <p className="#">{data.topic.topic_name}</p>
@@ -65,9 +66,9 @@ const PostItem = ({data}:{data:any}) => {
           <p className="text-font text-base text-color-black my-3 hidden-content-post">
             {data.content}
           </p>
-          <a href="#" className="color-primary text-[13px] title-font-800">
+          <Link to={`/blog-detail/${data.slug}`} className="color-primary text-[13px] title-font-800">
             Continue reading
-          </a>
+          </Link>
         </div>
       </div>
     </>

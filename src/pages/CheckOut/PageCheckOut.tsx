@@ -4,36 +4,38 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useGlobalContext } from "../../Layouts";
 
 import InputPrimary from "../../components/Inputs/InputPrimary";
-import Spinner from "../../components/Spinner/Spinner";
+
 import {
   getAddressByUserId,
   getPayments,
   getShippings,
   getUser,
-  postUrlPay
+  postUrlPay,
 } from "../../api/user.api";
-
 
 import Voucher from "./Voucher";
 import { useNavigate } from "react-router-dom";
 import ProductTables from "./ProductTables";
 import { postOrder } from "../../api/orders.api";
 import { IInForPay } from "../../interfaces/IInForPay";
+import Loadding from "../../components/Loadding/Loadding";
 
 const PageCheckOut = () => {
-
   const cookies = useGlobalContext();
   const navigate = useNavigate();
 
   if (!cookies?.user || !cookies?.totalPrice) {
-    navigate("/")
+    navigate("/");
   }
 
   const [shippings, setShipping] = useState<any>();
   const [payments, setPayments] = useState<any>();
   const [loading, setLoading] = useState<any>(false);
-  const [calculate, setCalculate] = useState<any>({ priceShipping: 0, priceVoucher: { price: 0, id: null },products: [] });
-
+  const [calculate, setCalculate] = useState<any>({
+    priceShipping: 0,
+    priceVoucher: { price: 0, id: null },
+    products: [],
+  });
 
   const {
     register,
@@ -43,7 +45,7 @@ const PageCheckOut = () => {
     formState: { errors },
   } = useForm<IInForPay>();
   const onSubmit: SubmitHandler<IInForPay> = async (data) => {
-    setLoading(true) ; 
+    setLoading(true);
     const obj = {
       telephone: data.telephone,
       payment_id: data.payment_id,
@@ -51,35 +53,43 @@ const PageCheckOut = () => {
       address: `${data.street_address} ${data.city} ${data.country}`,
       user_id: cookies.user.user_id,
       voucher: calculate.priceVoucher.id,
-      total: cookies.totalPrice + calculate.priceShipping - calculate.priceVoucher.price,
+      total:
+        cookies.totalPrice +
+        calculate.priceShipping -
+        calculate.priceVoucher.price,
       status: 2,
-      products: calculate.products
-    }
-    
-    const {payment_name} = payments.find((payment: any) => payment.id == data.payment_id)
+      products: calculate.products,
+    };
+
+    const { payment_name } = payments.find(
+      (payment: any) => payment.id == data.payment_id
+    );
 
     if (payment_name == "Cash on delivery") {
-      const datas = await postOrder(obj, cookies?.user?.token) ; 
-      if(datas?.status >= 200 && datas?.status < 300 ){
-        cookies.setOrderId(datas.data.id)
-        alert("Order sucessces")
-        navigate("/checkout/order-received")
+      const datas = await postOrder(obj, cookies?.user?.token);
+      if (datas?.status >= 200 && datas?.status < 300) {
+        cookies.setOrderId(datas.data.id);
+        alert("Order sucessces");
+        navigate("/checkout/order-received");
       }
     } else {
-      const datas = await postUrlPay(payment_name.split(' ').join('').toLowerCase()
-        , { total: obj.total, url: "http://localhost:5173/checkout/order-received" }, cookies?.user?.token);
+      const datas = await postUrlPay(
+        payment_name.split(" ").join("").toLowerCase(),
+        {
+          total: obj.total,
+          url: `${window.location.host}/checkout/order-received`,
+        },
+        cookies?.user?.token
+      );
       if (datas?.payUrl) {
-        window.location.href = datas.payUrl
-        sessionStorage.setItem('infor', JSON.stringify(obj));
-
+        window.location.href = datas.payUrl;
+        sessionStorage.setItem("infor", JSON.stringify(obj));
       } else if (datas?.data) {
-        window.location.href = datas.data
-        sessionStorage.setItem('infor', JSON.stringify(obj));
-
+        window.location.href = datas.data;
+        sessionStorage.setItem("infor", JSON.stringify(obj));
       }
     }
-    setLoading(false) ; 
-
+    setLoading(false);
   };
 
   const handlerGetInfoPay = useCallback(async () => {
@@ -109,9 +119,6 @@ const PageCheckOut = () => {
       setLoading(false);
     });
   }, []);
-
-
-
 
   useEffect(() => {
     handlerGetInfoPay();
@@ -260,7 +267,10 @@ const PageCheckOut = () => {
                     Your Order
                   </h3>
                 </div>
-                <ProductTables setLoading={setLoading} setCalculate={setCalculate} />
+                <ProductTables
+                  setLoading={setLoading}
+                  setCalculate={setCalculate}
+                />
                 <div className="flex justify-between items-center py-4 border-b border-solid">
                   <h4 className="title-color title-font text-[15px]">
                     Subtotal
@@ -292,7 +302,12 @@ const PageCheckOut = () => {
                             className="hover:cursor-pointer"
                             value={shipping.id}
                             {...register("shipping_id", { required: true })}
-                            onChange={() => setCalculate((state: any) => ({ ...state, priceShipping: +shipping.fee }))}
+                            onChange={() =>
+                              setCalculate((state: any) => ({
+                                ...state,
+                                priceShipping: +shipping.fee,
+                              }))
+                            }
                           />
                         </div>
                       ))}
@@ -312,14 +327,31 @@ const PageCheckOut = () => {
                 <div className="flex justify-between items-center py-4">
                   <h4 className="title-color title-font text-lg">Total</h4>
                   <div>
-                    {calculate?.priceShipping ?
-                      <p className="text-font text-[#777777] text-[10px] text-end call-api-success">Shipping :
-                        <span className="ml-1 font-medium">${calculate.priceShipping}</span></p> : ""}
-                    {calculate?.priceVoucher?.price ?
-                      <p className="text-font text-[#777777] text-[10px] text-end">Voucher :
-                        <span className="ml-1 font-medium">-${calculate.priceVoucher.price}</span></p> : ""}
+                    {calculate?.priceShipping ? (
+                      <p className="text-font text-[#777777] text-[10px] text-end call-api-success">
+                        Shipping :
+                        <span className="ml-1 font-medium">
+                          ${calculate.priceShipping}
+                        </span>
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                    {calculate?.priceVoucher?.price ? (
+                      <p className="text-font text-[#777777] text-[10px] text-end">
+                        Voucher :
+                        <span className="ml-1 font-medium">
+                          -${calculate.priceVoucher.price}
+                        </span>
+                      </p>
+                    ) : (
+                      ""
+                    )}
                     <h3 className="wd-text-font-bold text-[22px] color-primary text-end">
-                      ${cookies.totalPrice + calculate.priceShipping - calculate.priceVoucher.price}
+                      $
+                      {cookies.totalPrice +
+                        calculate.priceShipping -
+                        calculate.priceVoucher.price}
                     </h3>
                   </div>
                 </div>
@@ -387,11 +419,7 @@ const PageCheckOut = () => {
             </form>
           </div>
         </div>
-        {loading && (
-          <div className="fixed z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center">
-              <Spinner />
-          </div>
-        )}
+        <Loadding isActive={loading} />
       </div>
     </>
   );

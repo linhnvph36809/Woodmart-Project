@@ -3,8 +3,7 @@ import { IoDownloadOutline } from "react-icons/io5";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoHeartOutline } from "react-icons/io5";
-import { IoLogOutOutline } from "react-icons/io5";
-
+import { IoDuplicate } from "react-icons/io5";
 const classes = "text-[50px] text-[#bbb] flex mx-auto dashboard-icon" ; 
 
 const navLinksAccount = [
@@ -17,6 +16,12 @@ const navLinksAccount = [
         path: "orders",
         name: "Orders",
         icon: <BsFileEarmarkText className={classes}/>
+    },
+    {
+        path: "review-product",
+        name: "Review Products",
+        icon: <IoDuplicate className={classes}/>
+
     },
     {
         path: "download",
@@ -41,6 +46,7 @@ const navLinksAccount = [
         name: "Wishlist",
         icon: <IoHeartOutline className={classes}/>
     }
+
 ]
 
 export default navLinksAccount

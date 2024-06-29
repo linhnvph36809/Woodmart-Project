@@ -35,3 +35,6 @@ export const postUrlPay = async (pay:string,data:any,token:string) => {
     return await instance.post('/'+pay,data,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => alert(error) ); 
 }
 
+export const postReview = async (review:any,token:string) => {
+    return await instance.post('/reviews',review,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => alert(error) ); 
+}

@@ -4,23 +4,24 @@ import { useEffect, useState } from "react";
 import Product from "../../components/Products/Product";
 import { LuChevronRight } from "react-icons/lu";
 import { getProductByCategoryId } from "../../api/product.api";
-import Spinner from "../../components/Spinner/Spinner";
 import SideFilter from "./SideFilter";
-
+import Loadding from "../../components/Loadding/Loadding";
 
 const PageCategory = () => {
   let { id } = useParams();
   const [products, setProducts] = useState([]);
+  const [loadding, setLoadding] = useState<boolean>(false);
 
   useEffect(() => {
     (async function () {
-      if (id) { 
+      if (id) {
+        setLoadding(true);
         const { data } = await getProductByCategoryId(id);
         setProducts(data || []);
+        setLoadding(false);
       }
     })();
   }, [id]);
-
 
   return (
     <>
@@ -48,11 +49,11 @@ const PageCategory = () => {
       <div className="content py-8 flex justify-between gap-5">
         <SideFilter setProducts={setProducts} />
         <div className="w-9/12">
-          <div className="flex justify-between items-center mb-5">
-            <div className="text-font text-[15px] text-[#777777]">
+          <div className="flex justify-between items-center">
+            {/* <div className="text-font text-[15px] text-[#777777]">
               Showing 1–12 of 16 results
-            </div>
-            <div className="flex gap-6 items-center">
+            </div> */}
+            {/* <div className="flex gap-6 items-center">
               <div className="flex items-end wd-text-font-bold gap-2">
                 Show :
                 <ul className="flex gap-2 items-center">
@@ -116,10 +117,10 @@ const PageCategory = () => {
                   </select>
                 </form>
               </div>
-            </div>
+            </div> */}
           </div>
           {products.length > 0 ? (
-            <div className="grid grid-product-l gap-y-6 justify-between call-api-success">
+            <div className="grid grid-product-l grid-rows-[repeat(4,398px)]  gap-y-6 justify-between call-api-success">
               {products.map((product: any) => (
                 <Product
                   key={product.id}
@@ -137,9 +138,7 @@ const PageCategory = () => {
               ))}
             </div>
           ) : (
-            <div className="h-[500px] flex items-center justify-center">
-              <Spinner size={35} />
-            </div>
+            <p className="text-center title-font title-color text-lg">No results</p>
           )}
           {products.length > 12 && (
             <div>
@@ -176,6 +175,7 @@ const PageCategory = () => {
           )}
         </div>
       </div>
+      <Loadding isActive={loadding}/>
     </>
   );
 };

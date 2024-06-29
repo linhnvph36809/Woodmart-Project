@@ -19,7 +19,7 @@ const ProductBestsellers = memo(() => {
     <>
       {" "}
       {products.length > 0 ? (
-        <div className="grid grid-product-s gap-y-6 justify-between call-api-success">
+        <div className="grid grid-product-s grid-rows-[repeat(2,398px)] gap-y-6 justify-between call-api-success">
           {products.map((product: any) => (
             <Products key={product.id} data={{
               id:product.product.id,
