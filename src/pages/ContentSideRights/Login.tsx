@@ -9,7 +9,6 @@ import InputPrimary from "../../components/Inputs/InputPrimary";
 import { login } from "../../api/authentication.api";
 import { useGlobalContext } from "../../Layouts";
 import { useState } from "react";
-import Spinner from "../../components/Spinner/Spinner";
 
 const Login = ({ onClose }: { onClose: () => void }) => { 
   

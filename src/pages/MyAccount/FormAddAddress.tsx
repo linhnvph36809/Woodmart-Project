@@ -4,27 +4,22 @@ import { IInForPay } from "../../interfaces/IInForPay";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import { useGlobalContext } from "../../Layouts";
 import { postAddressUser } from "../../api/user.api";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const FormAddAddress = ({title}:{title:string}) => {
   const cookies = useGlobalContext()
-  const navigate = useNavigate()
   const [loading,setLoading] = useState(false) ; 
 
   const {
     register,
     handleSubmit,
-    watch,
-    reset,
     formState: { errors },
   } = useForm<IInForPay>();
-  const onSubmit: SubmitHandler<IInForPay> = async (data) => {
+  const onSubmit: SubmitHandler<IInForPay> = async () => {
     if(cookies.user){
       setLoading(true)
        await postAddressUser({"country": "QUnanm", "city": "Nam Từ Liêm", "street_address": "Đường Mỹ Đình", "post_code": "100000","user_id": 32},cookies.user.token) ;
       setLoading(false)
-      // navigate("/my-account/address")
     }
   }
 

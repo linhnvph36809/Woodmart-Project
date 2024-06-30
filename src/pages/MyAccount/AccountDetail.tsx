@@ -1,5 +1,4 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IInForPay } from "../../interfaces/IInForPay";
 import { useGlobalContext } from "../../Layouts";
 import InputPrimary from "../../components/Inputs/InputPrimary";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
@@ -27,7 +26,6 @@ const AccountDetail = ({ title }: { title: string }) => {
         register,
         handleSubmit,
         watch,
-        reset,
         formState: { errors },
     } = useForm<Input>();
     const onSubmit: SubmitHandler<Input> = async (data) => {

@@ -3,14 +3,11 @@ import { Link } from "react-router-dom";
 
 import Banner from "./Banner";
 import Categories from "./Categorys";
-// import SlibarProduct from "./SlibarProduct";
-import { useGlobalContext } from "../../Layouts";
 import PostsFooter from "../../components/Footers/PostsFooter";
 import ProductBestsellers from "./ProductBestsellers";
 import Posts from "./Posts";
 
 const Home = () => {
-  const handleBgTransparent = useGlobalContext();
 
   return (
     <>

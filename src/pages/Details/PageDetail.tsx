@@ -5,7 +5,6 @@ import { LuShuffle, LuX } from "react-icons/lu";
 import { LuHeart } from "react-icons/lu";
 import { LuRuler } from "react-icons/lu";
 import { LuChevronDown } from "react-icons/lu";
-import { HiStar } from "react-icons/hi";
 import { HiOutlineStar } from "react-icons/hi";
 import ZoomImages from "./ZoomImage";
 
@@ -110,7 +109,7 @@ const PageDetail = () => {
             setReviews(values[2]);
             setLoading(false);
           })
-          .catch((err) => {});
+          .catch(() => {});
       }
     })();
   }, [id]);

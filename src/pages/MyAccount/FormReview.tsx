@@ -32,12 +32,11 @@ const FormReview = memo(
     const {
       register,
       handleSubmit,
-      watch,
       formState: { errors },
     } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
       if (click) {
-        const res = await postReview(
+        await postReview(
           { ...review.review, comment: data.comment, stars: click },
           cookies.user.token
         );

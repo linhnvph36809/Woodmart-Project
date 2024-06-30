@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import InputPrimary from "../../components/Inputs/InputPrimary";
-import { lostPassword, upadtePassword } from "../../api/authentication.api";
+import { upadtePassword } from "../../api/authentication.api";
 import { useCookies } from "react-cookie";
 import Spinner from "../../components/Spinner/Spinner";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const CheckCode = () => {
     const [cookies] = useCookies(["code"]);
-    const [loadding, setLoading] = useState(false);
+    const [loadding] = useState(false);
     const [updatePassword, seUpdatePassword] = useState(false);
     const navigate = useNavigate();
 

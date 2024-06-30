@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import { BackGroundTransparent, useGlobalContext } from "../../Layouts";
 import { getOrderReviews } from "../../api/orders.api";

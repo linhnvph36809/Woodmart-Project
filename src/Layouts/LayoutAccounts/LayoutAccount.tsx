@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
@@ -9,7 +9,6 @@ import PageError from "../../components/PageError/PageError";
 const LayoutAccount = () => {
   const cookies = useGlobalContext();
 
-  const navigate = useNavigate();
   const [page, setPage] = useState<string>("");
   const location = useLocation();
 

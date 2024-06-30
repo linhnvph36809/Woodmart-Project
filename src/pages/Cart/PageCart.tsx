@@ -3,7 +3,6 @@ import { useGlobalContext } from "../../Layouts";
 import { useCallback, useEffect, useState } from "react";
 import { deleteCart, getCartByUserId, putCart } from "../../api/cart.api";
 import InputQuantity from "../../components/Inputs/InputQuantity";
-import Spinner from "../../components/Spinner/Spinner";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import { Link } from "react-router-dom";
 import Loadding from "../../components/Loadding/Loadding";
@@ -32,7 +31,7 @@ const PageCart = () => {
     async (id: string | number, token: string) => {
       setLoading(true);
       if(cookies?.user?.token){
-        const data = await deleteCart(id, token);
+        await deleteCart(id, token);
         hanlerGetCart();
       }
       setLoading(false);
@@ -44,7 +43,7 @@ const PageCart = () => {
     setLoading(true);
     setQuantity({id, quantity});
     setTimeout(async () => {
-      const data = await putCart({id,quantity},cookies?.user.token) ;
+      await putCart({id,quantity},cookies?.user.token) ;
       hanlerGetCart() 
       setLoading(false);
     },1000)

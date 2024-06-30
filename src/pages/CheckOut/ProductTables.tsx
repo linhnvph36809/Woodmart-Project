@@ -39,7 +39,7 @@ const ProductTables = ({setLoading,setCalculate} : {setLoading:any,setCalculate:
         async (quantity: string | number, id: string | number) => {
             setLoading(true);
             setQuantity({ id, quantity });
-            const data = await putCart({ id, quantity }, cookies?.user.token);
+            await putCart({ id, quantity }, cookies?.user.token);
             hanlerGetCart();
             setLoading(false);
         },
@@ -50,7 +50,7 @@ const ProductTables = ({setLoading,setCalculate} : {setLoading:any,setCalculate:
         async (id: string | number, token: string) => {
             setLoading(true);
             if (cookies?.user?.token) {
-                const data = await deleteCart(id, token);
+                await deleteCart(id, token);
                 hanlerGetCart();
             }
             setLoading(false);

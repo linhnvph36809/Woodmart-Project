@@ -16,20 +16,19 @@ const FormEditAddress = ({ title }: { title: string }) => {
   const cookies = useGlobalContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [idAddress, setIdAddress] = useState();
+  // const [idAddress, setIdAddress] = useState();
 
 
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm<IInForPay>();
   const onSubmit: SubmitHandler<IInForPay> = async (data) => {
     if (cookies.user) {
       setLoading(true);
-      const datas = await patchAddressUser(
+      await patchAddressUser(
         { ...data, user_id: cookies.user.user_id },
         cookies.user.token
       );
