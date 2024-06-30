@@ -16,7 +16,6 @@ import { postCart } from "../../api/cart.api";
 import { postWishlist } from "../../api/wishlist.api";
 
 export default memo(function Products({ data }: { data: any }) {
-
   const cookies = useGlobalContext();
 
   const image = useRef<any>("");
@@ -29,20 +28,30 @@ export default memo(function Products({ data }: { data: any }) {
 
   const [loading, setLoading] = useState<any>(null);
 
+  
+
   const handlerAddCart = useCallback(
     async (cart: any) => {
       setLoading(false);
       if (cookies?.user?.token) {
         const data = await postCart(cart, cookies?.user.token);
         if (data?.status < 200 && data?.status > 300) {
-          alert("Khong co squyen truy cap");
+          cookies.setMessage({
+            isActive: true,
+            message: "Not have access",
+            type: "yellow",
+          });
         } else {
           cookies.hanlerTotalPrice();
         }
         setSelectProduct(false);
         setLoading(true);
       } else {
-        alert("Vui lòng đăng nhập để mua hàng");
+        cookies.setMessage({
+          isActive: true,
+          message: "Please log in",
+          type: "yellow",
+        });
         setLoading(null);
       }
     },
@@ -55,7 +64,6 @@ export default memo(function Products({ data }: { data: any }) {
     },
     []
   );
-  
 
   const handlerWishlist = useCallback(async (productId: string | number) => {
     if (cookies?.user?.token) {
@@ -63,9 +71,17 @@ export default memo(function Products({ data }: { data: any }) {
         { user_id: cookies.user.user_id, product_id: productId },
         cookies.user.token
       );
-      alert("Thêm thành công");
+      cookies.setMessage({
+        isActive: true,
+        message: "Add wishlist success",
+        type: "blue",
+      });
     } else {
-      alert("Vui lòng đăng nhập để mua hàng");
+      cookies.setMessage({
+        isActive: true,
+        message: "Please log in",
+        type: "yellow",
+      });
     }
   }, []);
 
@@ -101,7 +117,7 @@ export default memo(function Products({ data }: { data: any }) {
                 alt=""
                 className="w-full h-full object-cover"
               />
-            ) : data.variants.length > 0 ? (
+            ) : data.variants?.length > 0 ? (
               <SwiperCarousel
                 className="rounded-t-[10px]"
                 sizeIcon="text-xl"
@@ -153,7 +169,11 @@ export default memo(function Products({ data }: { data: any }) {
                 <div className="absolute bottom-0 left-0 text-center right-0 bg-primary text-white">
                   <button
                     className={`text-xs wd-text-font-bold hover-bg-primary w-full py-3 
-                    ${variantProduct?.qty_in_stock && +variantProduct?.qty_in_stock < 1 && "bg-[#faccab] pointer-events-none"}`}
+                    ${
+                      variantProduct?.qty_in_stock &&
+                      +variantProduct?.qty_in_stock < 1 &&
+                      "bg-[#faccab] pointer-events-none"
+                    }`}
                     onClick={() =>
                       variantProduct?.id
                         ? handlerAddCart({
@@ -187,11 +207,11 @@ export default memo(function Products({ data }: { data: any }) {
               </h5>
             </a>
             <div className="flex items-center text-[15px] wd-text-font-bold nav-color">
-              {Array.isArray(data.reviews)
-                ? +data?.reviews[0]?.average_rating
-                : data?.reviews_avg_stars && +data.reviews_avg_stars}
+              {Array.isArray(data.reviews) && data.reviews?.length
+                ? (+data?.reviews[0]?.reviews_avg_stars).toFixed(1)
+                : data?.reviews_avg_stars && data.reviews_avg_stars}
               {data?.reviews_avg_stars ||
-                (Array.isArray(data.reviews) && data.reviews.length > 0 && (
+                (Array.isArray(data.reviews) && data.reviews?.length > 0 && (
                   <HiStar className="text-[22px] text-[#EABE12]" />
                 ))}
             </div>
@@ -218,9 +238,13 @@ export default memo(function Products({ data }: { data: any }) {
               <div
                 className={`flex justify-center bg-primary rounded-[35px] h-[36px] items-center hover:cursor-pointer
                 overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear
-                ${variantProduct?.qty_in_stock && +variantProduct?.qty_in_stock < 1 && "opacity-50 pointer-events-none"}`}
+                ${
+                  variantProduct?.qty_in_stock &&
+                  +variantProduct?.qty_in_stock < 1 &&
+                  "opacity-50 pointer-events-none"
+                }`}
                 onClick={() =>
-                  data.variants.length > 0
+                  data.variants?.length > 0
                     ? setSelectProduct((state) => !state)
                     : handlerAddCart({
                         user_id: cookies?.user?.user_id,
@@ -233,19 +257,23 @@ export default memo(function Products({ data }: { data: any }) {
                   className="text-white text-xs
                   block wd-text-font-bold translate-y-0 transition-btn-cart"
                 >
-                  {data.variants.length > 0 ? "Select options" : "Add to cart"}
+                  {data.variants?.length > 0 ? "Select options" : "Add to cart"}
                 </span>
                 {loading == null || loading == true ? (
                   <span
                     className="absolute flex justify-center items-center w-full bottom-0
                  top-0 translate-y-[29px] z-[10] btn-add-cart call-api-success"
                   >
-                    <PiShoppingCartBold className="w-[22px] font-bold h-[22px] absolute
-                     top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100" />
+                    <PiShoppingCartBold
+                      className="w-[22px] font-bold h-[22px] absolute
+                     top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white -scale-x-100"
+                    />
                   </span>
                 ) : (
-                  <span className="absolute flex justify-center items-center w-full
-                   bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart">
+                  <span
+                    className="absolute flex justify-center items-center w-full
+                   bottom-0 top-0 translate-y-[29px] z-[10] btn-add-cart"
+                  >
                     <Spinner color="#fff" size={15} />
                   </span>
                 )}

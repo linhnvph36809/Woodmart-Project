@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
 import { getAllPost, getPostDetail, getTopics } from "../../api/posts.api";
 import Loadding from "../../components/Loadding/Loadding";
 
@@ -48,8 +49,8 @@ const BlogDetail = () => {
                 className="w-full rounded-xl"
               />
             </div>
-            <p className="text-font nav-color text-[15px] text-justify py-5">
-              {postDetail?.content}
+            <p className="text-font nav-color text-[15px] text-justify py-5" 
+            dangerouslySetInnerHTML={{ __html: postDetail?.content }} >
             </p>
           </div>
           <div className="w-3/12">

@@ -7,10 +7,15 @@ import { useCookies } from 'react-cookie';
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import InputPrimary from "../../components/Inputs/InputPrimary";
 import { login } from "../../api/authentication.api";
+import { useGlobalContext } from "../../Layouts";
+import { useState } from "react";
+import Spinner from "../../components/Spinner/Spinner";
 
 const Login = ({ onClose }: { onClose: () => void }) => { 
-
+  
+  const cookies = useGlobalContext() ; 
   const [_,setCookie] = useCookies(['user']);
+  const [loading,setLoading] = useState(false) ; 
   
   type Inputs = {
     email: string;
@@ -23,14 +28,24 @@ const Login = ({ onClose }: { onClose: () => void }) => {
     formState: { errors },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setLoading(true)
     const datas = await login(data) ; 
+    setLoading(false)
     if(datas.status_code > 100 && datas.status_code < 300){
       setCookie('user', {token: datas.access_token, user_id: datas.data.id}, { path: '/',
       maxAge: 3600})
-      alert("Login successful")
+      cookies.setMessage({
+        isActive: true,
+        message: "Login success",
+        type: "blue",
+      });
       onClose() ;
     }else{
-      alert(datas.message)
+      cookies.setMessage({
+        isActive: true,
+        message: datas.message,
+        type: "red",
+      });
     }
   };
   
@@ -69,7 +84,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
           />
             {errors.password && <p className="text-sm text-font text-red-500 pt-1">This field is required</p>}
         </div>
-        <ButtonPrimary name="Log in" type="submit" />
+        <ButtonPrimary name={`${loading ? "Loading... ": "Login"}`} type="submit" />
         <div className="mt-5 flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <input type="checkbox" id="remember" />

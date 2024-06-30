@@ -37,7 +37,6 @@ const PageOrderComplete = () => {
     hanlerPostOrder();
   }, []);
 
-  console.log(orders);
 
   return (
     <>

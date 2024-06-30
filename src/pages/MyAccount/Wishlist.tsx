@@ -16,6 +16,9 @@ const Wishlist = () => {
       })();
     }, []);
 
+    console.log(products);
+    
+
     return (
         <>
         <div>

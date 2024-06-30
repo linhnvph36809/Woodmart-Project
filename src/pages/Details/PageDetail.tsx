@@ -8,11 +8,11 @@ import { LuChevronDown } from "react-icons/lu";
 import { HiStar } from "react-icons/hi";
 import { HiOutlineStar } from "react-icons/hi";
 import ZoomImages from "./ZoomImage";
-import Spinner from "../../components/Spinner/Spinner";
 
 import {
   getProductByCategoryId,
   getProductDetail,
+  getReviewProduct,
 } from "../../api/product.api";
 
 import InputQuantity from "../../components/Inputs/InputQuantity";
@@ -21,6 +21,8 @@ import SlibarProduct from "../Homes/SlibarProduct";
 import ProductColor from "../../components/Products/ProductColor";
 import { postCart } from "../../api/cart.api";
 import { useGlobalContext } from "../../Layouts";
+import Loadding from "../../components/Loadding/Loadding";
+import { RiStarFill } from "react-icons/ri";
 
 const PageDetail = () => {
   const { id } = useParams();
@@ -31,29 +33,89 @@ const PageDetail = () => {
   const [variantProduct, setVariantProduct] = useState<any>({});
   const [quantity, setQuantity] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+  const [reviews, setReviews] = useState<any>([]);
+
+  let userStars = {
+    oneStar: 0,
+    twoStar: 0,
+    threeStar: 0,
+    fourStar: 0,
+    fiveStar: 0,
+  };
+
   const navigate = useNavigate();
+
+  const stars = [1, 2, 3, 4, 5];
 
   const handlerCheckQuantity = (quantity: number) => {
     setQuantity(quantity);
   };
 
+  const handlerCountStar = () => {
+    reviews.forEach((review: any) => {
+      switch (+review.stars) {
+        case 1:
+          userStars = {
+            ...userStars,
+            oneStar: ++userStars.oneStar,
+          };
+          break;
+        case 2:
+          userStars = {
+            ...userStars,
+            twoStar: ++userStars.twoStar,
+          };
+          break;
+        case 3:
+          userStars = {
+            ...userStars,
+            threeStar: ++userStars.threeStar,
+          };
+          break;
+        case 4:
+          userStars = {
+            ...userStars,
+            fourStar: ++userStars.fourStar,
+          };
+          break;
+        case 5:
+          userStars = {
+            ...userStars,
+            fiveStar: ++userStars.fiveStar,
+          };
+          break;
+        default:
+          break;
+      }
+    });
+    console.log("start",userStars);
+
+  };
+
+  handlerCountStar();
+
+
   useEffect(() => {
     (async function () {
       if (id) {
         const product = getProductDetail(id);
-        const productByCategorys = getProductByCategoryId(2);
-        setLoading(true);
+        const productByCategorys = getProductByCategoryId(id);
+        const reviews = getReviewProduct(id);
 
-        Promise.all([product, productByCategorys])
+        setLoading(true);
+        Promise.all([product, productByCategorys, reviews])
           .then((values) => {
             setProduct(values[0].data);
             setProductByCategory(values[1].data.slice(0, 11));
+            setReviews(values[2]);
             setLoading(false);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
     })();
   }, [id]);
+
+  console.log(reviews);
 
   const handlerAddCart = useCallback(
     async (type: boolean, cart: any) => {
@@ -152,8 +214,9 @@ const PageDetail = () => {
           </div>
           <div className="flex justify-between items-start gap-8 mt-3">
             <div className="flex-1">
-              {Array.isArray(product.variant) && product.variant.length > 0 ? (
-                <ZoomImages datas={product.variant} />
+              {Array.isArray(product?.product?.variants) &&
+              product?.product?.variants.length > 0 ? (
+                <ZoomImages datas={product.product.variants} />
               ) : (
                 <img
                   src={product.product?.product_theme}
@@ -206,11 +269,11 @@ const PageDetail = () => {
                 <span>$</span>
                 {variantProduct.price || product.product?.price}
               </h1>
-              {product?.variant?.length ? (
+              {product.product?.variants?.length ? (
                 <div className="flex items-center gap-3 mb-5 title-font">
                   Color:{" "}
                   <ProductColor
-                    datas={product.variant}
+                    datas={product.product.variants}
                     size={25}
                     gap={3}
                     handlerSelected={setVariantProduct}
@@ -250,13 +313,15 @@ const PageDetail = () => {
                       name="Add to cart"
                       type="button"
                       className={`w-full bg-primary m-0 hover:bg-[#df8c4f]
-                      ${+variantProduct?.qty_in_stock < quantity &&
+                      ${
+                        +variantProduct?.qty_in_stock < quantity &&
                         "opacity-50 pointer-events-none"
-                        }
-                        ${product?.variant?.length
-                          ? variantProduct?.id ||
-                          "opacity-50 pointer-events-none"
-                          : ""
+                      }
+                        ${
+                          product?.product?.variants?.length
+                            ? variantProduct?.id ||
+                              "opacity-50 pointer-events-none"
+                            : ""
                         }
                       `}
                     />
@@ -275,13 +340,15 @@ const PageDetail = () => {
                       name="Buy now"
                       type="button"
                       className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]
-                        ${+variantProduct?.qty_in_stock < quantity &&
-                        "opacity-50 pointer-events-none"
-                        }
-                        ${product?.variant?.length
-                          ? variantProduct?.id ||
+                        ${
+                          +variantProduct?.qty_in_stock < quantity &&
                           "opacity-50 pointer-events-none"
-                          : ""
+                        }
+                        ${
+                          product?.variant?.length
+                            ? variantProduct?.id ||
+                              "opacity-50 pointer-events-none"
+                            : ""
                         }`}
                     />
                   </div>
@@ -379,8 +446,9 @@ const PageDetail = () => {
                     Color
                   </h4>
                   <div className="flex gap-2">
-                    {product?.variant && product.variant.length > 0 ? (
-                      product.variant.map((variant: any) => (
+                    {product?.product?.variants &&
+                    product?.product?.variants.length > 0 ? (
+                      product.product.variants.map((variant: any) => (
                         <span
                           key={variant.id}
                           className="text-font text-color-black text-[13px]"
@@ -400,9 +468,9 @@ const PageDetail = () => {
                     Materials
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
-                    {Array.isArray(product.variant) &&
-                      product.variant.length > 0
-                      ? product.variant[0].material.material_value
+                    {Array.isArray(product?.product?.variants) &&
+                    product?.product?.variants?.length > 0
+                      ? product.product.variants[0].material.material_value
                       : "Trống"}
                   </span>
                 </li>
@@ -578,99 +646,119 @@ const PageDetail = () => {
             <div className="flex justify-between gap-10">
               <div className="w-6/12">
                 <div className="text-center mb-5">
+                  <h1 className="title-font text-[60px]">
+                    {Math.floor(+product.average_rating)}
+                  </h1>
                   <div className="flex justify-center mb-2">
-                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
-                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
-                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
-                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
-                    <HiOutlineStar className="text-[#bbb] text-[20px]" />
+                    {stars.map((value, i) => (
+                      <RiStarFill
+                        key={i}
+                        className={`text-[#bbb] text-xl
+                            transtion-all duration-300 ease-linear
+                            cursor-pointer focus:text-black-500 ${
+                              Math.floor(+product.average_rating) >= value
+                                ? "text-[#eabe12]"
+                                : ""
+                            }`}
+                      />
+                    ))}
                   </div>
                   <span className="text-font text-base text-color-black">
-                    0 reviews
+                    {product?.product?.reviews.length} reviews
                   </span>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
                   </div>
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">0</div>
+                  <div className="text-font text-base text-color-black">{userStars.fiveStar}</div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
                     <HiOutlineStar className="text-xl text-[#bbb]" />
                   </div>
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">0</div>
+                  <div className="text-font text-base text-color-black">{userStars.fourStar}</div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
                   </div>
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">0</div>
+                  <div className="text-font text-base text-color-black">{userStars.threeStar}</div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
                   </div>
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">0</div>
+                  <div className="text-font text-base text-color-black">{userStars.twoStar}</div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
-                    <HiStar className="text-xl text-[#EABE12]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#EABE12]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
                   </div>
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">0</div>
+                  <div className="text-font text-base text-color-black">{userStars.oneStar}</div>
                 </div>
               </div>
               <div className="w-6/12">
                 <div>
-                  <div className="pb-3 mb-5 border-b">
-                    <div className="flex items-center gap-1">
-                    <h3 className="header-font text-[15px] mb-2 px-3 rounded-[30px] bg-[#b3b0b0]
-                    text-white">@binhle-qu1kq </h3>
-                    <span className="text-font text-xs nav-color">11 tháng trước</span>
+                  {reviews.map((review: any) => (
+                    <div className="pb-3 mb-5 border-b">
+                      <div className="flex items-center gap-1">
+                        <h3
+                          className="header-font text-[15px] mb-2 px-3 rounded-[30px] bg-[#b3b0b0]
+                    text-white"
+                        >
+                          @{review.user.email}{" "}
+                        </h3>
+                        <span className="text-font text-xs nav-color">
+                          {review.created_at}
+                        </span>
+                      </div>
+                      <p className="text-font nav-color text-base">
+                        {review.comment}
+                      </p>
                     </div>
-                    <p className="text-font nav-color text-base">Mong ngày nào cũng ra seri người cuối cùng ,hay quá </p>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
             <div className="flex justify-between items-center">
               <h5 className="text-sm title-color title-font mb-5">
-                0 REVIEWS FOR CAN
+                {product?.product?.reviews?.length} REVIEWS FOR CAN
               </h5>
             </div>
             <p className="text-font text-[15px] text-color-black">
@@ -692,7 +780,7 @@ const PageDetail = () => {
           )}
         </div>
       </div>
-      {loading && <div className="fixed inset-0 flex justify-center items-center"><Spinner size={30} /></div>}
+      {<Loadding isActive={loading} />}
     </>
   );
 };

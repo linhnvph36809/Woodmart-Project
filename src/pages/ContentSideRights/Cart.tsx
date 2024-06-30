@@ -109,9 +109,14 @@ const CartSideRight = memo(({onClose} : {onClose : () => void }) => {
           onClick={() => onClose()}>  
             View cart
           </Link>
-          <Link to="/checkout" onClick={() => onClose() }>
+          {
+            carts.length ? 
+          <Link to="/checkout" onClick={() => onClose() } >
           <ButtonPrimary name="Checkout" className="w-full bg-primary mt-3 hover:bg-[#df8c4f]"/>
           </Link>
+          : ""
+          }
+
         </div>
       </div>
     </div>

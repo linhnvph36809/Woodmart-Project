@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import { useCallback, useEffect, useState } from "react";
 import { getCartByUserId } from "../api/cart.api.ts";
 import { getUserById, logout } from "../api/authentication.api.ts";
+import Message from "../components/Message/Message.tsx";
 
 const LayOutMain = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const LayOutMain = () => {
     quantityProduct: 0,
   });
   const [orderId, setOrderId] = useState<any>();
+  const [message, setMessage] = useState<any>({isActive: false, message: "", type: ""});
 
   const hanlerTotalPrice = async () => {
     if (cookies?.user) {
@@ -46,6 +48,9 @@ const LayOutMain = () => {
     }
   }, [cookies.user?.token]);
 
+  console.log(cookies);
+  
+
   useEffect(() => {
     hanlerTotalPrice();
   }, [cookies.user?.token]);
@@ -58,7 +63,11 @@ const LayOutMain = () => {
     orderId,
     setOrderId,
     handlerLogout,
+    message,
+    setMessage
   };
+
+    
 
   return (
     <>
@@ -70,6 +79,7 @@ const LayOutMain = () => {
           </div>
           <Footer />
           <ButtonScrollTop />
+          <Message setMessage={setMessage} isActive={message.isActive} type={message.type} message={message.message} />
         </div>
       </User.Provider>
       <ScrollRestoration />

@@ -3,6 +3,7 @@ import { memo } from "react";
 const ProductColor = memo(({datas,size=12,gap=2,handlerSelected,colorSelected,changeImage=false}
     :{datas:any,size?:number,gap?:number,handlerSelected?:any,colorSelected?:any,changeImage?:boolean}) => {
 
+    
   return (
     <>
       <ul className={`flex gap-${gap}`}>

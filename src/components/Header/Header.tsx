@@ -11,40 +11,33 @@ import SideRight from "./SideRight.tsx";
 import { useGlobalContext } from "../../Layouts/index.ts";
 import { getUserById } from "../../api/authentication.api.ts";
 
-
 const Header = () => {
-  
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [fixedHeader, setFixedHeader] = useState(false);
-  const [showSideRight,setShowSideRight] = useState("") ; 
-  const [user,setUser] = useState<any>({isLogin: false}) ; 
+  const [showSideRight, setShowSideRight] = useState("");
+  const [user, setUser] = useState<any>({ isLogin: false });
 
-  const {user:check,totalPrice,quantityProduct} = useGlobalContext() ; 
+  const { user: check, totalPrice, quantityProduct } = useGlobalContext();
 
-  
-  
-  const handlerShowSideRight = (value:string = "") => {
-    setShowSideRight(value)
-  }
+  const handlerShowSideRight = (value: string = "") => {
+    setShowSideRight(value);
+  };
 
   const handlerGetUser = async () => {
     console.log("Header work");
-    if(check?.user_id && check?.token){
-      const data = await getUserById(check?.user_id,check?.token) ;
-        setUser((state:any) => ({...state,data:data?.data,isLogin:true}));   
-    }else{
-      setUser({})
+    if (check?.user_id && check?.token) {
+      const data = await getUserById(check?.user_id, check?.token);
+      setUser((state: any) => ({ ...state, data: data?.data, isLogin: true }));
+    } else {
+      setUser({});
     }
-  }
-
-  
+  };
 
   const ref = useRef<boolean | undefined>();
 
   useEffect(() => {
-    handlerGetUser() ; 
-  },[check?.token])
-
+    handlerGetUser();
+  }, [check?.token]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,21 +61,17 @@ const Header = () => {
     };
   }, [lastScrollTop]);
 
-
   return (
     <div>
       <header
-        className={`bg-white ${
-          lastScrollTop > 156
-            ? `fixed ${
-                fixedHeader
-                  ? "-top-[40px] transtion-all duration-500 ease-in-out"
-                  : `-top-full ${
-                      ref.current && "transtion-all duration-1000 ease-linear"
-                    }`
+        className={`bg-white ${lastScrollTop > 156
+            ? `fixed ${fixedHeader
+              ? "-top-[40px] transtion-all duration-500 ease-in-out"
+              : `-top-full ${ref.current && "transtion-all duration-1000 ease-linear"
               }`
+            }`
             : "absolute top-0"
-        }
+          }
        right-0 left-0 z-[200]`}
       >
         <div className="bg-[#1010100d] py-2">
@@ -182,31 +171,35 @@ const Header = () => {
               </div>
             </form>
             <div>
-              <a
-                href="#!"
+              <Link
+                to="/my-account/orders"
                 className="w-[42px] h-[42px] p-2 bg-[#1010100d] rounded-full flex items-center justify-center hover:opacity-85"
               >
                 <LuShuffle className="text-xl text-[#101010b3]" />
-              </a>
+              </Link>
             </div>
             <div>
-              <a
-                href="#!"
+              <Link
+                to="/my-account/wishlist"
                 className="w-[42px] h-[42px] p-2 bg-[#1010100d] rounded-full flex items-center justify-center hover:opacity-85"
               >
                 <GoHeart className="text-xl text-[#101010b3]" />
-              </a>
+              </Link>
             </div>
             <div>
               <Link
                 to={user?.isLogin ? "/my-account" : "/"}
-                onClick={() => user?.isLogin ? () => {} : handlerShowSideRight("login")}
+                onClick={() =>
+                  user?.isLogin ? () => { } : handlerShowSideRight("login")
+                }
                 className="flex bg-[#1010100d] gap-1 header-font
                 h-[42px] p-2 items-center hover:opacity-85 justify-center
                 rounded-[42px] text-sm w-[150px] text-[#101010b3]"
               >
                 <LiaUser className="text-2xl text-[#101010b3]" />
-                {user?.isLogin ? user?.data?.email :" Login / Register"}
+                <p className="hidden-content-post">
+                  {user?.isLogin ? user?.data?.email : " Login / Register"}
+                </p>
               </Link>
             </div>
             <div>
@@ -217,8 +210,8 @@ const Header = () => {
                 text-white header-font h-[42px] p-3 items-center hover:opacity-85
                 justify-center rounded-[42px] text-sm min-w-[90px] text-[#101010b3]"
               >
-                <PiShoppingCartBold className="text-xl" />
-                ${totalPrice ? totalPrice :  0} 
+                <PiShoppingCartBold className="text-xl" />$
+                {totalPrice ? totalPrice : 0}
                 <p
                   className="absolute -top-1 -right-1 bg-white color-primary min-w-[18px] h-[18px]
                 rounded-full text-[11px] flex items-center justify-center p-1 border-[0.1px] border-solid border-[#0000002b]"
@@ -236,7 +229,10 @@ const Header = () => {
           </div>
         </div>
       </header>
-      <SideRight showSideRight={showSideRight} handlerShowSideRight={handlerShowSideRight}/>
+      <SideRight
+        showSideRight={showSideRight}
+        handlerShowSideRight={handlerShowSideRight}
+      />
     </div>
   );
 };

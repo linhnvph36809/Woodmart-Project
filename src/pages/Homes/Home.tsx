@@ -8,7 +8,6 @@ import { useGlobalContext } from "../../Layouts";
 import PostsFooter from "../../components/Footers/PostsFooter";
 import ProductBestsellers from "./ProductBestsellers";
 import Posts from "./Posts";
-import ProductCollection from "./ProductCollection";
 
 const Home = () => {
   const handleBgTransparent = useGlobalContext();
@@ -306,7 +305,7 @@ const Home = () => {
           </h4>
         </div>
         <div className="flex items-start gap-6">
-          <img src="./public/images/product-collection-10.jpg.webp" alt="" />
+          <img src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-choosing-rules-img.png.webp" alt="" />
           <div>
             <h4 className="title-color title-font text-base mb-5">
               Whether living on your own or with a family, your living room is
@@ -342,7 +341,8 @@ const Home = () => {
                 Do not buy unnecessary pieces of furniture
               </li>
             </ul>
-            <div className="relative w-full bg-repeat bg-center rounded-[200px] h-[398px] bg-[url('./public/images/banner-4.jpg')] mt-8">
+            <div className="relative w-full bg-repeat bg-center rounded-[200px] h-[398px] 
+            bg-[url('https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-choosing-rules-video-1-opt.jpg?id=1586')] mt-8">
               <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
                 <div className="text-center">
                   <p className="text-lg text-[#ffffffcc] text-font mb-2">

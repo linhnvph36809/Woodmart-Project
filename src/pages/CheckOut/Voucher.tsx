@@ -9,9 +9,6 @@ const Voucher = ({ setCalculate }: { setCalculate: any }) => {
     const [voucher, setVoucher] = useState("");
     const [loading, setLoading] = useState(false);
 
-
-
-
     const handlerSubmit = async () => {
         if (voucher) {
             try {
@@ -22,7 +19,7 @@ const Voucher = ({ setCalculate }: { setCalculate: any }) => {
                         ({ ...state, priceVoucher: { price: data.discount, id: data.id } }))
                 }
             } catch (error) {
-                alert("VOUCHER NOT EXIST")
+                cookies.setMessage({ isActive: true, message: "VOUCHER NOT EXIST", type: "yellow" })
                 setCalculate((state: any) =>
                     ({ ...state, priceVoucher: { price: 0, id: null } }))
             } finally {

@@ -9,7 +9,7 @@ export const getProductByCategoryId = async (id:string|number) => {
 }
 
 export const getProductBestsellers = async () => {
-    return await instance.get('/products?best_seller=1').then(({data}) => data).catch(() => alert("Lỗi sp betsalse"))
+    return await instance.get('/products?best_seller=1').then(({data}) => data).catch(() => [])
 }
 
 export const getProductDetail = async (id:string|number) => {
@@ -22,4 +22,8 @@ export const filterByProducts = async (url:string) => {
 
 export const getProductCollections = async () => {
     return await instance.get('/products?popular_week=1').then(({data}) => data).catch(() => []);
+}
+
+export const getReviewProduct = async (id:string|number) => {
+    return await instance.get('/reviews?product_id='+id).then(({data}) => data).catch(() => []);
 }

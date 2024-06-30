@@ -6,6 +6,7 @@ import InputQuantity from "../../components/Inputs/InputQuantity";
 import Spinner from "../../components/Spinner/Spinner";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import { Link } from "react-router-dom";
+import Loadding from "../../components/Loadding/Loadding";
 
 const PageCart = () => {
   const cookies = useGlobalContext();
@@ -139,12 +140,6 @@ const PageCart = () => {
                 ) : (
                   <div className="text-center text-center title-font py-3">No products in the cart.</div>
                 )}
-                {loading && (
-                  <div className="absolute top-0 left-0 bottom-0 right-0 
-                  flex justify-center items-center">
-                    <Spinner />
-                  </div>
-                )}
               </div>
 
             </div>
@@ -233,13 +228,16 @@ const PageCart = () => {
                 </h3>
               </div>
               <Link to="/checkout">
+              {
+                carts.length ? 
               <ButtonPrimary
                 className="w-full h-[42px] flex justify-center items-center
                  wd-text-font-bold text-white text-[13px] rounded-[32px] bg-primary mt-2
                  hover:bg-[#df8c4f]"
                  name="Proceed to checkout"
               >
-              </ButtonPrimary>
+              </ButtonPrimary> : ""
+              }   
               </Link>
             </div>
             <div className="mt-5 bg-white p-6 rounded-[10px]">
@@ -276,6 +274,7 @@ const PageCart = () => {
           </div>
         </div>
       </div>
+      <Loadding isActive={loading} />
     </>
   );
 };

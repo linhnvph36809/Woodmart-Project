@@ -19,13 +19,14 @@ import ProductTables from "./ProductTables";
 import { postOrder } from "../../api/orders.api";
 import { IInForPay } from "../../interfaces/IInForPay";
 import Loadding from "../../components/Loadding/Loadding";
+import PageError from "../../components/PageError/PageError";
 
 const PageCheckOut = () => {
   const cookies = useGlobalContext();
   const navigate = useNavigate();
 
   if (!cookies?.user || !cookies?.totalPrice) {
-    navigate("/");
+    return <PageError />;
   }
 
   const [shippings, setShipping] = useState<any>();
@@ -44,8 +45,10 @@ const PageCheckOut = () => {
     reset,
     formState: { errors },
   } = useForm<IInForPay>();
+
   const onSubmit: SubmitHandler<IInForPay> = async (data) => {
     setLoading(true);
+    
     const obj = {
       telephone: data.telephone,
       payment_id: data.payment_id,
@@ -69,7 +72,7 @@ const PageCheckOut = () => {
       const datas = await postOrder(obj, cookies?.user?.token);
       if (datas?.status >= 200 && datas?.status < 300) {
         cookies.setOrderId(datas.data.id);
-        alert("Order sucessces");
+        cookies.setMessage({ isActive: true, message: "Order success", type: "blue" })
         navigate("/checkout/order-received");
       }
     } else {
