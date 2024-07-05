@@ -1,13 +1,11 @@
 import LightGallery from "lightgallery/react";
 
-// import styles
 import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 
-// import plugins if you need
 import lgZoom from "lightgallery/plugins/zoom";
-import lgFullscreen from 'lightgallery/plugins/Fullscreen';
+// import lgFullscreen from 'lightgallery/plugins/Fullscreen';
 
 const ZoomImages = ({ datas = [] }: { datas: any }) => {
 
@@ -15,7 +13,7 @@ const ZoomImages = ({ datas = [] }: { datas: any }) => {
     <>
       <LightGallery
         speed={500}
-        plugins={[lgFullscreen, lgZoom]}
+        plugins={[lgZoom]}
         elementClassNames="grid grid-cols-2 gap-5 h-full object-cover"
       >
         {
@@ -23,7 +21,7 @@ const ZoomImages = ({ datas = [] }: { datas: any }) => {
             <a key={data.id} href={data.img} className="relative rounded-full">
               <img
                 src={data.img}
-                alt="Lỗi" // Ensure there's a meaningful alt text
+                alt="Image error"
                 className="rounded-[10px]"
               />
               <div className="absolute top-4 right-4 z-[5] rounded-xl bg-[#438E44]
