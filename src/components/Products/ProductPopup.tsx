@@ -1,4 +1,3 @@
-import { HiStar } from "react-icons/hi";
 import { RiCloseFill } from "react-icons/ri";
 import SwiperCarousel from "../Swiper/SwiperCarousel";
 import ButtonPrimary from "../Buttons/ButtonPrimary";

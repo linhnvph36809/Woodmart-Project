@@ -1,5 +1,4 @@
 import { RiCloseFill } from "react-icons/ri";
-import { useGlobalContext } from "../../Layouts";
 
 const VideoGlobal = ({ handlerVideo }: any) => {
 
