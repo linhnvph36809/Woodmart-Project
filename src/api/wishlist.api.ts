@@ -7,5 +7,9 @@ export const getWishlistByUserId = async (id:string|number,token:string) => {
 
 
 export const postWishlist = async (data:{user_id:string|number,product_id:string|number},token:string) => {
-    return await instance.post('/wishlist',data,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => alert(error)); 
+    return await instance.post('/wishlist',data,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data); 
+}
+
+export const deleteWishlist= async (id:string|number,token:string) => {
+    return await instance.delete('/wishlist/'+id,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => error); 
 }

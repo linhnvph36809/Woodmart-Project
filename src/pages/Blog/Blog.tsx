@@ -4,6 +4,7 @@ import PostItem from "../../components/Posts/PostItem";
 import { getAllPost } from "../../api/posts.api";
 const Blog = () => {
   const [posts, setPost] = useState<any>([]);
+  document.title = "Blog"
 
   useEffect(() => {
     (async function () {

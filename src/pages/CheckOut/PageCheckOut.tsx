@@ -20,14 +20,21 @@ import { postOrder } from "../../api/orders.api";
 import { IInForPay } from "../../interfaces/IInForPay";
 import Loadding from "../../components/Loadding/Loadding";
 import PageError from "../../components/PageError/PageError";
+import { deleteCart } from "../../api/cart.api";
 
 const PageCheckOut = () => {
   const cookies = useGlobalContext();
   const navigate = useNavigate();
+  document.title = "Checkout..."
 
-  if (!cookies?.user || !cookies?.totalPrice) {
+  if (!cookies?.user) {
     return <PageError />;
   }
+
+  const currentUrl = window.location.href;
+  const urlObject = new URL(currentUrl);
+  console.log("Url:", urlObject);
+
 
   const [shippings, setShipping] = useState<any>();
   const [payments, setPayments] = useState<any>();
@@ -36,6 +43,7 @@ const PageCheckOut = () => {
     priceShipping: 0,
     priceVoucher: { price: 0, id: null },
     products: [],
+    cartId: null,
   });
 
   const {
@@ -45,9 +53,24 @@ const PageCheckOut = () => {
     formState: { errors },
   } = useForm<IInForPay>();
 
+  const handlerDeleteCart = useCallback(async (cartId: any) => {
+    cartId.forEach(async (id: any) => {
+      try {
+        await deleteCart(id, cookies.user.token);
+      } catch {
+        cookies.removeCookie("user");
+        navigate('/login')
+      }
+    })
+    cookies.hanlerTotalPrice()
+
+  }, [])
+
+
+
   const onSubmit: SubmitHandler<IInForPay> = async (data) => {
     setLoading(true);
-    
+
     const obj = {
       telephone: data.telephone,
       payment_id: data.payment_id,
@@ -61,6 +84,7 @@ const PageCheckOut = () => {
         calculate.priceVoucher.price,
       status: 2,
       products: calculate.products,
+      cartIds: calculate.cartId
     };
 
     const { payment_name } = payments.find(
@@ -68,28 +92,42 @@ const PageCheckOut = () => {
     );
 
     if (payment_name == "Cash on delivery") {
-      const datas = await postOrder(obj, cookies?.user?.token);
-      if (datas?.status >= 200 && datas?.status < 300) {
+      try {
+        const datas = await postOrder(obj, cookies?.user?.token);
+        await handlerDeleteCart(calculate.cartId)
         cookies.setOrderId(datas.data.id);
         cookies.setMessage({ isActive: true, message: "Order success", type: "blue" })
         navigate("/checkout/order-received");
+      } catch (error) {
+        cookies.removeCookie("user");
+        navigate("/login");
+
       }
+
+
     } else {
-      const datas = await postUrlPay(
-        payment_name.split(" ").join("").toLowerCase(),
-        {
-          total: obj.total,
-          url: `${window.location.host}/checkout/order-received`,
-        },
-        cookies?.user?.token
-      );
-      if (datas?.payUrl) {
-        window.location.href = datas.payUrl;
-        sessionStorage.setItem("infor", JSON.stringify(obj));
-      } else if (datas?.data) {
-        window.location.href = datas.data;
-        sessionStorage.setItem("infor", JSON.stringify(obj));
+      try {
+        const datas = await postUrlPay(
+          payment_name.split(" ").join("").toLowerCase(),
+          {
+            total: obj.total,
+            url: `${urlObject.origin}/checkout/order-received`,
+          },
+          cookies?.user?.token
+        );
+
+        if (datas?.payUrl) {
+          window.location.href = datas.payUrl;
+          sessionStorage.setItem("infor", JSON.stringify(obj));
+        } else if (datas?.data) {
+          window.location.href = datas.data;
+          sessionStorage.setItem("infor", JSON.stringify(obj));
+        }
+      } catch (error) {
+        cookies.removeCookie("user");
+        navigate("/login")
       }
+
     }
     setLoading(false);
   };
@@ -119,6 +157,9 @@ const PageCheckOut = () => {
       setShipping(shipping);
       setPayments(payments);
       setLoading(false);
+    }).catch(() => {
+      cookies.removeCookie("user");
+      navigate('/login')
     });
   }, []);
 
@@ -272,6 +313,7 @@ const PageCheckOut = () => {
                 <ProductTables
                   setLoading={setLoading}
                   setCalculate={setCalculate}
+
                 />
                 <div className="flex justify-between items-center py-4 border-b border-solid">
                   <h4 className="title-color title-font text-[15px]">

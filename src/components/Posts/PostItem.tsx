@@ -1,22 +1,22 @@
 import { Link } from "react-router-dom";
 
-const PostItem = ({data}:{data:any}) => {
+const PostItem = ({ data }: { data: any }) => {
   return (
     <>
-      <div className="bg-white border-gray-200 rounded-lg posts">
+      <div className="bg-white border-gray-200 rounded-lg posts h-[460px]">
         <Link to={`/blog-detail/${data.slug}`} className="relative">
           <div className="overflow-hidden rounded-t-lg">
             <img
               className="w-full object-cover h-[202px] transtion-all duration-500 ease-in-out image-posts"
               src={data.theme}
-              alt="Ảnh lỗi"
+              alt="Image Error"
             />
           </div>
           <div className="absolute left-0 right-0 bottom-0 flex justify-between px-5 py-3 bg-black bg-opacity-5">
             <div className="flex items-center gap-2">
               <img
                 src={data.user.img}
-                alt="Ảnh lỗi"
+                alt="Image Error"
                 className="rounded-full w-[22px] h-[22px] object-cover"
               />
               <p className="text-sm text-[#f8f6f3] text-font">{data.user.full_name}</p>
@@ -63,8 +63,8 @@ const PostItem = ({data}:{data:any}) => {
           <a href="#" className="nav-color text-lg title-font tracking-tight">
             {data.title}
           </a>
-          <p className="text-font text-base text-color-black my-3 hidden-content-post">
-            {data.content}
+          <p className="text-font text-base text-color-black my-3 hidden-content-post" dangerouslySetInnerHTML={{ __html: data?.content }} >
+            
           </p>
           <Link to={`/blog-detail/${data.slug}`} className="color-primary text-[13px] title-font-800">
             Continue reading

@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CheckCode = () => {
+    document.title = "Check Code"
+
     const [cookies] = useCookies(["code"]);
     const [loadding] = useState(false);
     const [updatePassword, seUpdatePassword] = useState(false);
@@ -28,7 +30,7 @@ const CheckCode = () => {
     const newPassword = watch("password", "");
 
     const onSubmit: SubmitHandler<Input> = async (data) => {
-        const { code,email } = cookies?.code || { code: null };
+        const { code, email } = cookies?.code || { code: null };
         if (updatePassword == false && code && data.code && code == +data.code) {
             alert("Trungkhop");
             seUpdatePassword(true);

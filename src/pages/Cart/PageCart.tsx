@@ -9,6 +9,7 @@ import Loadding from "../../components/Loadding/Loadding";
 
 const PageCart = () => {
   const cookies = useGlobalContext();
+  document.title = "My Cart"
 
   const [carts, setCarts] = useState<any>([]);
   const [quantity, setQuantity] = useState<any>();

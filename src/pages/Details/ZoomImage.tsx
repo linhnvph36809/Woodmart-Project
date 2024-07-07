@@ -24,10 +24,6 @@ const ZoomImages = ({ datas = [] }: { datas: any }) => {
                 alt="Image error"
                 className="rounded-[10px]"
               />
-              <div className="absolute top-4 right-4 z-[5] rounded-xl bg-[#438E44]
-              text-white min-w-[50px] text-xs uppercase text-center font-bold py-1">
-                New
-              </div>
             </a>
           ))
         }

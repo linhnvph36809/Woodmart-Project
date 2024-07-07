@@ -6,11 +6,13 @@ import Loadding from "../../components/Loadding/Loadding";
 
 const BlogDetail = () => {
   const { slug } = useParams();
+  
   const [postDetail, setPostDetail] = useState<any>();
   const [topics, setTopics] = useState<any>();
   const [posts, setPost] = useState<any>([]);
   const [loadding, setLoadding] = useState<boolean>(false);
 
+  document.title = slug || "Blog details..."
 
   useEffect(() => {
     (async function () {
@@ -25,7 +27,7 @@ const BlogDetail = () => {
         }
       );
     })();
-  }, []);
+  }, [slug]);
 
   
 

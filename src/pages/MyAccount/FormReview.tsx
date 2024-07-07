@@ -3,6 +3,7 @@ import { RiStarFill } from "react-icons/ri";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useGlobalContext } from "../../Layouts";
 import { postReview } from "../../api/user.api";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
   comment: string;
@@ -11,7 +12,7 @@ type Inputs = {
 const FormReview = memo(
   ({ review, handlerSetReview }: { review: any; handlerSetReview: any }) => {
     const cookies = useGlobalContext();
-
+    const navigate = useNavigate()
     const [hover, setHover] = useState<number>(0);
     const [click, setClick] = useState<number>(0);
 
@@ -36,11 +37,16 @@ const FormReview = memo(
     } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
       if (click) {
-        await postReview(
-          { ...review.review, comment: data.comment, stars: click },
-          cookies.user.token
-        );
-        handlerSetReview();
+        try {
+          await postReview(
+            { ...review.review, comment: data.comment, stars: click },
+            cookies.user.token
+          );
+          handlerSetReview();
+        } catch {
+          cookies.removeCookie("user");
+          navigate('/login')
+        }
       } else {
         alert("Please enter stars");
       }
@@ -69,11 +75,10 @@ const FormReview = memo(
                     key={i}
                     className={`text-[#bbb] text-xl
                             transtion-all duration-300 ease-linear hover:text-[#f59a57] 
-                            cursor-pointer focus:text-black-500 ${
-                              hover >= value || click >= value
-                                ? "text-[#f59a57]"
-                                : ""
-                            }`}
+                            cursor-pointer focus:text-black-500 ${hover >= value || click >= value
+                        ? "text-[#f59a57]"
+                        : ""
+                      }`}
                     onMouseEnter={() => handlerHover(value)}
                     onClick={() => handlerClick(value)}
                     onMouseLeave={() => handlerResetHover()}

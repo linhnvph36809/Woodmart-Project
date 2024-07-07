@@ -4,7 +4,7 @@ const Loadding = ({isActive} : any) => {
   return (
     <>
       {isActive && (
-        <div className="fixed z-10 inset-0 flex justify-center items-center bg-[#ffffffc9]">
+        <div className="fixed z-[2000] inset-0 flex justify-center items-center bg-[#ffffffc9]">
           <Spinner size={30} />
         </div>
       )}

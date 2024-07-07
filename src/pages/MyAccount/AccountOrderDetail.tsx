@@ -1,22 +1,27 @@
 import { useCallback, useEffect, useState } from "react";
 import { getOrderDetail } from "../../api/orders.api";
 import { useGlobalContext } from "../../Layouts";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner/Spinner";
 
 const AccountOrderDetail = () => {
   const cookies = useGlobalContext();
   const { id } = useParams();
-
+  const navigator = useNavigate()
   const [orders, setOrders] = useState<any>([]);
-  const [loading,setLoading] = useState<boolean>(false) ; 
+  const [loading, setLoading] = useState<boolean>(false);
 
   const hanlerGetOrderDetail = useCallback(async (id: string | number) => {
     if (id) {
-      setLoading(true)
-      const datas = await getOrderDetail(id, cookies.user.token);
-      setLoading(false)
-      setOrders(datas);
+      try {
+        setLoading(true)
+        const datas = await getOrderDetail(id, cookies.user.token);
+        setLoading(false)
+        setOrders(datas);
+      } catch (error) {
+        cookies.removeCookie("user");
+        navigator("/login")
+      }
 
     }
   }, []);
@@ -26,7 +31,7 @@ const AccountOrderDetail = () => {
   }, []);
 
   console.log(orders);
-  
+
 
   return (
     <>

@@ -4,9 +4,11 @@ import { BackGroundTransparent, useGlobalContext } from "../../Layouts";
 import { getOrderReviews } from "../../api/orders.api";
 import Spinner from "../../components/Spinner/Spinner";
 import FormReview from "./FormReview";
+import { useNavigate } from "react-router-dom";
 
 const ReviewProducts = () => {
   const cookies = useGlobalContext();
+  const navigator = useNavigate()
   const [orders, setOrders] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selected, setSelected] = useState<any>({
@@ -24,13 +26,18 @@ const ReviewProducts = () => {
     },
     []
   );
-  console.log("selected", selected);
 
   const hanlerGetOrderDetail = useCallback(async () => {
-    setLoading(true);
-    const datas = await getOrderReviews("32", cookies.user.token);
-    setLoading(false);
-    setOrders(datas);
+    try{
+      setLoading(true);
+      const datas = await getOrderReviews(cookies.user.user_id, cookies.user.token);
+      setLoading(false);
+      setOrders(datas);
+    }catch{
+      cookies.removeCookie("user");
+      navigator("/login")
+
+    }
   }, []);
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import Loadding from "../../components/Loadding/Loadding";
 
 const PageCategory = () => {
   let { id } = useParams();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any>([]);
   const [loadding, setLoadding] = useState<boolean>(false);
 
   useEffect(() => {
@@ -17,11 +17,14 @@ const PageCategory = () => {
       if (id) {
         setLoadding(true);
         const { data } = await getProductByCategoryId(id);
+
         setProducts(data || []);
         setLoadding(false);
       }
     })();
   }, [id]);
+  document.title = products[0]?.category?.category_name || "Category"
+
 
   return (
     <>
@@ -42,7 +45,7 @@ const PageCategory = () => {
                 d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
               />
             </svg>
-            Sofas
+            {products[0]?.category?.category_name || "Empty"}
           </h1>
         </div>
       </div>

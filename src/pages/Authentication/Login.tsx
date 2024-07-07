@@ -9,7 +9,7 @@ import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import { login, loginGoogle, postRegister } from "../../api/authentication.api";
 
 const Login = () => {
-
+  document.title = "Login"
   const [_, setCookie] = useCookies(["user"]);
   const [selected, setSelected] = useState<string>("login");
   const navigate = useNavigate() ; 

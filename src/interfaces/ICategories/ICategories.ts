@@ -4,4 +4,5 @@ export interface ICategory {
     image_url: string
     parent_category_id: number|string,
     quantity?: number|string
+    icon?:string
 }

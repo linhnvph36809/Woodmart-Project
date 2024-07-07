@@ -1,6 +1,9 @@
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import SlibarImage from "./SlibarImage";
 const PageShowroom = () => {
+
+  document.title = "Showroom"
+
   return (
     <>
       <BannerGolobal title="Showrooms" />

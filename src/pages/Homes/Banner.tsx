@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { useState } from "react";
-import contents from "./content";
+import {contents} from "./content";
 import { IContent } from "../../interfaces/Icontent";
 
 export default function Banner() {

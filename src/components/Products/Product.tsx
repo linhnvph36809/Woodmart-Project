@@ -11,12 +11,13 @@ import { BackGroundTransparent, useGlobalContext } from "../../Layouts";
 import ProductColor from "./ProductColor";
 import ProductPopup from "./ProductPopup";
 import Spinner from "../Spinner/Spinner";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { postCart } from "../../api/cart.api";
 import { postWishlist } from "../../api/wishlist.api";
 
 export default memo(function Products({ data }: { data: any }) {
   const cookies = useGlobalContext();
+  const navigator = useNavigate();
 
   const image = useRef<any>("");
 
@@ -28,24 +29,21 @@ export default memo(function Products({ data }: { data: any }) {
 
   const [loading, setLoading] = useState<any>(null);
 
-  
+
 
   const handlerAddCart = useCallback(
     async (cart: any) => {
       setLoading(false);
-      if (cookies?.user?.token) {
-        const data = await postCart(cart, cookies?.user.token);
-        if (data?.status < 200 && data?.status > 300) {
-          cookies.setMessage({
-            isActive: true,
-            message: "Not have access",
-            type: "yellow",
-          });
-        } else {
+      if (cookies?.user) {
+        try {
+          await postCart(cart, cookies?.user.token);
           cookies.hanlerTotalPrice();
+          setSelectProduct(false);
+          setLoading(true);
+        } catch (error) {
+          cookies.removeCookie("user");
+          navigator("/login")
         }
-        setSelectProduct(false);
-        setLoading(true);
       } else {
         cookies.setMessage({
           isActive: true,
@@ -62,20 +60,25 @@ export default memo(function Products({ data }: { data: any }) {
     (product: any = { active: false }) => {
       setProductPopup(product);
     },
-    []
+    [productPopup]
   );
 
   const handlerWishlist = useCallback(async (productId: string | number) => {
     if (cookies?.user?.token) {
-      await postWishlist(
-        { user_id: cookies.user.user_id, product_id: productId },
-        cookies.user.token
-      );
-      cookies.setMessage({
-        isActive: true,
-        message: "Add wishlist success",
-        type: "blue",
-      });
+      try {
+        await postWishlist(
+          { user_id: cookies.user.user_id, product_id: productId },
+          cookies.user.token
+        );
+        cookies.setMessage({
+          isActive: true,
+          message: "Add wishlist success",
+          type: "blue",
+        });
+      } catch {
+        navigator('/login')
+      }
+
     } else {
       cookies.setMessage({
         isActive: true,
@@ -83,7 +86,7 @@ export default memo(function Products({ data }: { data: any }) {
         type: "yellow",
       });
     }
-  }, []);
+  }, [cookies?.user]);
 
   if (variantProduct.changeImage) {
     image.current = variantProduct.img;
@@ -92,9 +95,8 @@ export default memo(function Products({ data }: { data: any }) {
   return (
     <>
       <div
-        className={`${
-          selectProduct || "product-hover"
-        } relative overflow-hidden z-[10px]
+        className={`${selectProduct || "product-hover"
+          } relative overflow-hidden z-[10px]
           bg-white rounded-[10px] flex flex-col justify-between h-full`}
       >
         <div className="absolute top-3 right-3 z-[5]">
@@ -102,12 +104,6 @@ export default memo(function Products({ data }: { data: any }) {
             className="text-xl text-color-black hover:cursor-pointer hover:opacity-70"
             onClick={() => handlerWishlist(data.id)}
           />
-        </div>
-        <div
-          className="absolute top-2 left-3 z-[5] rounded-xl bg-[#438E44] text-white min-w-[50px]
-              text-xs uppercase text-center wd-text-font-bold py-1"
-        >
-          New
         </div>
         <div className="relative block overflow-hidden flex-1">
           <Link to={`/product-detail/${data.id}`}>
@@ -169,21 +165,20 @@ export default memo(function Products({ data }: { data: any }) {
                 <div className="absolute bottom-0 left-0 text-center right-0 bg-primary text-white">
                   <button
                     className={`text-xs wd-text-font-bold hover-bg-primary w-full py-3 
-                    ${
-                      variantProduct?.qty_in_stock &&
+                    ${variantProduct?.qty_in_stock &&
                       +variantProduct?.qty_in_stock < 1 &&
                       "bg-[#faccab] pointer-events-none"
-                    }`}
+                      }`}
                     onClick={() =>
                       variantProduct?.id
                         ? handlerAddCart({
-                            user_id: cookies?.user?.user_id,
-                            quantity: 1,
-                            product_variant_id: variantProduct.id || data.id,
-                          })
+                          user_id: cookies?.user?.user_id,
+                          quantity: 1,
+                          product_variant_id: variantProduct.id || data.id,
+                        })
                         : alert(
-                            "Please select some product options before adding this product to your cart."
-                          )
+                          "Please select some product options before adding this product to your cart."
+                        )
                     }
                   >
                     Add to cart
@@ -238,19 +233,18 @@ export default memo(function Products({ data }: { data: any }) {
               <div
                 className={`flex justify-center bg-primary rounded-[35px] h-[36px] items-center hover:cursor-pointer
                 overflow-hidden btn-cart-hover relative transtion-all duration-300 ease-linear
-                ${
-                  variantProduct?.qty_in_stock &&
+                ${variantProduct?.qty_in_stock &&
                   +variantProduct?.qty_in_stock < 1 &&
                   "opacity-50 pointer-events-none"
-                }`}
+                  }`}
                 onClick={() =>
                   data.variants?.length > 0
                     ? setSelectProduct((state) => !state)
                     : handlerAddCart({
-                        user_id: cookies?.user?.user_id,
-                        quantity: 1,
-                        product_variant_id: variantProduct.id || data.id,
-                      })
+                      user_id: cookies?.user?.user_id,
+                      quantity: 1,
+                      product_variant_id: variantProduct.id || data.id,
+                    })
                 }
               >
                 <span

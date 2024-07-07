@@ -4,8 +4,11 @@ import { LuMoveRight } from "react-icons/lu";
 import { useGlobalContext } from "../../Layouts";
 import { getOrderDetail, postOrder } from "../../api/orders.api";
 import Loadding from "../../components/Loadding/Loadding";
+import { deleteCart } from "../../api/cart.api";
 
 const PageOrderComplete = () => {
+  document.title = "Order Complete"
+
   const cookies = useGlobalContext();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<any>([]);
@@ -15,18 +18,39 @@ const PageOrderComplete = () => {
 
   const hanlerPostOrder = useCallback(async () => {
     if (cookies?.user && products) {
-      const datas = await postOrder(products, cookies?.user?.token);
-      hanlerGetOrderDetail(datas.data.id);
+      try {
+        const datas = await postOrder(products, cookies?.user?.token);
+        hanlerGetOrderDetail(datas.data.id);
+        handlerDeleteCart()
+      } catch {
+        cookies.removeCookie("user");
+        navigate('/login')
+      }
+
     }
   }, []);
 
+  const handlerDeleteCart = useCallback(async () => {
+    products.cartId.forEach(async (id: any) => {
+      await deleteCart(id, cookies.user.token);
+    })
+    cookies.hanlerTotalPrice()
+  }, [])
+
   const hanlerGetOrderDetail = useCallback(async (id: string | number) => {
     if (id || products) {
-      setLoading(true);
-      const datas = await getOrderDetail(id, cookies.user.token);
-      setOrders(datas);
-      setLoading(false);
-      sessionStorage.removeItem("infor");
+      try {
+        setLoading(true);
+        const datas = await getOrderDetail(id, cookies.user.token);
+        setOrders(datas);
+        setLoading(false);
+        sessionStorage.removeItem("infor");
+      } catch {
+        cookies.removeCookie("user");
+        navigate("/login");
+
+      }
+
     } else {
       navigate("/");
     }
@@ -198,7 +222,7 @@ const PageOrderComplete = () => {
           </address>
         </div>
       </div>
-      <Loadding isActive={loading}/>
+      <Loadding isActive={loading} />
     </>
   );
 };

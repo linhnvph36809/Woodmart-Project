@@ -1,5 +1,7 @@
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 const PageAbout = () => {
+
+  document.title = "About "
   return (
     <>
       <BannerGolobal title="About us" />

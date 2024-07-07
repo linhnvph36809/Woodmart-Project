@@ -89,27 +89,20 @@ const ProductPopup = ({
           <h1 className="text-[26px] title-font text-[#333333] mb-3">
             <a href="#">{data.name}</a>
           </h1>
-          <a href="#">
-            <img
-              src="https://woodmart.xtemos.com/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-brand-poliform.jpg"
-              alt=""
-              className="w-[65px]"
-            />
-          </a>
           <div className="flex gap-1 items-center my-3">
-            <div className="flex items-center text-[15px] title-font">
+            {/* <div className="flex items-center text-[15px] title-font">
               Đánh giá:{" "}
               <span className="ml-2">
-                {Array.isArray(data.reviews)
-                  ? +data.reviews[0].average_rating
-                  : data.reviews_avg_stars}
+                {Array.isArray(data?.reviews)
+                  ? data?.reviews[0]?.average_rating
+                  : data?.reviews_avg_stars}
               </span>
               <HiStar className="text-xl text-[#EABE12]" />
-            </div>
-            <p className="text-color-black text-[15px] text-font">
+            </div> */}
+            {/* <p className="text-color-black text-[15px] text-font">
               {" "}
               (2 customer reviews)
-            </p>
+            </p> */}
           </div>
           <h3 className="color-primary title-font text-2xl wd-text-font-bold">
             ${variantProduct?.price || data.price}

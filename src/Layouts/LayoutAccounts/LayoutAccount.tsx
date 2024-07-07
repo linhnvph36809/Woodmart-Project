@@ -8,6 +8,7 @@ import PageError from "../../components/PageError/PageError";
 
 const LayoutAccount = () => {
   const cookies = useGlobalContext();
+  document.title = "My Account";
 
   const [page, setPage] = useState<string>("");
   const location = useLocation();

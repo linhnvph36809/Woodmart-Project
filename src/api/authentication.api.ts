@@ -29,6 +29,6 @@ export const postRegister = async (user: ILogin) => {
 
 export const getUserById = async (id: string|number,token:string) => {
     return await instance.get('/users/'+id,{headers:{ 'Authorization': `Bearer ${token}` }})
-    .then(({data}) => data).catch((error) => alert(error)); 
+    .then(({data}) => data); 
 }
 

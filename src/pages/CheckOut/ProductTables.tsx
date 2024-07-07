@@ -3,32 +3,41 @@ import { LuX } from "react-icons/lu";
 import { deleteCart, getCartByUserId, putCart } from "../../api/cart.api";
 import InputQuantity from "../../components/Inputs/InputQuantity";
 import { useGlobalContext } from "../../Layouts";
+import { useNavigate } from "react-router-dom";
 
-const ProductTables = ({setLoading,setCalculate} : {setLoading:any,setCalculate:any}) => {
-    
+const ProductTables = ({ setLoading, setCalculate }: { setLoading: any, setCalculate: any }) => {
+
     const cookies = useGlobalContext();
-
+    const navigator = useNavigate()
     const [carts, setCarts] = useState<any>();
     const [quantity, setQuantity] = useState<any>();
 
-
     const hanlerGetCart = async () => {
         setLoading(true);
+
         const datas = await getCartByUserId(
             cookies.user.user_id,
             cookies.user.token
         );
 
-        const results = datas.map((data : any) => 
-        ({
-        product_id: data.variant.product_id,
-        color_id: data.variant.color_id,
-        material_id: data.variant.material_id,
-        price: data.variant.price,
-        product_variant_img: data.variant.img,
-        quantity: data.quantity,
-        })) ; 
-        setCalculate((state: any) => ({...state,products: results}))
+        if (datas.length == 0) {
+            navigator('/')
+        }
+        const cartId:any = [];
+        const results = datas.map((data: any) => {
+            cartId.push(data.id)
+            return ({
+                product_id: data.variant.product_id,
+                color_id: data.variant.color_id,
+                material_id: data.variant.material_id,
+                price: data.variant.price,
+                product_variant_img: data?.variant.img,
+                quantity: data.quantity,
+            })
+        });
+
+
+        setCalculate((state: any) => ({ ...state, products: results,cartId: cartId }))
         setCarts(datas);
         cookies.hanlerTotalPrice();
         setLoading(false);
@@ -85,7 +94,7 @@ const ProductTables = ({setLoading,setCalculate} : {setLoading:any,setCalculate:
                     <tbody>
                         {carts?.length &&
                             carts.map((cart: any) => (
-                                <tr className="bg-white border-b">
+                                <tr className="bg-white border-b" key={cart.id}>
                                     <th
                                         scope="row"
                                         className="px-6 py-4 text-font flex items-center gap-3"

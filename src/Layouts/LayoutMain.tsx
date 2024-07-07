@@ -17,6 +17,8 @@ const LayOutMain = () => {
   const [orderId, setOrderId] = useState<any>();
   const [message, setMessage] = useState<any>({isActive: false, message: "", type: ""});
 
+  
+
   const hanlerTotalPrice = async () => {
     if (cookies?.user) {
       const data = await getCartByUserId(
@@ -35,21 +37,25 @@ const LayOutMain = () => {
 
   const handlerLogout = useCallback(async () => {
     if (cookies.user?.user_id && cookies.user?.token) {
-      const user = await getUserById(
-        cookies.user?.user_id,
-        cookies.user?.token
-      );
-      const data = await logout({ email: user.email }, cookies.user.token);
-      if (data.status == 200) {
+      try{
+        const user = await getUserById(
+          cookies.user?.user_id,
+          cookies.user?.token
+        );
+        const data = await logout({ email: user.email }, cookies.user.token);
+        if (data.status == 200) {
+          removeCookie("user");
+          navigate("/");
+          setTotalPrice({ totalPrice: 0, quantityProduct: 0 });
+        }
+      }catch{
         removeCookie("user");
         navigate("/");
-        setTotalPrice({ totalPrice: 0, quantityProduct: 0 });
       }
     }
   }, [cookies.user?.token]);
 
-  console.log(cookies);
-  
+  console.log(cookies)
 
   useEffect(() => {
     hanlerTotalPrice();
@@ -64,7 +70,8 @@ const LayOutMain = () => {
     setOrderId,
     handlerLogout,
     message,
-    setMessage
+    setMessage,
+    removeCookie
   };
 
     

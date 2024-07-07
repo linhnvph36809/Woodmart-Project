@@ -1,9 +1,8 @@
 import { RiCloseFill } from "react-icons/ri";
 import { useGlobalContext } from "../../Layouts";
 
-const VideoGlobal = () => {
-    
-  const handleBgTransparent = useGlobalContext() ; 
+const VideoGlobal = ({ handlerVideo }: any) => {
+
 
   return (
     <>
@@ -21,7 +20,7 @@ const VideoGlobal = () => {
         />
         <button
           className="absolute -top-10 -right-2 z-[10]"
-          onClick={() => handleBgTransparent()}
+          onClick={() => handlerVideo()}
         >
           <RiCloseFill className="text-[30px] text-white transtion-all duration-200 ease-linear hover:opacity-80" />
         </button>

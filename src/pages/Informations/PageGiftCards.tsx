@@ -1,6 +1,8 @@
 import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import { LuChevronDown, LuMoveRight } from "react-icons/lu";
 const PageGiftCards = () => {
+  document.title = "Gift Cards "
+ 
   return (
     <>
       <BannerGolobal title="Gift cards" />

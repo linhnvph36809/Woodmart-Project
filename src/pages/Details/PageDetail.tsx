@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { LuShuffle, LuX } from "react-icons/lu";
 import { LuHeart } from "react-icons/lu";
@@ -22,6 +22,8 @@ import { postCart } from "../../api/cart.api";
 import { useGlobalContext } from "../../Layouts";
 import Loadding from "../../components/Loadding/Loadding";
 import { RiStarFill } from "react-icons/ri";
+import { GoHeart } from "react-icons/go";
+import { postWishlist } from "../../api/wishlist.api";
 
 const PageDetail = () => {
   const { id } = useParams();
@@ -34,6 +36,8 @@ const PageDetail = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [reviews, setReviews] = useState<any>([]);
 
+  const navigate = useNavigate();
+
   let userStars = {
     oneStar: 0,
     twoStar: 0,
@@ -42,7 +46,6 @@ const PageDetail = () => {
     fiveStar: 0,
   };
 
-  const navigate = useNavigate();
 
   const stars = [1, 2, 3, 4, 5];
 
@@ -87,53 +90,88 @@ const PageDetail = () => {
           break;
       }
     });
-    console.log("start",userStars);
-
+    console.log("start", userStars);
   };
 
   handlerCountStar();
 
+  const handlerGetProductDetail = () => {
+    if (id) {
+      const product = getProductDetail(id);
+      const productByCategorys = getProductByCategoryId(id);
+      const reviews = getReviewProduct(id);
+      setLoading(true);
+      Promise.all([product, productByCategorys, reviews])
+        .then((values) => {
+          if (!values[0].data) {
+            navigate("/login");
+          }
+          setProduct(values[0].data || {});
+          setProductByCategory(values[1].data.slice(0, 11));
+          setReviews(values[2]);
+          setLoading(false);
+        })
+        .catch(() => { });
+    }
+  };
+
+  const handlerWishlist = useCallback(async (productId: string | number) => {
+    if (cookies?.user?.token) {
+      try {
+        await postWishlist(
+          { user_id: cookies.user.user_id, product_id: productId },
+          cookies.user.token
+        );
+        cookies.setMessage({
+          isActive: true,
+          message: "Add wishlist success",
+          type: "blue",
+        });
+      } catch {
+        cookies.removeCookie("user");
+        navigate('/login')
+      }
+    } else {
+      cookies.setMessage({
+        isActive: true,
+        message: "Please log in",
+        type: "yellow",
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    (async function () {
-      if (id) {
-        const product = getProductDetail(id);
-        const productByCategorys = getProductByCategoryId(id);
-        const reviews = getReviewProduct(id);
-
-        setLoading(true);
-        Promise.all([product, productByCategorys, reviews])
-          .then((values) => {
-            setProduct(values[0].data);
-            setProductByCategory(values[1].data.slice(0, 11));
-            setReviews(values[2]);
-            setLoading(false);
-          })
-          .catch(() => {});
-      }
-    })();
-  }, [id]);
-
-  console.log(reviews);
+    handlerGetProductDetail();
+  }, []);
 
   const handlerAddCart = useCallback(
     async (type: boolean, cart: any) => {
       if (cookies?.user?.token) {
-        setLoading(true);
-        const data = await postCart(cart, cookies?.user.token);
-        if (data?.status < 200 && data?.status > 300) {
-          alert("Khong co squyen truy cap");
-        } else {
-          await cookies.hanlerTotalPrice();
-          setLoading(false);
-          type && navigate("/checkout");
+        try{
+          setLoading(true);
+          await postCart(cart, cookies?.user.token);
+            await cookies.hanlerTotalPrice();
+            setLoading(false);
+            type && navigate("/checkout");
+        }catch{
+          cookies.removeCookie("user");
+          navigate("/login")
         }
+
       } else {
-        alert("Vui lòng đăng nhập để mua hàng");
+        cookies.setMessage({
+          isActive: true,
+          message: "Please Login",
+          type: "red",
+        });
+        navigate("/login");
       }
     },
     [cookies?.user]
   );
+
+  document.title = product?.product?.product_name || "Product Detail...";
+
 
   return (
     <>
@@ -142,9 +180,9 @@ const PageDetail = () => {
           <div className="pt-3 flex justify-between">
             <ul className="flex gap-2">
               <li>
-                <a href="#" className="text-color-black text-[15px] text-font">
+                <Link to="/" className="text-color-black text-[15px] text-font">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-color-black text-[15px] text-font">
@@ -152,9 +190,12 @@ const PageDetail = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-color-black text-[15px] text-font">
-                  Armchairs
-                </a>
+                <Link
+                  to={`/product-category/${product?.product?.category?.id}`}
+                  className="text-color-black text-[15px] text-font"
+                >
+                  {product?.product?.category?.category_name}
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-color-black text-[15px] text-font">
@@ -162,7 +203,10 @@ const PageDetail = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="nav-color text-[15px] title-font"></a>
+                <a href="#" className="nav-color text-[15px] title-font">
+                  {" "}
+                  {product?.product?.product_name}
+                </a>
               </li>
             </ul>
             <div className="flex gap-2">
@@ -214,11 +258,11 @@ const PageDetail = () => {
           <div className="flex justify-between items-start gap-8 mt-3">
             <div className="flex-1">
               {Array.isArray(product?.product?.variants) &&
-              product?.product?.variants.length > 0 ? (
-                <ZoomImages datas={product.product.variants} />
+                product?.product?.variants.length > 0 ? (
+                <ZoomImages datas={product?.product?.variants} />
               ) : (
                 <img
-                  src={product.product?.product_theme}
+                  src={product?.product?.product_theme}
                   alt=""
                   className="w-full h-full"
                 />
@@ -227,20 +271,19 @@ const PageDetail = () => {
             <div className="w-[553.338px]">
               <div className="flex justify-between">
                 <h1 className="text-[28px] title-font-800">
-                  {product.product?.product_name}
+                  {product?.product?.product_name}
                 </h1>
-                <a href="#" className="block p-2 shadow rounded-[6.6px]">
-                  <img
-                    src="./public/images/brand-minotti.jpg.webp"
-                    alt=""
-                    className="w-[80px]"
+                <div>
+                  <GoHeart
+                    className="text-2xl text-color-black hover:cursor-pointer hover:opacity-70"
+                    onClick={() => handlerWishlist(product?.product?.id)}
                   />
-                </a>
+                </div>
               </div>
               <div className="nav-color wd-text-font-bold text-base mt-3">
                 SKU:{" "}
                 <span className="text-[15px] text-font text-color-black">
-                  {product.product?.id}
+                  {product?.product?.id}
                 </span>
               </div>
               <div className="p-5 my-5 flex gap-4 bg-[#10101008] rounded-[10px]">
@@ -261,14 +304,11 @@ const PageDetail = () => {
                   </p>
                 </div>
               </div>
-              <p className="text-base text-color-black text-font">
-                {product.product?.product_description}
-              </p>
               <h1 className="text-[34px] title-font-800 color-primary py-4">
                 <span>$</span>
-                {variantProduct.price || product.product?.price}
+                {variantProduct.price || product?.product?.price}
               </h1>
-              {product.product?.variants?.length ? (
+              {product?.product?.variants?.length ? (
                 <div className="flex items-center gap-3 mb-5 title-font">
                   Color:{" "}
                   <ProductColor
@@ -312,15 +352,13 @@ const PageDetail = () => {
                       name="Add to cart"
                       type="button"
                       className={`w-full bg-primary m-0 hover:bg-[#df8c4f]
-                      ${
-                        +variantProduct?.qty_in_stock < quantity &&
+                      ${+variantProduct?.qty_in_stock < quantity &&
                         "opacity-50 pointer-events-none"
-                      }
-                        ${
-                          product?.product?.variants?.length
-                            ? variantProduct?.id ||
-                              "opacity-50 pointer-events-none"
-                            : ""
+                        }
+                        ${product?.product?.variants?.length
+                          ? variantProduct?.id ||
+                          "opacity-50 pointer-events-none"
+                          : ""
                         }
                       `}
                     />
@@ -339,15 +377,13 @@ const PageDetail = () => {
                       name="Buy now"
                       type="button"
                       className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]
-                        ${
-                          +variantProduct?.qty_in_stock < quantity &&
-                          "opacity-50 pointer-events-none"
+                        ${+variantProduct?.qty_in_stock < quantity &&
+                        "opacity-50 pointer-events-none"
                         }
-                        ${
-                          product?.variant?.length
-                            ? variantProduct?.id ||
-                              "opacity-50 pointer-events-none"
-                            : ""
+                        ${product?.variant?.length
+                          ? variantProduct?.id ||
+                          "opacity-50 pointer-events-none"
+                          : ""
                         }`}
                     />
                   </div>
@@ -446,7 +482,7 @@ const PageDetail = () => {
                   </h4>
                   <div className="flex gap-2">
                     {product?.product?.variants &&
-                    product?.product?.variants.length > 0 ? (
+                      product?.product?.variants.length > 0 ? (
                       product.product.variants.map((variant: any) => (
                         <span
                           key={variant.id}
@@ -468,7 +504,7 @@ const PageDetail = () => {
                   </h4>
                   <span className="text-font text-color-black text-[13px]">
                     {Array.isArray(product?.product?.variants) &&
-                    product?.product?.variants?.length > 0
+                      product?.product?.variants?.length > 0
                       ? product.product.variants[0].material.material_value
                       : "Trống"}
                   </span>
@@ -492,9 +528,12 @@ const PageDetail = () => {
                 alt=""
                 className="rounded-[10px] my-5"
               />
-              <p className="text-font text-sm text-color-black pt-3">
-                {product.product?.product_description}
-              </p>
+              <div
+                className="text-font text-sm text-color-black pt-3"
+                dangerouslySetInnerHTML={{
+                  __html: product?.product?.product_description,
+                }}
+              ></div>
               <ul className="mt-5 pl-2">
                 <li className="flex items-center gap-2 text-font text-sm text-color-black mb-2">
                   <img
@@ -646,7 +685,7 @@ const PageDetail = () => {
               <div className="w-6/12">
                 <div className="text-center mb-5">
                   <h1 className="title-font text-[60px]">
-                    {Math.floor(+product.average_rating)}
+                    {(+product.average_rating).toFixed(1)}
                   </h1>
                   <div className="flex justify-center mb-2">
                     {stars.map((value, i) => (
@@ -654,11 +693,10 @@ const PageDetail = () => {
                         key={i}
                         className={`text-[#bbb] text-xl
                             transtion-all duration-300 ease-linear
-                            cursor-pointer focus:text-black-500 ${
-                              Math.floor(+product.average_rating) >= value
-                                ? "text-[#eabe12]"
-                                : ""
-                            }`}
+                            cursor-pointer focus:text-black-500 ${Math.floor(+product.average_rating) >= value
+                            ? "text-[#eabe12]"
+                            : ""
+                          }`}
                       />
                     ))}
                   </div>
@@ -677,7 +715,9 @@ const PageDetail = () => {
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">{userStars.fiveStar}</div>
+                  <div className="text-font text-base text-color-black">
+                    {userStars.fiveStar}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
@@ -690,7 +730,9 @@ const PageDetail = () => {
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">{userStars.fourStar}</div>
+                  <div className="text-font text-base text-color-black">
+                    {userStars.fourStar}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
@@ -703,7 +745,9 @@ const PageDetail = () => {
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">{userStars.threeStar}</div>
+                  <div className="text-font text-base text-color-black">
+                    {userStars.threeStar}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
@@ -716,7 +760,9 @@ const PageDetail = () => {
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">{userStars.twoStar}</div>
+                  <div className="text-font text-base text-color-black">
+                    {userStars.twoStar}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center gap-3 mb-2">
                   <div className="flex items-center">
@@ -729,29 +775,37 @@ const PageDetail = () => {
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>
                   </div>
-                  <div className="text-font text-base text-color-black">{userStars.oneStar}</div>
+                  <div className="text-font text-base text-color-black">
+                    {userStars.oneStar}
+                  </div>
                 </div>
               </div>
               <div className="w-6/12">
                 <div>
-                  {reviews.map((review: any) => (
-                    <div className="pb-3 mb-5 border-b">
-                      <div className="flex items-center gap-1">
-                        <h3
-                          className="header-font text-[15px] mb-2 px-3 rounded-[30px] bg-[#b3b0b0]
+                  {reviews.length ? (
+                    reviews.map((review: any) => (
+                      <div className="pb-3 mb-5 border-b">
+                        <div className="flex items-center gap-1">
+                          <h3
+                            className="header-font text-[15px] mb-2 px-3 rounded-[30px] bg-[#b3b0b0]
                     text-white"
-                        >
-                          @{review.user.email}{" "}
-                        </h3>
-                        <span className="text-font text-xs nav-color">
-                          {review.created_at}
-                        </span>
+                          >
+                            @{review.user.email}{" "}
+                          </h3>
+                          <span className="text-font text-xs nav-color">
+                            {review.created_at}
+                          </span>
+                        </div>
+                        <p className="text-font nav-color text-base">
+                          {review.comment}
+                        </p>
                       </div>
-                      <p className="text-font nav-color text-base">
-                        {review.comment}
-                      </p>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-center text-font nav-color">
+                      There are no reviews yet
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

@@ -6,8 +6,17 @@ import Categories from "./Categorys";
 import PostsFooter from "../../components/Footers/PostsFooter";
 import ProductBestsellers from "./ProductBestsellers";
 import Posts from "./Posts";
+import Brands from "./Brands";
+import { useState } from "react";
+import { BackGroundTransparent, VideoGlobal } from "../../Layouts";
 
 const Home = () => {
+  document.title = "Home"
+  const [video, setVideo] = useState<boolean>(false);
+
+  const handlerShowVideo = () => {
+    setVideo(!video)
+  }
 
   return (
     <>
@@ -24,60 +33,6 @@ const Home = () => {
           <h1 className="text-[32px] title-font title-color">
             Weekly bestsellers
           </h1>
-          <div>
-            <ul className="flex justify-between items-center gap-5">
-              <li>
-                <a
-                  href="#"
-                  className="nav-color text-base relative
-                    after:content-[''] after:bg-[#f59a57] after:w-full after:h-[2px] after:absolute after:top-full after:left-0
-                     title-font hover:after:w-full after:transition-all after:duration-300 after:ease-linear"
-                >
-                  All
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-[#333333b3] text-base relative
-                    after:content-[''] after:bg-[#f59a57] after:w-0 after:h-[2px] after:absolute after:top-full after:left-0
-                     title-font hover:after:w-full after:transition-all after:duration-300 after:ease-linear"
-                >
-                  Chairs
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-[#333333b3] text-base relative
-                    after:content-[''] after:bg-[#f59a57] after:w-0 after:h-[2px] after:absolute after:top-full after:left-0
-                     title-font hover:after:w-full after:transition-all after:duration-300 after:ease-linear"
-                >
-                  Sofas
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-[#333333b3] text-base relative
-                    after:content-[''] after:bg-[#f59a57] after:w-0 after:h-[2px] after:absolute after:top-full after:left-0
-                     title-font hover:after:w-full after:transition-all after:duration-300 after:ease-linear"
-                >
-                  Armchairs
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-[#333333b3] text-base relative
-                    after:content-[''] after:bg-[#f59a57] after:w-0 after:h-[2px] after:absolute after:top-full after:left-0
-                     title-font hover:after:w-full after:transition-all after:duration-300 after:ease-linear"
-                >
-                  Tables
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
         <ProductBestsellers />
         <div className="mb-5 pt-20">
@@ -88,109 +43,13 @@ const Home = () => {
             Discover lots products from popular brands
           </p>
         </div>
-        <div className="grid grid-cols-258 gap-y-6 justify-between">
-          <a href="" className="block shoping-hover">
-            <div className="relative w-card bg-center bg-no-repeat bg-cover rounded-[10px] bg-[url('./public/images/brand-1.jpg')] min-h-[396px]">
-              <div className="absolute top-0 bottom-0 left-0 right-0 transition-shoping rounded-[10px]  transition-all duration-300 ease-linear">
-                <div className="absolute top-5 left-5 flex gap-4">
-                  <div>
-                    <img src="./public/images/shop-1.png" alt="" />
-                  </div>
-                  <div>
-                    <h4 className="title-font text-white text-[22px] block">
-                      Elitis
-                    </h4>
-                    <p className="mt-2 text-font text-[#dad9d8] text-base">
-                      Talosa / France
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a href="" className="block shoping-hover">
-            <div className="relative w-card bg-center bg-no-repeat bg-cover rounded-[10px] bg-[url('./public/images/brand-2.jpg')] min-h-[396px]">
-              <div className="absolute top-0 bottom-0 left-0 right-0 transition-shoping rounded-[10px]  transition-all duration-300 ease-linear">
-                <div className="absolute top-5 left-5 flex gap-4">
-                  <div>
-                    <img src="./public/images/shop-2.png" alt="" />
-                  </div>
-                  <div>
-                    <h4 className="title-font text-white text-[22px] block">
-                      Hay
-                    </h4>
-                    <p className="mt-2 text-font text-[#dad9d8] text-base">
-                      Barcelona / Spain
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a href="" className="block shoping-hover">
-            <div className="relative w-card bg-center bg-no-repeat bg-cover rounded-[10px] bg-[url('./public/images/brand-3.jpg')] min-h-[396px]">
-              <div className="absolute top-0 bottom-0 left-0 right-0 transition-shoping rounded-[10px]  transition-all duration-300 ease-linear">
-                <div className="absolute top-5 left-5 flex gap-4">
-                  <div>
-                    <img src="./public/images/shop-3.png" alt="" />
-                  </div>
-                  <div>
-                    <h4 className="title-font text-white text-[22px] block">
-                      Kettal
-                    </h4>
-                    <p className="mt-2 text-font text-[#dad9d8] text-base">
-                      Barcelona / Spain
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a href="" className="block shoping-hover">
-            <div className="relative w-card bg-center bg-no-repeat bg-cover rounded-[10px] bg-[url('./public/images/brand-4.jpg')] min-h-[396px]">
-              <div className="absolute top-0 bottom-0 left-0 right-0 transition-shoping rounded-[10px]  transition-all duration-300 ease-linear">
-                <div className="absolute top-5 left-5 flex gap-4">
-                  <div>
-                    <img src="./public/images/shop-4.png" alt="" />
-                  </div>
-                  <div>
-                    <h4 className="title-font text-white text-[22px] block">
-                      LIardo
-                    </h4>
-                    <p className="mt-2 text-font text-[#dad9d8] text-base">
-                      Barcelona / Spain
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a href="" className="block shoping-hover">
-            <div className="relative w-card bg-center bg-no-repeat bg-cover rounded-[10px] bg-[url('./public/images/brand-5.jpg')] min-h-[396px]">
-              <div className="absolute top-0 bottom-0 left-0 right-0 transition-shoping rounded-[10px]  transition-all duration-300 ease-linear">
-                <div className="absolute top-5 left-5 flex gap-4">
-                  <div>
-                    <img src="./public/images/shop-5.png" alt="" />
-                  </div>
-                  <div>
-                    <h4 className="title-font text-white text-[22px] block">
-                      Poliform
-                    </h4>
-                    <p className="mt-2 text-font text-[#dad9d8] text-base">
-                      Como / Italy
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
+        <Brands />
         <div className="mb-8 pt-20 text-center">
           <h4 className="text-[32px] title-color title-font">
-            Shopping by brands
+            Product collections
           </h4>
           <p className="text-base text-font text-color-black">
-            Discover lots products from popular brands
+            Explore product collections from our vendors
           </p>
         </div>
       </div>
@@ -199,19 +58,19 @@ const Home = () => {
           <div>
             <img
               className="rounded-xl mb-5"
-              src="./public/images/product-collection-1.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-1.jpg"
               alt=""
             />
             <img
               className="rounded-xl"
-              src="./public/images/product-collection-2.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-6.jpg"
               alt=""
             />
           </div>
           <div>
             <img
               className="rounded-xl mb-5"
-              src="./public/images/product-collection-3.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-2.jpg"
               alt=""
             />
             <div className="h-[185px] bg-[#e1dbd4] rounded-xl p-[30px] flex justify-center items-center">
@@ -233,13 +92,13 @@ const Home = () => {
               className="rounded-xl mb-5"
             >
               <source
-                src="./public/videos/video-product.mp4"
+                src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-video-opt.mp4"
                 type="video/mp4"
               />
             </video>
             <img
               className="rounded-xl"
-              src="./public/images/product-collection-4.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-7.jpg"
               alt=""
             />
           </div>
@@ -255,19 +114,19 @@ const Home = () => {
             </div>
             <img
               className="rounded-xl"
-              src="./public/images/product-collection-5.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-4.jpg"
               alt=""
             />
           </div>
           <div>
             <img
               className="rounded-xl mb-5"
-              src="./public/images/product-collection-6.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-5.jpg"
               alt=""
             />
             <img
               className="rounded-xl"
-              src="./public/images/product-collection-7.jpg.webp"
+              src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/05/wd-furniture-hotspot-8.jpg"
               alt=""
             />
           </div>
@@ -292,7 +151,7 @@ const Home = () => {
             <img
               src="./public/images/product-collection-8.jpg.webp"
               alt=""
-              className="rounded-xl"
+              className="rounded-xl"  
             />
           </div>
         </div> */}
@@ -353,7 +212,7 @@ const Home = () => {
                       className="w-[80px] h-[80px] rounded-full flex
                     justify-center items-center border-[2px] border-solid
                     border-[#c2beb9] hover:cursor-pointer"
-                      onClick={() => {}}
+                      onClick={() => handlerShowVideo()}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -392,6 +251,14 @@ const Home = () => {
         <Posts />
         <PostsFooter />
       </div>
+      {
+        video &&
+        <>
+          <VideoGlobal handlerVideo={handlerShowVideo}/>
+        </>
+      }
+      <BackGroundTransparent bgTransparent={video} onhandleBg={handlerShowVideo} />
+
     </>
   );
 };

@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export const postCart = async (product:any,token:string) => {
-    return await instance.post('/cart',product,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => error ); 
+    return await instance.post('/cart',product,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data) 
 }
 
 export const putCart = async (product:any,token:string) => {      
@@ -15,5 +15,5 @@ export const getCartByUserId = async (user_id:string|number,token:string) => {
 }
 
 export const deleteCart = async (id:string|number,token:string) => {
-    return await instance.delete('/cart/'+id,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => error ); 
+    return await instance.delete('/cart/'+id,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data); 
 }

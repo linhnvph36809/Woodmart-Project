@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
+  document.title = "Forget Password"
 
   const [_, setCookie] = useCookies(["code"]);
   const [loadding,setLoading] = useState(false) ; 

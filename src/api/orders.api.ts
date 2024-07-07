@@ -5,7 +5,7 @@ export const getVoucher = async (voucher:string,token:string) => {
 }
 
 export const postOrder = async (order:any,token:string) => {
-    return await instance.post('/orders',order,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data).catch((error) => console.log(error))
+    return await instance.post('/orders',order,{headers:{ 'Authorization': `Bearer ${token}` }}).then(({data}) => data)
 }
 
 export const getOrderDetail = async (id:string|number,token:string) => {

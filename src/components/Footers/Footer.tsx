@@ -6,15 +6,6 @@ const Footer = () => {
                     <div className="w-9/12">
                         <img src="./public/images/logo-footer.svg" alt="" />
                     </div>
-                    <div className="w-3/12 flex items-center gap-2">
-                        <span className="text-[22px] text-white title-font">Subscribe us:</span>
-                        <div className="flex items-center gap-2">
-                            <img className="w-[30px]" src="./public/images/facebook.png" alt="" />
-                            <img className="w-[30px]" src="./public/images/x-footer.png" alt="" />
-                            <img className="w-[30px]" src="./public/images/pinterest.png" alt="" />
-                            <img className="w-[30px]" src="./public/images/in.png" alt="" />
-                        </div>
-                    </div>
                 </div>
                 <div className="flex justify-between pt-12 pb-8">
                     <div className="w-9/12 flex">
@@ -109,8 +100,8 @@ const Footer = () => {
                         <h1 className="title-font text-[22px] text-white">Download App on Mobile:</h1>
                         <p className="text-sm text-font text-[#ffffffcc] py-3">15% discount on your first purchase</p>
                         <div className="flex items-center gap-4 mt-2">
-                            <img src="./public/images/google-play.svg" alt="" />
-                            <img src="./public/images/app-store.svg" alt="" />
+                            <img src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/google-play.svg" alt="" />
+                            <img src="https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/app-store.svg" alt="" />
                         </div>
                     </div>
                 </div>
@@ -118,7 +109,7 @@ const Footer = () => {
             <div className="py-5 border-t-[0.8px] border-solid border-[#ffffff26]">
                 <div className="content flex justify-between">
                     <h3 className="text-font text-xs text-[#cccccc] text-white"><strong className="text-white">WOODMART</strong> © 2024 CREATED BY <strong className="text-white">XTEMOS STUDIO</strong>. PREMIUM E-COMMERCE SOLUTIONS.</h3>
-                    <img src="./public/images/payments.png" alt="" />
+                    <img src="https://woodmart.b-cdn.net/furniture2/wp-content/themes/woodmart/images/payments.png" alt="" />
                 </div>
             </div>
         </footer>

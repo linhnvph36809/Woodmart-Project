@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { GoHeart } from "react-icons/go";
 import { LuShuffle } from "react-icons/lu";
@@ -10,13 +10,15 @@ import Category from "./Category.tsx";
 import SideRight from "./SideRight.tsx";
 import { useGlobalContext } from "../../Layouts/index.ts";
 import { getUserById } from "../../api/authentication.api.ts";
+import Loadding from "../Loadding/Loadding.tsx";
 
 const Header = () => {
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [fixedHeader, setFixedHeader] = useState(false);
   const [showSideRight, setShowSideRight] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>({ isLogin: false });
-
+  const navigator = useNavigate()
   const { user: check, totalPrice, quantityProduct } = useGlobalContext();
 
   const handlerShowSideRight = (value: string = "") => {
@@ -24,10 +26,17 @@ const Header = () => {
   };
 
   const handlerGetUser = async () => {
-    console.log("Header work");
     if (check?.user_id && check?.token) {
-      const data = await getUserById(check?.user_id, check?.token);
-      setUser((state: any) => ({ ...state, data: data?.data, isLogin: true }));
+      try {
+        setLoading(true);
+        const data = await getUserById(check?.user_id, check?.token);
+        setUser((state: any) => ({ ...state, data: data?.data, isLogin: true }));
+
+      } catch {
+        navigator('/');
+      } finally {
+        setLoading(false);
+      }
     } else {
       setUser({});
     }
@@ -65,12 +74,12 @@ const Header = () => {
     <div>
       <header
         className={`bg-white ${lastScrollTop > 156
-            ? `fixed ${fixedHeader
-              ? "-top-[40px] transtion-all duration-500 ease-in-out"
-              : `-top-full ${ref.current && "transtion-all duration-1000 ease-linear"
-              }`
+          ? `fixed ${fixedHeader
+            ? "-top-[40px] transtion-all duration-500 ease-in-out"
+            : `-top-full ${ref.current && "transtion-all duration-1000 ease-linear"
             }`
-            : "absolute top-0"
+          }`
+          : "absolute top-0"
           }
        right-0 left-0 z-[200]`}
       >
@@ -233,6 +242,7 @@ const Header = () => {
         showSideRight={showSideRight}
         handlerShowSideRight={handlerShowSideRight}
       />
+      <Loadding isActive={loading} />
     </div>
   );
 };

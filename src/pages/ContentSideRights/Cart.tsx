@@ -31,8 +31,6 @@ const CartSideRight = memo(({onClose} : {onClose : () => void }) => {
   },[carts])
 
 
-  
-
   useEffect(() => {
     hanlerGetCart()
   },[])
