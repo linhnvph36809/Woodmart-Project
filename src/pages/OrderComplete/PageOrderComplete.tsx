@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CryptoJS from 'crypto-js';
-
 import { LuMoveRight } from "react-icons/lu";
 import { useGlobalContext } from "../../Layouts";
 import { getOrderDetail, postOrder } from "../../api/orders.api";
@@ -16,14 +14,9 @@ const PageOrderComplete = () => {
   const [orders, setOrders] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  var products: any = ""
-
-  const encryptedData = sessionStorage.getItem("infor") || ""
-  if (encryptedData) {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, 'nguyen van linh');
-    products = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-  }
-
+  const products = sessionStorage.getItem("infor")
+    ? JSON.parse(sessionStorage.getItem("infor") as any)
+    : "";
 
   const hanlerPostOrder = useCallback(async () => {
     if (cookies?.user && products) {

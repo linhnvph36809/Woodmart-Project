@@ -43,6 +43,8 @@ const FormReview = memo(
             cookies.user.token
           );
           handlerSetReview();
+          cookies.setMessage({ isActive: true, message: "Review successful", type: "blue" })
+
         } catch {
           cookies.removeCookie("user");
           navigate('/login')

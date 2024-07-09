@@ -62,7 +62,7 @@ const Login = () => {
         { token: datas.access_token, user_id: datas.data.id },
         { path: "/", maxAge: 3600 }
       );
-      alert("Register successful");
+      cookies.setMessage({ isActive: true, message: "Register successful", type: "blue" })
       navigate('/')
     } else {
       alert(datas.message);

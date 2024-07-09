@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import CryptoJS from 'crypto-js';
 
 import { useGlobalContext } from "../../Layouts";
 import InputPrimary from "../../components/Inputs/InputPrimary";
@@ -116,14 +115,13 @@ const PageCheckOut = () => {
           cookies?.user?.token
         );
 
-        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(obj), 'nguyen van linh').toString()
         if (datas?.payUrl) {
           window.location.href = datas.payUrl;
-          sessionStorage.setItem("infor", encryptedData);
-          
+          sessionStorage.setItem("infor", JSON.stringify(obj));
+
         } else if (datas?.data) {
           window.location.href = datas.data;
-          sessionStorage.setItem("infor", encryptedData);
+          sessionStorage.setItem("infor", JSON.stringify(obj));
         }
       } catch (error) {
         navigate("/error")
