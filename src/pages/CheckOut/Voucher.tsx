@@ -16,12 +16,12 @@ const Voucher = ({ setCalculate }: { setCalculate: any }) => {
                 const data = await getVoucher(voucher, cookies.user.token);
                 if (data?.discount) {
                     setCalculate((state: any) =>
-                        ({ ...state, priceVoucher: { price: data.discount, id: data.id } }))
+                        ({ ...state, priceVoucher: { price: data.discount, code: voucher } }))
                 }
             } catch (error) {
                 cookies.setMessage({ isActive: true, message: "VOUCHER NOT EXIST", type: "yellow" })
                 setCalculate((state: any) =>
-                    ({ ...state, priceVoucher: { price: 0, id: null } }))
+                    ({ ...state, priceVoucher: { price: 0, code: null } }))
             } finally {
                 setLoading(false)
 

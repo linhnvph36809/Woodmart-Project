@@ -17,7 +17,6 @@ const LayOutMain = () => {
   const [orderId, setOrderId] = useState<any>();
   const [message, setMessage] = useState<any>({isActive: false, message: "", type: ""});
 
-  
 
   const hanlerTotalPrice = async () => {
     if (cookies?.user) {

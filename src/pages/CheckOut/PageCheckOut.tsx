@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useGlobalContext } from "../../Layouts";
+import CryptoJS from 'crypto-js';
 
+import { useGlobalContext } from "../../Layouts";
 import InputPrimary from "../../components/Inputs/InputPrimary";
+
 
 import {
   getAddressByUserId,
@@ -33,7 +34,6 @@ const PageCheckOut = () => {
 
   const currentUrl = window.location.href;
   const urlObject = new URL(currentUrl);
-  console.log("Url:", urlObject);
 
 
   const [shippings, setShipping] = useState<any>();
@@ -41,7 +41,7 @@ const PageCheckOut = () => {
   const [loading, setLoading] = useState<any>(false);
   const [calculate, setCalculate] = useState<any>({
     priceShipping: 0,
-    priceVoucher: { price: 0, id: null },
+    priceVoucher: { price: 0, code: null },
     products: [],
     cartId: null,
   });
@@ -67,7 +67,6 @@ const PageCheckOut = () => {
   }, [])
 
 
-
   const onSubmit: SubmitHandler<IInForPay> = async (data) => {
     setLoading(true);
 
@@ -77,15 +76,16 @@ const PageCheckOut = () => {
       shipping_id: data.shipping_id,
       address: `${data.street_address} ${data.city} ${data.country}`,
       user_id: cookies.user.user_id,
-      voucher: calculate.priceVoucher.id,
+      voucher: calculate.priceVoucher.code,
       total:
-        cookies.totalPrice +
-        calculate.priceShipping -
-        calculate.priceVoucher.price,
+        (cookies.totalPrice +
+          calculate.priceShipping) -
+        (cookies.totalPrice * calculate.priceVoucher.price / 100),
       status: 2,
       products: calculate.products,
       cartIds: calculate.cartId
     };
+
 
     const { payment_name } = payments.find(
       (payment: any) => payment.id == data.payment_id
@@ -116,16 +116,17 @@ const PageCheckOut = () => {
           cookies?.user?.token
         );
 
+        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(obj), 'nguyen van linh').toString()
         if (datas?.payUrl) {
           window.location.href = datas.payUrl;
-          sessionStorage.setItem("infor", JSON.stringify(obj));
+          sessionStorage.setItem("infor", encryptedData);
+          
         } else if (datas?.data) {
           window.location.href = datas.data;
-          sessionStorage.setItem("infor", JSON.stringify(obj));
+          sessionStorage.setItem("infor", encryptedData);
         }
       } catch (error) {
-        cookies.removeCookie("user");
-        navigate("/login")
+        navigate("/error")
       }
 
     }
@@ -385,7 +386,7 @@ const PageCheckOut = () => {
                       <p className="text-font text-[#777777] text-[10px] text-end">
                         Voucher :
                         <span className="ml-1 font-medium">
-                          -${calculate.priceVoucher.price}
+                          -{calculate.priceVoucher.price}%
                         </span>
                       </p>
                     ) : (
@@ -393,9 +394,9 @@ const PageCheckOut = () => {
                     )}
                     <h3 className="wd-text-font-bold text-[22px] color-primary text-end">
                       $
-                      {cookies.totalPrice +
-                        calculate.priceShipping -
-                        calculate.priceVoucher.price}
+                      {(cookies.totalPrice +
+                        calculate.priceShipping) -
+                        (cookies.totalPrice * calculate.priceVoucher.price / 100)}
                     </h3>
                   </div>
                 </div>

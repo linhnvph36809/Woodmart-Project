@@ -3,22 +3,32 @@ import Products from "../../components/Products/Product"
 import { deleteWishlist, getWishlistByUserId } from "../../api/wishlist.api";
 import { useGlobalContext } from "../../Layouts";
 import { LuX } from "react-icons/lu";
+import Loadding from "../../components/Loadding/Loadding";
+import { useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
 
   const cookies = useGlobalContext();
-
+  const navigate = useNavigate()
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handlerDeleteWishList = async (id:string|number) => {
+  const handlerDeleteWishList = async (id: string | number) => {
     await deleteWishlist(id, cookies.user.token);
-    handlerGetWishList() ;
+    handlerGetWishList();
 
   }
 
-  const handlerGetWishList =  async () =>  {
-    const data = await getWishlistByUserId(cookies.user.user_id, cookies.user.token);
-    data && setProducts(data);
+  const handlerGetWishList = async () => {
+    try {
+      setLoading(true)
+      const data = await getWishlistByUserId(cookies.user.user_id, cookies.user.token);
+      data && setProducts(data);
+      setLoading(false)
+    } catch {
+      navigate("/login")
+    }
+
   };
 
   useEffect(() => {
@@ -55,6 +65,9 @@ const Wishlist = () => {
           ))}
         </div>
       </div>
+      {
+        <Loadding isActive={loading} />
+      }
     </>
   )
 }

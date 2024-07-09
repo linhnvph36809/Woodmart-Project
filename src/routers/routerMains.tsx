@@ -15,6 +15,7 @@ import ForgetPassword from '../pages/Authentication/ForgetPassword';
 import Blog from '../pages/Blog/Blog';
 import CheckCode from '../pages/Authentication/CheckCode';
 import BlogDetail from '../pages/Blog/BlogDetail';
+import PageError from '../components/PageError/PageError';
 
 
 const routers = createBrowserRouter([
@@ -77,6 +78,10 @@ const routers = createBrowserRouter([
             {
                 path: "/checkout/order-received", 
                 element: <PageOrderComplete/>
+            },
+            {
+                path: "/error", 
+                element: <PageError/>
             },
             routerAccounts
 

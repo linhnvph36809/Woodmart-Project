@@ -7,28 +7,30 @@ import BannerGolobal from "../../components/BannerGlobal/BannerGlobal";
 import InputPrimary from "../../components/Inputs/InputPrimary";
 import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import { login, loginGoogle, postRegister } from "../../api/authentication.api";
+import { useGlobalContext } from "../../Layouts";
 
 const Login = () => {
   document.title = "Login"
   const [_, setCookie] = useCookies(["user"]);
   const [selected, setSelected] = useState<string>("login");
-  const navigate = useNavigate() ; 
+  const navigate = useNavigate();
+  const cookies = useGlobalContext()
 
   type Input = {
     email: string;
     password: string;
     full_name?: string,
-    phone_number: string|number
+    phone_number: string | number
   };
 
-  const handlerLogin = (datas:any) => {
+  const handlerLogin = (datas: any) => {
     if (datas.status_code == 200) {
       setCookie(
         "user",
         { token: datas.access_token, user_id: datas.data.id },
         { path: "/", maxAge: 3600 }
       );
-      alert("Login successful");
+      cookies.setMessage({ isActive: true, message: "Login successful", type: "blue" })
       navigate('/')
 
     } else {
@@ -52,8 +54,8 @@ const Login = () => {
   };
 
   const onSubmit2: SubmitHandler<Input> = async (data) => {
-    const datas = await postRegister(data) ;
-    
+    const datas = await postRegister(data);
+
     if (datas.status < 300 && datas.status > 100) {
       setCookie(
         "user",
@@ -67,7 +69,7 @@ const Login = () => {
     }
   }
 
-  
+
 
   return (
     <>
@@ -250,33 +252,41 @@ const Login = () => {
                       {errors.email && <p className="text-sm text-font text-red-500 pt-1">This field is required</p>}
                     </div>
                     <div className="mt-5">
-                      <InputPrimary 
-                      label="Full Name" 
-                      required type="text" 
-                      register={{ ...register("full_name", { required: true }) }}
+                      <InputPrimary
+                        label="Full Name"
+                        required type="text"
+                        register={{ ...register("full_name", { required: true }) }}
                       />
                       {errors.full_name && <p className="text-sm text-font text-red-500 pt-1">This field is required</p>}
 
                     </div>
                     <div className="mt-5">
-                      <InputPrimary 
-                      label="Phone" 
-                      required type="number" 
-                      register={{ ...register("phone_number",
-                      { required: {value: true,message: "This field is required"},
-                      min: {value: 0,message: "This field must be positive"},
-                      minLength: {value: 9,message: "This field must be greater than 9 characters"} }) }}
+                      <InputPrimary
+                        label="Phone"
+                        required type="number"
+                        register={{
+                          ...register("phone_number",
+                            {
+                              required: { value: true, message: "This field is required" },
+                              min: { value: 0, message: "This field must be positive" },
+                              minLength: { value: 9, message: "This field must be greater than 9 characters" }
+                            })
+                        }}
                       />
                       {errors.phone_number && <p className="text-sm text-font text-red-500 pt-1">{errors.phone_number.message}</p>}
 
                     </div>
                     <div className="mt-5">
-                      <InputPrimary 
-                      label="Password" 
-                      required type="password" 
-                      register={{ ...register("password",
-                      { required: {value: true,message: "This field is required"},
-                        minLength: {value: 6, message: "This field must be greater than 6 characters"} }) }}
+                      <InputPrimary
+                        label="Password"
+                        required type="password"
+                        register={{
+                          ...register("password",
+                            {
+                              required: { value: true, message: "This field is required" },
+                              minLength: { value: 6, message: "This field must be greater than 6 characters" }
+                            })
+                        }}
                       />
                       {errors.password && <p className="text-sm text-font text-red-500 pt-1">{errors.password.message}</p>}
                     </div>

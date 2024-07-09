@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from 'crypto-js';
+
 import { LuMoveRight } from "react-icons/lu";
 import { useGlobalContext } from "../../Layouts";
 import { getOrderDetail, postOrder } from "../../api/orders.api";
@@ -7,38 +9,49 @@ import Loadding from "../../components/Loadding/Loadding";
 import { deleteCart } from "../../api/cart.api";
 
 const PageOrderComplete = () => {
-  document.title = "Order Complete"
+  document.title = "Order Complete";
 
   const cookies = useGlobalContext();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const products = JSON.parse(sessionStorage.getItem("infor") || "false");
+  var products: any = ""
+
+  const encryptedData = sessionStorage.getItem("infor") || ""
+  if (encryptedData) {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, 'nguyen van linh');
+    products = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  }
+
 
   const hanlerPostOrder = useCallback(async () => {
     if (cookies?.user && products) {
       try {
+        const newProduct = { ...products };
+        delete newProduct.cartIds;
         const datas = await postOrder(products, cookies?.user?.token);
-        hanlerGetOrderDetail(datas.data.id);
-        handlerDeleteCart()
+        hanlerGetOrderDetail(datas?.data?.id);
+        handlerDeleteCart();
       } catch {
-        cookies.removeCookie("user");
-        navigate('/login')
+        navigate("/error");
       }
-
     }
   }, []);
 
   const handlerDeleteCart = useCallback(async () => {
-    products.cartId.forEach(async (id: any) => {
-      await deleteCart(id, cookies.user.token);
-    })
-    cookies.hanlerTotalPrice()
-  }, [])
+    try {
+      products?.cartIds?.forEach(async (id: any) => {
+        await deleteCart(id, cookies.user.token);
+      });
+      cookies.hanlerTotalPrice();
+    } catch {
+      navigate("/error");
+    }
+  }, []);
 
   const hanlerGetOrderDetail = useCallback(async (id: string | number) => {
-    if (id || products) {
+    if (id) {
       try {
         setLoading(true);
         const datas = await getOrderDetail(id, cookies.user.token);
@@ -46,18 +59,16 @@ const PageOrderComplete = () => {
         setLoading(false);
         sessionStorage.removeItem("infor");
       } catch {
-        cookies.removeCookie("user");
-        navigate("/login");
-
+        navigate("/error");
       }
-
     } else {
       navigate("/");
     }
   }, []);
 
+
   useEffect(() => {
-    hanlerGetOrderDetail(cookies.orderId);
+    products || hanlerGetOrderDetail(cookies.orderId);
     hanlerPostOrder();
   }, []);
 
@@ -66,7 +77,7 @@ const PageOrderComplete = () => {
     <>
       <div className="w-[800px] mx-auto text-center">
         <div className="py-5 flex justify-center">
-          <img src="../public/images/logo.svg" alt="" />
+          <img src="https://woodmart.xtemos.com/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-logo-black.svg" alt="" />
         </div>
       </div>
       <div
@@ -185,9 +196,20 @@ const PageOrderComplete = () => {
                     Shipping:
                   </h4>
                   <p className="text-font text-[15px] text-color-black">
-                    {orders.order.shipping.shipping_name}
+                    {orders.order.shipping.shipping_name}, {orders.order.shipping.fee}$
                   </p>
                 </div>
+                {
+                  orders['voucher-detail'] && <div className="flex justify-between items-center py-4 border-b border-solid">
+                    <h4 className="title-color title-font text-[15px]">
+                      Voucher:
+                    </h4>
+                    <p className="text-font text-[15px] text-color-black">
+                      {orders['voucher-detail']?.code}, -{orders['voucher-detail']?.discount}%
+                    </p>
+                  </div>
+                }
+
                 <div className="flex justify-between items-center py-4 border-b border-solid">
                   <h4 className="title-color title-font text-[15px]">
                     Payment method:
@@ -199,7 +221,7 @@ const PageOrderComplete = () => {
                 <div className="flex justify-between items-center py-4 border-b border-solid">
                   <h4 className="title-color title-font text-[15px]">TOTAL:</h4>
                   <h4 className="text-[22px] wd-text-font-bold color-primary">
-                    ${+orderDetail.price * +orderDetail.quantity}
+                    ${orders.order.total}
                   </h4>
                 </div>
               </div>

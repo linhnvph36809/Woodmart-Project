@@ -8,12 +8,12 @@ const Blog = () => {
 
   useEffect(() => {
     (async function () {
-      const {data} = await getAllPost();
+      const { data } = await getAllPost();
       setPost(data);
     })();
   }, []);
 
-  
+
 
   return (
     <>
@@ -24,28 +24,7 @@ const Blog = () => {
             <PostItem key={post.id} data={post} />
           ))}
         </div>
-        <div>
-          <ul className="flex gap-1 justify-center my-10">
-            <li>
-              <a
-                href="#"
-                className="min-w-[34px] h-[34px] text-sm text-white
-                            wd-text-font-bold rounded bg-primary flex justify-center items-center"
-              >
-                1
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="min-w-[34px] h-[34px] text-sm 
-                            wd-text-font-bold rounded flex justify-center items-center"
-              >
-                2
-              </a>
-            </li>
-          </ul>
-        </div>
+
       </div>
     </>
   );

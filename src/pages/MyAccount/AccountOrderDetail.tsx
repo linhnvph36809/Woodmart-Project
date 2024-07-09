@@ -19,8 +19,7 @@ const AccountOrderDetail = () => {
         setLoading(false)
         setOrders(datas);
       } catch (error) {
-        cookies.removeCookie("user");
-        navigator("/login")
+        navigator("/error")
       }
 
     }
@@ -72,9 +71,20 @@ const AccountOrderDetail = () => {
                   Shipping:
                 </h4>
                 <p className="text-font text-[15px] text-color-black">
-                  {orders.order.shipping.shipping_name}
+                  {orders.order.shipping.shipping_name}, {orders.order.shipping.fee}$
                 </p>
               </div>
+              {
+                orders['voucher-detail']?.code && <div className="flex justify-between items-center py-4 border-b border-solid">
+                  <h4 className="title-color title-font text-[15px]">
+                    Voucher:
+                  </h4>
+                  <p className="text-font text-[15px] text-color-black">
+                    {orders['voucher-detail']?.code}, -{orders['voucher-detail']?.discount}%
+                  </p>
+                </div>
+              }
+
               <div className="flex justify-between items-center py-4 border-b border-solid">
                 <h4 className="title-color title-font text-[15px]">
                   Payment method:
@@ -86,7 +96,7 @@ const AccountOrderDetail = () => {
               <div className="flex justify-between items-center py-4 border-b border-solid">
                 <h4 className="title-color title-font text-[15px]">TOTAL:</h4>
                 <h4 className="text-[22px] wd-text-font-bold color-primary">
-                  ${+orderDetail.price * +orderDetail.quantity}
+                  ${+orders.order.total}
                 </h4>
               </div>
             </div>

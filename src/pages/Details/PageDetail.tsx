@@ -5,7 +5,6 @@ import { LuShuffle, LuX } from "react-icons/lu";
 import { LuHeart } from "react-icons/lu";
 import { LuRuler } from "react-icons/lu";
 import { LuChevronDown } from "react-icons/lu";
-import { HiOutlineStar } from "react-icons/hi";
 import ZoomImages from "./ZoomImage";
 
 import {
@@ -45,7 +44,6 @@ const PageDetail = () => {
     fourStar: 0,
     fiveStar: 0,
   };
-
 
   const stars = [1, 2, 3, 4, 5];
 
@@ -104,7 +102,7 @@ const PageDetail = () => {
       Promise.all([product, productByCategorys, reviews])
         .then((values) => {
           if (!values[0].data) {
-            navigate("/login");
+            navigate("/error");
           }
           setProduct(values[0].data || {});
           setProductByCategory(values[1].data.slice(0, 11));
@@ -129,7 +127,7 @@ const PageDetail = () => {
         });
       } catch {
         cookies.removeCookie("user");
-        navigate('/login')
+        navigate("/login");
       }
     } else {
       cookies.setMessage({
@@ -147,17 +145,16 @@ const PageDetail = () => {
   const handlerAddCart = useCallback(
     async (type: boolean, cart: any) => {
       if (cookies?.user?.token) {
-        try{
+        try {
           setLoading(true);
           await postCart(cart, cookies?.user.token);
-            await cookies.hanlerTotalPrice();
-            setLoading(false);
-            type && navigate("/checkout");
-        }catch{
+          await cookies.hanlerTotalPrice();
+          setLoading(false);
+          type && navigate("/checkout");
+        } catch {
           cookies.removeCookie("user");
-          navigate("/login")
+          navigate("/login");
         }
-
       } else {
         cookies.setMessage({
           isActive: true,
@@ -171,7 +168,6 @@ const PageDetail = () => {
   );
 
   document.title = product?.product?.product_name || "Product Detail...";
-
 
   return (
     <>
@@ -346,20 +342,19 @@ const PageDetail = () => {
                         product_variant_id: variantProduct.id,
                       })
                     }
-                    className="w-full"
+                    className={`w-full ${+variantProduct?.qty_in_stock < quantity &&
+                      "opacity-50 pointer-events-none"
+                      }
+                        ${product?.product?.variants?.length
+                        ? variantProduct?.id ||
+                        "opacity-50 pointer-events-none"
+                        : ""
+                      }`}
                   >
                     <ButtonPrimary
                       name="Add to cart"
                       type="button"
                       className={`w-full bg-primary m-0 hover:bg-[#df8c4f]
-                      ${+variantProduct?.qty_in_stock < quantity &&
-                        "opacity-50 pointer-events-none"
-                        }
-                        ${product?.product?.variants?.length
-                          ? variantProduct?.id ||
-                          "opacity-50 pointer-events-none"
-                          : ""
-                        }
                       `}
                     />
                   </div>
@@ -371,20 +366,19 @@ const PageDetail = () => {
                         product_variant_id: variantProduct.id,
                       })
                     }
-                    className="w-full"
+                    className={`w-full ${+variantProduct?.qty_in_stock < quantity &&
+                      "opacity-50 pointer-events-none"
+                      }
+                        ${product?.product?.variants?.length
+                        ? variantProduct?.id ||
+                        "opacity-50 pointer-events-none"
+                        : ""
+                      }`}
                   >
                     <ButtonPrimary
                       name="Buy now"
                       type="button"
-                      className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]
-                        ${+variantProduct?.qty_in_stock < quantity &&
-                        "opacity-50 pointer-events-none"
-                        }
-                        ${product?.variant?.length
-                          ? variantProduct?.id ||
-                          "opacity-50 pointer-events-none"
-                          : ""
-                        }`}
+                      className={`w-full bg-[#101010e6] m-0 hover:bg-[#333333]`}
                     />
                   </div>
                 </div>
@@ -725,7 +719,7 @@ const PageDetail = () => {
                     <RiStarFill className="text-xl text-[#EABE12]" />
                     <RiStarFill className="text-xl text-[#EABE12]" />
                     <RiStarFill className="text-xl text-[#EABE12]" />
-                    <HiOutlineStar className="text-xl text-[#bbb]" />
+                    <RiStarFill className="text-xl text-[#bbb]" />
                   </div>
                   <div className="bg-[#0000000f] w-[540px] h-[12px] rounded-[10px] ">
                     <div className="h-[12px] bg-primary rounded-[10px] w-1/2"></div>

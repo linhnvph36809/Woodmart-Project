@@ -177,8 +177,9 @@ const PageCategory = () => {
             </div>
           )}
         </div>
+
       </div>
-      <Loadding isActive={loadding}/>
+      <Loadding isActive={loadding} />
     </>
   );
 };

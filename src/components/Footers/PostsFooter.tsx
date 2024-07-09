@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const PostsFooter = () => {
-    const [active,setActive] = useState<boolean>(true) ; 
+  const [active, setActive] = useState<boolean>(true);
   return (
     <>
       <div>
@@ -39,14 +39,13 @@ const PostsFooter = () => {
           </p>
         </div>
         <div className="pb-10 relative">
-          <a
+          <span
             onClick={() => setActive(!active)}
-            href="#!"
             className="border-b-[2px] border-solid border-[#f59a57] nav-color
-            text-[13px] wd-text-font-bold pb-[2px] hover:opacity-70"
+            text-[13px] wd-text-font-bold pb-[2px] hover:opacity-70 cursor-pointer"
           >
             Read More
-          </a>
+          </span>
           {active && <div className={`absolute w-full -top-[60px] h-[65px] z-[10] test`}></div>}
 
         </div>

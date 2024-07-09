@@ -34,8 +34,7 @@ const ReviewProducts = () => {
       setLoading(false);
       setOrders(datas);
     }catch{
-      cookies.removeCookie("user");
-      navigator("/login")
+      navigator("/error")
 
     }
   }, []);
@@ -44,8 +43,7 @@ const ReviewProducts = () => {
     hanlerGetOrderDetail();
   }, []);
 
-  console.log(orders);
-
+  
   return (
     <>
       <div>
