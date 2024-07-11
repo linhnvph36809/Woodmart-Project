@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LuMoveRight } from "react-icons/lu";
 import { useGlobalContext } from "../../Layouts";
 import { getOrderDetail, postOrder } from "../../api/orders.api";
 import Loadding from "../../components/Loadding/Loadding";
 import { deleteCart } from "../../api/cart.api";
+import PageError from "../../components/PageError/PageError";
 
 const PageOrderComplete = () => {
   document.title = "Order Complete";
+  const location = useLocation();
+  if(!location.search){
+    return <PageError />
+  }
+  
 
   const cookies = useGlobalContext();
   const navigate = useNavigate();
