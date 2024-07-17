@@ -5,8 +5,8 @@ const Brands = () => {
         <>
             <div className="grid grid-cols-258 gap-y-6 justify-between">
                 {
-                    listBrands.map((listBrand:any) =>
-                        <a href="" className="block shoping-hover">
+                    listBrands.map((listBrand:any,index) =>
+                        <a href="" key={index} className="block shoping-hover">
                             <div className={`relative w-card rounded-[10px]`}>
                                 <img src={listBrand.banner} alt="" className="w-full min-h-[396px] rounded-[10px]"/>
                                 <div className="absolute top-0 bottom-0 left-0 right-0 transition-shoping rounded-[10px]

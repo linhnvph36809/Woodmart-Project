@@ -49,14 +49,17 @@ const Login = () => {
     formState: { errors },
   } = useForm<Input>();
   const onSubmit: SubmitHandler<Input> = async (data) => {
-    const datas = await login(data);
-    handlerLogin(datas);
+    try {
+      const datas = await login(data);
+      handlerLogin(datas);
+    } catch (error) {
+      cookies.setMessage({ isActive: true, message: "Login failed", type: "red" })
+    }
   };
 
   const onSubmit2: SubmitHandler<Input> = async (data) => {
-    const datas = await postRegister(data);
-
-    if (datas.status < 300 && datas.status > 100) {
+    try {
+      const datas = await postRegister(data);
       setCookie(
         "user",
         { token: datas.access_token, user_id: datas.data.id },
@@ -64,8 +67,8 @@ const Login = () => {
       );
       cookies.setMessage({ isActive: true, message: "Register successful", type: "blue" })
       navigate('/')
-    } else {
-      alert(datas.message);
+    } catch (error) {
+      cookies.setMessage({ isActive: true, message: "Validation failed", type: "red" })
     }
   }
 
@@ -299,7 +302,7 @@ const Login = () => {
             )}
             <div className="w-6/12 text-center px-10 border-l-[1px] border-solid border-[#0000001b]">
               <h3 className="title-font title-color text-[22px] uppercase">
-                REGISTER
+                {selected == "login" ? "REGISTER" : "LOGIN"}
               </h3>
               <p className="text-font text-color-black text-[15px] my-5">
                 Registering for this site allows you to access your order status

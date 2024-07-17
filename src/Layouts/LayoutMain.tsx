@@ -54,7 +54,6 @@ const LayOutMain = () => {
     }
   }, [cookies.user?.token]);
 
-  console.log(cookies)
 
   useEffect(() => {
     hanlerTotalPrice();

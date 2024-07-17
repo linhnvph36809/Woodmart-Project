@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Product from "../../components/Products/Product";
@@ -23,28 +23,29 @@ const PageCategory = () => {
       }
     })();
   }, [id]);
-  document.title = products[0]?.category?.category_name || "Category"
-
+  document.title = products[0]?.category?.category_name || "Category";
 
   return (
     <>
       <div className="h-[294px] bg-[url('https://woodmart.b-cdn.net/furniture2/wp-content/uploads/sites/11/2023/04/wd-furniture-pt-sofas-opt.jpg')] flex items-center">
         <div className="content">
           <h1 className="flex items-center gap-2 title-font text-[78px] text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-8 h-8 text-white"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
-              />
-            </svg>
+            <Link to="/">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-8 h-8 text-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
+                />
+              </svg>
+            </Link>
             {products[0]?.category?.category_name || "Empty"}
           </h1>
         </div>
@@ -141,7 +142,9 @@ const PageCategory = () => {
               ))}
             </div>
           ) : (
-            <p className="text-center title-font title-color text-lg">No results</p>
+            <p className="text-center title-font title-color text-lg">
+              No results
+            </p>
           )}
           {products.length > 12 && (
             <div>
@@ -177,7 +180,6 @@ const PageCategory = () => {
             </div>
           )}
         </div>
-
       </div>
       <Loadding isActive={loadding} />
     </>
