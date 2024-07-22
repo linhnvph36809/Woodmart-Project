@@ -1,21 +1,22 @@
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ICategory } from "../../interfaces/ICategories/ICategories";
-import { getAllCategorys } from "../../api/categorys.api";
+import axios from "axios";
 
 const Category = memo(() => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
     (async function(){
-      const {data} = await getAllCategorys()
+      const {data} = await axios.get("https://woodmart.click/api/category")
       setCategories(data)
     })()
   }, []);
 
+
   return (
     <ul className="flex gap-7">
-      {categories.map((category:any) => (
+      {categories?.map((category:any) => (
         <li key={category.id}>
           <Link
             to={`product-category/${category.id}`}

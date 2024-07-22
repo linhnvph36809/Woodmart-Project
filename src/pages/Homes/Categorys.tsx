@@ -10,8 +10,12 @@ const Categories = memo(() => {
 
   useEffect(() => {
     (async function(){
-      const datas = await getCategorysByCount()  
-      setCategories(datas)
+      try {
+        const datas = await getCategorysByCount()  
+        setCategories(datas)
+      } catch (error) {
+        console.log(error)
+      }
     })()
     
   }, []);
