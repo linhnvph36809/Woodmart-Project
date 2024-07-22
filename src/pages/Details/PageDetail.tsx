@@ -88,7 +88,6 @@ const PageDetail = () => {
           break;
       }
     });
-    console.log("start", userStars);
   };
 
   handlerCountStar();
@@ -140,7 +139,7 @@ const PageDetail = () => {
 
   useEffect(() => {
     handlerGetProductDetail();
-  }, []);
+  }, [id]);
 
   const handlerAddCart = useCallback(
     async (type: boolean, cart: any) => {
